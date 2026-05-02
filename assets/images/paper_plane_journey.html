@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paper Plane Terrain Journey</title>
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #111;
+    overflow: hidden;
+  }
+  #bgCanvas {
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+  }
+</style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+<script>
+try {
+  const canvas = document.getElementById('bgCanvas');
+  const ctx = canvas.getContext('2d');
+
+  // Mobile layout resolution
+  const w = 1080;
+  const h = 1920;
+  canvas.width = w;
+  canvas.height = h;
+
+  // Hex to RGB Helper
+  function hexToRgb(hex) {
+    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : { r: 0, g: 0, b: 0 };
+  }
+
+  function lerpColor(c1, c2, t) {
+    let r = Math.round(c1.r + (c2.r - c1.r) * t);
+    let g = Math.round(c1.g + (c2.g - c1.g) * t);
+    let b = Math.round(c1.b + (c2.b - c1.b) * t);
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
+
+  // Smooth ease in out for transitions
+  function easeInOut(t) {
+    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+  }
+
+  // Uniform Parallax Speeds (Crucial for seamless morphing)
+  const S1 = 1.0;
+  const S2 = 1.8;
+  const S3 = 3.0;
+
+  // 5 Terrains Definitions
+  const TERRAINS = [
+    {
+      name: 'DESERT',
+      sky: [hexToRgb('#FF4E50'), hexToRgb('#F9D423')],
+      sun: { y: 0.4, color: hexToRgb('#FFD700') },
+      layers: [
+        { base: 0.55, amp: 80, freq: 0.002, speed: S1, type: 'smooth', colors: [hexToRgb('#E65C00'), hexToRgb('#F9D423')] },
+        { base: 0.70, amp: 100, freq: 0.0015, speed: S2, type: 'smooth', colors: [hexToRgb('#D35400'), hexToRgb('#F39C12')] },
+        { base: 0.85, amp: 120, freq: 0.001, speed: S3, type: 'smooth', colors: [hexToRgb('#A04000'), hexToRgb('#E67E22')] }
+      ]
+    },
+    {
+      name: 'JUNGLE',
+      sky: [hexToRgb('#11998e'), hexToRgb('#38ef7d')],
+      sun: { y: 0.2, color: hexToRgb('#FFFFFF') },
+      layers: [
+        { base: 0.55, amp: 90, freq: 0.006, speed: S1, type: 'jagged', colors: [hexToRgb('#1D976C'), hexToRgb('#93F9B9')] },
+        { base: 0.70, amp: 110, freq: 0.004, speed: S2, type: 'jagged', colors: [hexToRgb('#0f9b0f'), hexToRgb('#38ef7d')] },
+        { base: 0.85, amp: 130, freq: 0.003, speed: S3, type: 'jagged', colors: [hexToRgb('#000000'), hexToRgb('#11998e')] }
+      ]
+    },
+    {
+      name: 'WATERFALL',
+      sky: [hexToRgb('#2980B9'), hexToRgb('#6DD5FA')],
+      sun: { y: 0.3, color: hexToRgb('#FFFFFF') },
+      layers: [
+        { base: 0.40, amp: 200, freq: 0.0015, speed: S1, type: 'cliff', colors: [hexToRgb('#141E30'), hexToRgb('#243B55')] },
+        { base: 0.65, amp: 80, freq: 0.002, speed: S2, type: 'smooth', colors: [hexToRgb('#00c6ff'), hexToRgb('#0072ff')] }, // Water layer
+        { base: 0.90, amp: 90, freq: 0.005, speed: S3, type: 'jagged', colors: [hexToRgb('#2C3E50'), hexToRgb('#000000')] }
+      ]
+    },
+    {
+      name: 'PLAIN',
+      sky: [hexToRgb('#56CCF2'), hexToRgb('#2F80ED')],
+      sun: { y: 0.25, color: hexToRgb('#FFDF00') },
+      layers: [
+        { base: 0.60, amp: 40, freq: 0.002, speed: S1, type: 'smooth', colors: [hexToRgb('#56ab2f'), hexToRgb('#a8e063')] },
+        { base: 0.75, amp: 60, freq: 0.0015, speed: S2, type: 'smooth', colors: [hexToRgb('#00b09b'), hexToRgb('#96c93d')] },
+        { base: 0.90, amp: 80, freq: 0.001, speed: S3, type: 'smooth', colors: [hexToRgb('#11998e'), hexToRgb('#38ef7d')] }
+      ]
+    },
+    {
+      name: 'URBAN',
+      sky: [hexToRgb('#0f0c29'), hexToRgb('#302b63')],
+      sun: { y: 0.5, color: hexToRgb('#FF007F') }, // Neon moon
+      layers: [
+        { base: 0.60, amp: 200, freq: 0.004, speed: S1, type: 'city', colors: [hexToRgb('#3a1c71'), hexToRgb('#d76d77')] },
+        { base: 0.75, amp: 150, freq: 0.006, speed: S2, type: 'city', colors: [hexToRgb('#141E30'), hexToRgb('#243B55')] },
+        { base: 0.90, amp: 100, freq: 0.008, speed: S3, type: 'city', colors: [hexToRgb('#000000'), hexToRgb('#434343')] }
+      ]
+    }
+  ];
+
+  let time = 0;
+  let currentIdx = 0;
+  let nextIdx = 1;
+  let transProgress = 0; // 0 to 1
+  let transitionSpeed = 0.0015; // Controls morph duration
+
+  function getTerrainHeight(x, globalTime, layer) {
+    let xx = x + globalTime * layer.speed * 200; // parallax scroll speed
+    let val = 0;
+    
+    if (layer.type === 'smooth') {
+      val = Math.sin(xx * layer.freq) * layer.amp + Math.sin(xx * layer.freq * 2.1) * layer.amp * 0.4;
+    } 
+    else if (layer.type === 'jagged') {
+      val = Math.sin(xx * layer.freq) * layer.amp + Math.abs(Math.sin(xx * layer.freq * 4)) * layer.amp * 0.8;
+    } 
+    else if (layer.type === 'cliff') {
+      val = Math.sin(xx * layer.freq) * layer.amp;
+      let sharp = Math.sin(xx * layer.freq * 0.5);
+      if (sharp > 0) val -= sharp * 200; // steep vertical drop
+    } 
+    else if (layer.type === 'city') {
+      let blockSize = 1 / layer.freq;
+      let block = Math.floor(xx / blockSize);
+      // pseudo-random step height based on block coordinate
+      let r = Math.abs(Math.sin(block * 12.9898) * 43758.5453) % 1;
+      val = r * layer.amp;
+    }
+    
+    return h * layer.base - val;
+  }
+
+  function drawSky(ctx, t1, t2, easeT) {
+    let topColor = lerpColor(t1.sky[0], t2.sky[0], easeT);
+    let botColor = lerpColor(t1.sky[1], t2.sky[1], easeT);
+    let grad = ctx.createLinearGradient(0, 0, 0, h);
+    grad.addColorStop(0, topColor);
+    grad.addColorStop(1, botColor);
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, w, h);
+  }
+
+  function drawSun(ctx, t1, t2, easeT) {
+    let sunY = lerp(t1.sun.y, t2.sun.y, easeT) * h;
+    let sunColor = lerpColor(t1.sun.color, t2.sun.color, easeT);
+    
+    ctx.beginPath();
+    ctx.arc(w * 0.7, sunY, w * 0.15, 0, Math.PI * 2);
+    ctx.fillStyle = sunColor;
+    ctx.shadowColor = sunColor;
+    ctx.shadowBlur = 80;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+
+  function drawLayers(ctx, t1, t2, easeT) {
+    for (let i = 0; i < 3; i++) {
+      let l1 = t1.layers[i];
+      let l2 = t2.layers[i];
+      
+      let curTop = lerpColor(l1.colors[0], l2.colors[0], easeT);
+      let curBot = lerpColor(l1.colors[1], l2.colors[1], easeT);
+      
+      let grad = ctx.createLinearGradient(0, h * 0.3, 0, h);
+      grad.addColorStop(0, curTop);
+      grad.addColorStop(1, curBot);
+      ctx.fillStyle = grad;
+      
+      ctx.beginPath();
+      ctx.moveTo(0, h);
+      
+      // Plot the dynamic terrain geometry across the screen width
+      let step = 15;
+      for (let x = 0; x <= w + step; x += step) {
+        let y1 = getTerrainHeight(x, time, l1);
+        let y2 = getTerrainHeight(x, time, l2);
+        let y = lerp(y1, y2, easeT);
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(w + step, h);
+      ctx.lineTo(0, h);
+      ctx.closePath();
+      ctx.fill();
+    }
+  }
+
+  function drawPaperPlane(ctx) {
+    let px = w * 0.25;
+    let py = h * 0.35 + Math.sin(time * 3) * 30; // Organic bobbing flight
+    let tilt = Math.cos(time * 3) * 0.12; // Subtle pitch tilting
+
+    ctx.save();
+    ctx.translate(px, py);
+    ctx.rotate(tilt);
+    ctx.scale(1.5, 1.5);
+
+    // Left Wing (Main body)
+    ctx.fillStyle = '#FFFFFF';
+    ctx.beginPath();
+    ctx.moveTo(40, 0);   // Nose
+    ctx.lineTo(-20, 15); // Bottom wing tip
+    ctx.lineTo(-10, 0);  // Tail inner
+    ctx.closePath();
+    ctx.fill();
+
+    // Right Wing (Top shaded)
+    ctx.fillStyle = '#D6D6D6';
+    ctx.beginPath();
+    ctx.moveTo(40, 0);
+    ctx.lineTo(-10, 0);
+    ctx.lineTo(-25, -15);
+    ctx.closePath();
+    ctx.fill();
+    
+    // Core structural fold (Darkest)
+    ctx.fillStyle = '#A0A0A0';
+    ctx.beginPath();
+    ctx.moveTo(40, 0);
+    ctx.lineTo(-10, 0);
+    ctx.lineTo(-15, 6);
+    ctx.closePath();
+    ctx.fill();
+
+    // Aesthetic wind trails
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(-35, 0);
+    ctx.lineTo(-65 + Math.sin(time*15)*15, 0);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function drawAmbientParticles(ctx) {
+    // Universal dust/sparks drifting horizontally
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+    for(let i=0; i<20; i++) {
+       let px = ((i * 137 + time * 500) % (w * 1.5)) - w*0.2;
+       let py = ((i * 313 + Math.sin(time * 5 + i)*100) % h);
+       ctx.beginPath();
+       ctx.arc(px, py, 3, 0, Math.PI*2);
+       ctx.fill();
+    }
+  }
+
+  function animate() {
+    time += 0.01;
+    transProgress += transitionSpeed; 
+    
+    // Once morph is complete, step to the next terrain
+    if (transProgress >= 1) {
+      transProgress = 0;
+      currentIdx = nextIdx;
+      nextIdx = (nextIdx + 1) % TERRAINS.length;
+    }
+
+    let t1 = TERRAINS[currentIdx];
+    let t2 = TERRAINS[nextIdx];
+    let easeT = easeInOut(transProgress);
+
+    // 1. Sky & Sun Interpolation
+    drawSky(ctx, t1, t2, easeT);
+    drawSun(ctx, t1, t2, easeT);
+    
+    // 2. Terrain Interpolation (Geometry + Colors)
+    drawLayers(ctx, t1, t2, easeT);
+    
+    // 3. Subject
+    drawPaperPlane(ctx);
+    
+    // 4. Foreground Polish
+    drawAmbientParticles(ctx);
+
+    requestAnimationFrame(animate);
+  }
+
+  // Start the journey
+  animate();
+} catch (e) {
+  const canvas = document.getElementById('bgCanvas');
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = 'red';
+  ctx.font = '50px sans-serif';
+  ctx.fillText('Error: ' + e.message, 50, 100);
+}
+</script>
+</body>
+</html>

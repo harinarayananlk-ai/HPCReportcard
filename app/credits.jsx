@@ -16,7 +16,7 @@ export default function CreditsPage() {
   return (
     <View style={styles.container}>
       <WebView 
-        source={require('./index (2).html')} 
+        source={require('./credits_animation.html')} 
         style={styles.webview}
         originWhitelist={['*']}
       />
