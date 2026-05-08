@@ -8,12 +8,11 @@ import { useTheme, useAuth, API_URL } from '../../context/GlobalContext';
 import SleekDropdown from './SleekDropdown';
 import InfoModal from './InfoModal';
 import { domains, curricularGoals, competencies } from '../../constants/SelectionData';
-import { useVideoPlayer, VideoView } from 'expo-video';
 import Animated, { FadeInDown, useSharedValue, useAnimatedStyle, withTiming, withRepeat, withSequence } from 'react-native-reanimated';
 import { Waves, Mountain, Cloud, CloudUpload } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ActivityIndicator } from 'react-native';
-import PaperPlaneAnimation from '../../components/PaperPlaneAnimation';
+import PremiumBackground from '../../components/PremiumBackground';
 
 const { width: W, height: H } = Dimensions.get('window');
 
@@ -77,11 +76,7 @@ export default function SelectionPage() {
     const [activities, setActivities] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [isSyncing, setIsSyncing] = useState(false);
-    const player = useVideoPlayer(require('../../assets/images/Background_animation_forest.mp4'), (p) => {
-        p.loop = true;
-        p.play();
-        p.muted = true;
-    });
+
 
     // ── Autofill on mount ────────────────────────────────────────────────────
     useEffect(() => {
@@ -223,11 +218,7 @@ export default function SelectionPage() {
     return (
         <View style={{ flex: 1 }}>
             <StatusBar translucent barStyle="light-content" backgroundColor="transparent" />
-            <View style={[StyleSheet.absoluteFill, { backgroundColor: theme.background }]} />
-            <PaperPlaneAnimation />
-
-            {/* ── Dark green overlay ──────────────────────────────────────── */}
-            <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.5)' }]} />
+            <PremiumBackground />
 
             {/* ── Content ────────────────────────────────────────────────── */}
             <SafeAreaView style={{ flex: 1 }}>
@@ -367,11 +358,11 @@ const getStyles = (theme) => StyleSheet.create({
         justifyContent: 'center', alignItems: 'center',
     },
     backText: { color: theme.primary, fontSize: 22, fontWeight: '800' },
-    headerTitle: { color: theme.primary, fontSize: 22, fontWeight: '800', letterSpacing: 1 },
-    headerSub: { color: theme.muted, fontSize: 12, letterSpacing: 2, marginTop: 2 },
+    headerTitle: { color: theme.primary, fontSize: 24, fontWeight: '600', letterSpacing: 2, fontFamily: "Jost_600SemiBold" },
+    headerSub: { color: theme.muted, fontSize: 12, letterSpacing: 2, marginTop: 2, fontFamily: "Jost_300Light" },
     headerIcons: { flexDirection: 'row', gap: 12, alignItems: 'center' },
     iconContainer: { alignItems: 'center', justifyContent: 'center' },
-    iconText: { fontSize: 6, fontWeight: '900', marginTop: 2 },
+    iconText: { fontSize: 7, fontWeight: '300', marginTop: 2, fontFamily: "Jost_300Light" },
     divider: { color: theme.muted, textAlign: 'center', fontSize: 14, marginVertical: 12, opacity: 0.6 },
 
     // Card
@@ -395,20 +386,22 @@ const getStyles = (theme) => StyleSheet.create({
     fieldLabel: {
         color: theme.text,
         fontSize: 13,
-        fontWeight: '700',
+        fontWeight: '300',
         marginBottom: 8,
-        letterSpacing: 0.5,
+        letterSpacing: 2,
         textTransform: 'uppercase',
+        fontFamily: "Jost_300Light",
     },
     textArea: {
-        backgroundColor: 'rgba(0,0,0,0.1)',
+        backgroundColor: 'rgba(255,255,255,0.05)',
         borderWidth: 1,
         borderColor: theme.border,
-        borderRadius: 12,
+        borderRadius: 16,
         padding: 14,
         color: theme.text,
         fontSize: 14,
         minHeight: 120,
+        fontFamily: "Jost_400Regular",
     },
 
     // Next button
@@ -419,5 +412,5 @@ const getStyles = (theme) => StyleSheet.create({
         alignItems: 'center',
         marginTop: 10,
     },
-    nextBtnText: { color: theme.buttonText, fontSize: 16, fontWeight: 'bold', textTransform: 'uppercase' },
+    nextBtnText: { color: theme.buttonText, fontSize: 14, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 2, fontFamily: "Jost_600SemiBold" },
 });

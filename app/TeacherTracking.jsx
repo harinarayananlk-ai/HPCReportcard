@@ -3,22 +3,26 @@ import {
   View,
   Text,
   TextInput,
-  SectionList,
+  ScrollView,
   StyleSheet,
   StatusBar,
   Alert,
   ActivityIndicator,
+  Platform,
 } from "react-native";
 import { useRouter } from "expo-router";
 import Constants from "expo-constants";
 import SoundButton from "../components/SoundButton";
+import GemButton from "../components/GemButton";
 import { useTheme, useAuth, API_URL } from "../context/GlobalContext";
+import { gems } from "../colour_themes";
 
 export default function TeacherTracking() {
   const router = useRouter();
   const { theme } = useTheme();
   const { setActiveStudentId, setActiveStudentProfile } = useAuth();
-  const styles = getStyles(theme);
+  const accentColor = gems.jade;
+  const styles = getStyles(theme, accentColor);
   const [students, setStudents] = useState([]);
   const [registrationNumber, setRegistrationNumber] = useState("");
   const [className, setClassName] = useState("");
@@ -41,6 +45,17 @@ export default function TeacherTracking() {
     });
 
     return Object.values(sectionsObj).sort((a, b) => a.title.localeCompare(b.title));
+  };
+
+  const [expandedSections, setExpandedSections] = useState({});
+  const [expandedStudents, setExpandedStudents] = useState({});
+
+  const toggleSection = (sectionTitle) => {
+    setExpandedSections(prev => ({ ...prev, [sectionTitle]: !prev[sectionTitle] }));
+  };
+
+  const toggleStudent = (studentId) => {
+    setExpandedStudents(prev => ({ ...prev, [studentId]: !prev[studentId] }));
   };
 
   // Fetch initial list of students
@@ -104,32 +119,6 @@ export default function TeacherTracking() {
     }
   };
 
-  const renderStudentItem = ({ item }) => (
-    <View style={styles.card}>
-      <Text style={styles.cardTitle}>Reg. No: {item.registration_number} ({item.class_name})</Text>
-      <View style={styles.cardRow}>
-        <Text style={styles.cardLabel}>Username:</Text>
-        <Text style={styles.cardValue} selectable>{item.username}</Text>
-      </View>
-      <View style={styles.cardRow}>
-        <Text style={styles.cardLabel}>Password:</Text>
-        <Text style={styles.cardValue} selectable>{item.password || '******'}</Text>
-      </View>
-
-      <SoundButton 
-          style={{marginTop: 12, padding: 12, backgroundColor: theme.primary, borderRadius: 8, alignItems: 'center'}}
-          onPress={() => {
-              setActiveStudentId(item.user_id);
-              setActiveStudentProfile({ registration_number: item.registration_number });
-              router.push("/part_a1/StudentRegistration");
-          }}
-      >
-          <Text style={{color: theme.buttonText, fontWeight: 'bold'}}>View/Edit Student's Card</Text>
-      </SoundButton>
-
-    </View>
-  );
-
   return (
     <View style={styles.container}>
       <StatusBar barStyle={theme.isDark ? "light-content" : "dark-content"} />
@@ -142,73 +131,116 @@ export default function TeacherTracking() {
         <Text style={styles.headerTitle}>Class Registry</Text>
       </View>
 
-      {/* Input Section */}
-      <View style={styles.inputSection}>
-        <Text style={styles.sectionTitle}>Add New Student</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Class Name (e.g., Grade 10-A)"
-          placeholderTextColor={theme.secondaryText}
-          value={className}
-          onChangeText={setClassName}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Registration Number (e.g., REG101)"
-          placeholderTextColor={theme.secondaryText}
-          value={registrationNumber}
-          onChangeText={setRegistrationNumber}
-        />
-        <SoundButton
-          style={styles.addBtn}
-          onPress={handleAddStudent}
-          disabled={adding}
-        >
-          {adding ? (
-            <ActivityIndicator color={theme.buttonText} />
-          ) : (
-            <Text style={styles.addBtnText}>Add Student & Generate Login</Text>
-          )}
-        </SoundButton>
-      </View>
-
-      <View style={styles.divider} />
-
-      {/* List Section */}
-      <View style={styles.listSection}>
-        <Text style={styles.sectionTitle}>
-          Registered Students ({students.length})
-        </Text>
-        
-        {loading ? (
-          <ActivityIndicator size="large" color={theme.primary} style={{ marginTop: 20 }} />
-        ) : (
-          <SectionList
-            sections={getSections()}
-            keyExtractor={(item, index) => item.username + index}
-            renderItem={renderStudentItem}
-            renderSectionHeader={({ section: { title, teacher } }) => (
-              <View style={styles.sectionHeader}>
-                <View>
-                  <Text style={styles.sectionTitleText}>{title}</Text>
-                  <Text style={styles.sectionTeacherText}>Oversight: {teacher}</Text>
-                </View>
-                <View style={styles.sectionDivider} />
-              </View>
-            )}
-            contentContainerStyle={styles.listContent}
-            stickySectionHeadersEnabled={true}
-            ListEmptyComponent={
-              <Text style={styles.emptyText}>No students registered yet.</Text>
-            }
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 60 }}>
+        {/* Input Section */}
+        <View style={styles.inputSection}>
+          <Text style={styles.sectionTitle}>Add New Student</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Class Name (e.g., Grade 10-A)"
+            placeholderTextColor={theme.secondaryText}
+            value={className}
+            onChangeText={setClassName}
           />
-        )}
-      </View>
+          <TextInput
+            style={styles.input}
+            placeholder="Registration Number (e.g., REG101)"
+            placeholderTextColor={theme.secondaryText}
+            value={registrationNumber}
+            onChangeText={setRegistrationNumber}
+          />
+          <GemButton
+            gemType="jade"
+            onPress={handleAddStudent}
+            disabled={adding}
+          >
+            {adding ? (
+              <ActivityIndicator color={theme.buttonText} />
+            ) : (
+              <Text style={styles.addBtnText}>ADD STUDENT</Text>
+            )}
+          </GemButton>
+        </View>
+
+        <View style={styles.divider} />
+
+        {/* List Section */}
+        <View style={styles.listSection}>
+          <Text style={styles.sectionTitle}>
+            Registered Students ({students.length})
+          </Text>
+          
+          {loading ? (
+            <ActivityIndicator size="large" color={accentColor} style={{ marginTop: 20 }} />
+          ) : (
+            getSections().map((section) => (
+              <View key={section.title} style={styles.sectionWrapper}>
+                <SoundButton 
+                  onPress={() => toggleSection(section.title)}
+                  style={[styles.sectionHeaderAccordion, { backgroundColor: theme.surface }]}
+                >
+                  <View style={styles.sectionHeaderInfo}>
+                    <Text style={styles.sectionTitleText}>{section.title}</Text>
+                    <Text style={styles.studentCount}>({section.data.length} Students)</Text>
+                  </View>
+                  <Text style={[styles.chevronIcon, { color: accentColor }]}>
+                    {expandedSections[section.title] ? "▲" : "▼"}
+                  </Text>
+                </SoundButton>
+
+                {expandedSections[section.title] && (
+                  <View style={styles.studentList}>
+                    {section.data.map((student) => (
+                      <View key={student.user_id} style={styles.studentItemWrapper}>
+                        <SoundButton 
+                          onPress={() => toggleStudent(student.user_id)}
+                          style={[styles.studentRow, { backgroundColor: theme.card }]}
+                        >
+                          <Text style={styles.studentNameText}>{student.username}</Text>
+                          <Text style={styles.studentIdLabel}>UID: {student.registration_number}</Text>
+                        </SoundButton>
+
+                        {expandedStudents[student.user_id] && (
+                          <View style={[styles.studentDetailCard, { backgroundColor: theme.card, borderColor: theme.border }]}>
+                            <View style={styles.detailRow}>
+                              <Text style={styles.detailLabel}>USERNAME:</Text>
+                              <Text style={[styles.detailValue, { color: accentColor }]} selectable>{student.username}</Text>
+                            </View>
+                            <View style={styles.detailRow}>
+                              <Text style={styles.detailLabel}>PASSWORD:</Text>
+                              <Text style={[styles.detailValue, { color: accentColor }]} selectable>{student.plain_password || student.password || 'pass123'}</Text>
+                            </View>
+
+                            <GemButton 
+                              style={{marginTop: 16}}
+                              gemType="jade"
+                              onPress={() => {
+                                  setActiveStudentId(student.user_id);
+                                  setActiveStudentProfile({ registration_number: student.registration_number });
+                                  router.push("/part_a1/StudentRegistration");
+                              }}
+                            >
+                              <Text style={{color: theme.buttonText, fontWeight: '700', fontSize: 12, letterSpacing: 2}}>VIEW/EDIT CARD</Text>
+                            </GemButton>
+                          </View>
+                        )}
+                      </View>
+                    ))}
+                  </View>
+                )}
+              </View>
+            ))
+          )}
+          {students.length === 0 && !loading && (
+            <Text style={styles.emptyText}>No students registered yet.</Text>
+          )}
+        </View>
+      </ScrollView>
     </View>
   );
 }
 
-const getStyles = (theme) => StyleSheet.create({
+const getStyles = (theme, accentColor) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.background,
@@ -228,12 +260,14 @@ const getStyles = (theme) => StyleSheet.create({
   backText: {
     color: theme.secondaryText,
     fontSize: 14,
-    fontWeight: "bold",
+    fontWeight: "300",
+    fontFamily: "Jost_300Light",
   },
   headerTitle: {
     color: theme.text,
     fontSize: 20,
-    fontWeight: "800",
+    fontWeight: "600",
+    fontFamily: "Jost_600SemiBold",
   },
   inputSection: {
     padding: 20,
@@ -241,19 +275,23 @@ const getStyles = (theme) => StyleSheet.create({
   sectionTitle: {
     color: theme.text,
     fontSize: 16,
-    fontWeight: "700",
+    fontWeight: "600",
     marginBottom: 12,
+    fontFamily: "Jost_600SemiBold",
   },
   input: {
-    backgroundColor: theme.inputBackground,
-    borderWidth: 1,
-    borderColor: theme.inputBorder,
-    borderRadius: 8,
+    backgroundColor: 'transparent',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    borderColor: accentColor + '80',
     color: theme.text,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    fontSize: 15,
-    marginBottom: 12,
+    paddingHorizontal: 8,
+    paddingVertical: 12,
+    fontSize: 14,
+    marginBottom: 20,
+    fontFamily: "Jost_400Regular",
   },
   addBtn: {
     backgroundColor: theme.primary,
@@ -263,8 +301,10 @@ const getStyles = (theme) => StyleSheet.create({
   },
   addBtnText: {
     color: theme.buttonText,
-    fontSize: 15,
-    fontWeight: "bold",
+    fontSize: 12,
+    fontWeight: "600",
+    letterSpacing: 2,
+    fontFamily: "Jost_600SemiBold",
   },
   divider: {
     height: 1,
@@ -278,62 +318,79 @@ const getStyles = (theme) => StyleSheet.create({
   listContent: {
     paddingBottom: 40,
   },
-  card: {
-    backgroundColor: theme.card,
-    borderWidth: 1,
-    borderColor: theme.border,
-    borderRadius: 10,
+  sectionWrapper: {
+    marginBottom: 8,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  sectionHeaderAccordion: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     padding: 16,
-    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.05)',
   },
-  cardTitle: {
+  sectionHeaderInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  studentCount: {
+    fontSize: 10,
+    color: theme.secondaryText,
+    fontFamily: 'Jost_400Regular',
+  },
+  chevronIcon: {
+    fontSize: 10,
+  },
+  studentList: {
+    paddingLeft: 12,
+    paddingRight: 12,
+    paddingTop: 8,
+    paddingBottom: 8,
+  },
+  studentItemWrapper: {
+    marginBottom: 4,
+  },
+  studentRow: {
+    padding: 12,
+    borderRadius: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  studentNameText: {
+    fontSize: 14,
     color: theme.text,
-    fontSize: 15,
-    fontWeight: "bold",
-    marginBottom: 12,
+    fontFamily: 'Jost_400Regular',
   },
-  cardRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 6,
-  },
-  cardLabel: {
+  studentIdLabel: {
+    fontSize: 10,
     color: theme.secondaryText,
-    width: 80,
-    fontSize: 13,
+    fontFamily: 'Jost_300Light',
   },
-  cardValue: {
-    color: theme.accent, // A sleek color to emphasize credentials
-    fontSize: 14,
-    fontWeight: "600",
-    letterSpacing: 0.5,
-  },
-  emptyText: {
-    color: theme.secondaryText,
-    textAlign: "center",
-    marginTop: 40,
-    fontSize: 14,
-  },
-  sectionHeader: {
-    backgroundColor: theme.background,
-    paddingVertical: 12,
-  },
-  sectionTitleText: {
-    color: theme.primary,
-    fontSize: 14,
-    fontWeight: "800",
-    textTransform: "uppercase",
-    letterSpacing: 1,
-  },
-  sectionTeacherText: {
-    color: theme.secondaryText,
-    fontSize: 11,
-    fontWeight: "600",
+  studentDetailCard: {
     marginTop: 2,
+    padding: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderStyle: 'dashed',
   },
-  sectionDivider: {
-    height: 1,
-    backgroundColor: theme.border,
-    marginTop: 12,
+  detailRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  detailLabel: {
+    fontSize: 10,
+    color: theme.secondaryText,
+    letterSpacing: 1,
+    fontFamily: 'Jost_600SemiBold',
+  },
+  detailValue: {
+    fontSize: 12,
+    fontWeight: '700',
+    fontFamily: 'Jost_600SemiBold',
   },
 });

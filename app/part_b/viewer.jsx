@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, ActivityIndicator, TouchableOpacity, Text, StatusBar } from "react-native";
+import { View, StyleSheet, ActivityIndicator, Text, StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";
-import { useVideoPlayer, VideoView } from "expo-video";
+import PremiumBackground from "../../components/PremiumBackground";
 import { useRouter } from "expo-router";
 import { useTheme, useAuth, API_URL } from "../../context/GlobalContext";
 import { Ionicons } from "@expo/vector-icons";
+import SoundButton from "../../components/SoundButton";
 
 export default function ViewCardScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
   const { user, profile, setProfile } = useAuth();
   const [htmlUri, setHtmlUri] = useState(null);
   const [loading, setLoading] = useState(true);
-  const player = useVideoPlayer(require("../../assets/images/Background_animation_forest.mp4"), (p) => {
-    p.loop = true;
-    p.play();
-    p.muted = true;
-  });
 
   const fetchProfile = async () => {
     const targetId = profile?.user_id || user?.id;
@@ -25,7 +22,7 @@ export default function ViewCardScreen() {
       const res = await fetch(`${API_URL}/students/profile/${targetId}`);
       const data = await res.json();
       if (data && data.registration_number) {
-        setProfile(data); // Refresh context with latest DB state
+        setProfile(data);
       }
     } catch (e) {}
   };
@@ -41,32 +38,22 @@ export default function ViewCardScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Premium Video Background */}
-      <VideoView
-        player={player}
-        style={StyleSheet.absoluteFill}
-        contentFit="cover"
-        nativeControls={false}
-      />
-      {/* Dark tint overlay for readability */}
-      <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.65)' }]} />
+      <PremiumBackground />
+      <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.05)' }]} />
 
       <SafeAreaView style={{ flex: 1 }}>
-        <StatusBar barStyle="light-content" />
+        <StatusBar barStyle={theme.isDark ? "light-content" : "dark-content"} />
         
-        {/* Transparent Modern Header */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={24} color="#fff" />
-            <Text style={[styles.backText, { color: "#fff" }]}> Back</Text>
-          </TouchableOpacity>
+          <SoundButton onPress={() => router.back()} style={styles.backButton}>
+            <Ionicons name="chevron-back" size={20} color={theme.text} />
+          </SoundButton>
           
-          <Text style={[styles.headerTitle, { color: "#fff" }]}>Holistic Progress Card</Text>
+          <Text style={[styles.headerTitle, { color: theme.text }]}>REALTIME_PREVIEW</Text>
 
-          <TouchableOpacity onPress={() => router.push("/part_b/transition")} style={styles.nextBtn}>
-            <Text style={{ color: "#fff", fontWeight: 'bold' }}>Next </Text>
-            <Ionicons name="chevron-forward" size={18} color="#fff" />
-          </TouchableOpacity>
+          <SoundButton onPress={() => router.push("/part_b/transition")} style={styles.nextBtn}>
+            <Ionicons name="chevron-forward" size={20} color={theme.text} />
+          </SoundButton>
         </View>
 
         <View style={styles.webviewContainer}>
@@ -81,13 +68,13 @@ export default function ViewCardScreen() {
             />
           ) : (
             <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color="#fff" />
+              <ActivityIndicator size="large" color={theme.accent} />
             </View>
           )}
 
           {loading && (
             <View style={[StyleSheet.absoluteFill, styles.loadingOverlay]}>
-              <ActivityIndicator size="large" color="#fff" />
+              <ActivityIndicator size="large" color={theme.accent} />
             </View>
           )}
         </View>
@@ -99,41 +86,46 @@ export default function ViewCardScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: 'transparent',
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    marginTop: 10,
+    paddingHorizontal: 24,
+    paddingVertical: 20,
   },
   backButton: {
-    flexDirection: "row",
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: "center",
     alignItems: "center",
-    padding: 8,
-  },
-  backText: {
-    fontSize: 16,
-    fontWeight: "700",
+    backgroundColor: 'rgba(255,255,255,0.05)',
   },
   headerTitle: {
-    fontSize: 14,
-    fontWeight: "800",
-    textTransform: "uppercase",
-    letterSpacing: 2,
+    fontSize: 12,
+    fontFamily: "Jost_600SemiBold",
+    letterSpacing: 4,
+    opacity: 0.6,
   },
   nextBtn: {
-    flexDirection: "row",
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: "center",
     alignItems: "center",
-    padding: 8,
+    backgroundColor: 'rgba(255,255,255,0.05)',
   },
   webviewContainer: {
     flex: 1,
-  },
-  webview: {
-    flex: 1,
+    marginHorizontal: 16,
+    marginBottom: 20,
+    borderRadius: 24,
+    overflow: 'hidden',
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.1)',
   },
   loadingContainer: {
     flex: 1,
@@ -144,5 +136,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     zIndex: 10,
+    backgroundColor: 'rgba(255,255,255,0.02)',
   },
 });

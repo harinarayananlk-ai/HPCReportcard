@@ -24,9 +24,323 @@ import Animated, {
   ZoomIn
 } from "react-native-reanimated";
 import SoundButton from "../../components/SoundButton";
+import PremiumBackground from "../../components/PremiumBackground";
 import { useTheme, useAuth, API_URL } from "../../context/GlobalContext";
+import { gems } from "../../colour_themes";
 
 const { width: SCREEN_W } = Dimensions.get("window");
+
+// ── HELPER COMPONENTS ──
+
+const SectionTitle = ({ icon, title, styles, theme }) => {
+  return (
+    <View style={styles.sectionHeader}>
+      <Ionicons name={icon} size={14} color={theme.accent} />
+      <Text style={[styles.sectionText, { color: theme.text }]}>{title.toUpperCase()}</Text>
+    </View>
+  );
+};
+
+const FieldLabel = ({ label, styles, theme }) => {
+  return <Text style={[styles.label, { color: theme.secondaryText }]}>{label}</Text>;
+};
+
+const getStyles = (theme) => StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  header: {
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0,0,0,0.05)',
+  },
+  headerTop: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  headerInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  headerIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+  },
+  headerTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    letterSpacing: 2,
+    fontFamily: "Jost_600SemiBold",
+  },
+  headerSubtitle: {
+    fontSize: 10,
+    fontWeight: "300",
+    opacity: 0.8,
+    fontFamily: "Jost_300Light",
+  },
+  headerActions: {
+    flexDirection: "row",
+    gap: 8,
+  },
+  actionBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.05)",
+  },
+  scroll: {
+    flex: 1,
+    padding: 20,
+  },
+  section: {
+    marginBottom: 32,
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 16,
+    gap: 8,
+  },
+  sectionText: {
+    fontSize: 11,
+    fontWeight: "600",
+    letterSpacing: 2,
+    fontFamily: "Jost_600SemiBold",
+  },
+  photoGrid: {
+    flexDirection: "row",
+    gap: 12,
+  },
+  photoBox: {
+    flex: 1,
+    height: 110,
+    borderRadius: 16,
+    borderWidth: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
+  },
+  fullImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  photoLabel: {
+    fontSize: 9,
+    fontWeight: "600",
+    marginTop: 8,
+    color: "#71717a",
+    fontFamily: "Jost_600SemiBold",
+    letterSpacing: 1,
+  },
+  fieldRow: {
+    flexDirection: "row",
+    gap: 12,
+  },
+  flex1: {
+    flex: 1,
+  },
+  label: {
+    fontSize: 10,
+    fontWeight: "600",
+    marginBottom: 8,
+    letterSpacing: 1.5,
+    fontFamily: "Jost_600SemiBold",
+    textTransform: "uppercase",
+  },
+  textInput: {
+    height: 48,
+    borderRadius: 12,
+    borderWidth: 1,
+    paddingHorizontal: 16,
+    fontSize: 14,
+    fontFamily: "Jost_400Regular",
+  },
+  fieldMargin: {
+    marginTop: 16,
+  },
+  glassCard: {
+    borderRadius: 20,
+    borderWidth: 1,
+    padding: 8,
+  },
+  nodeInputRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 12,
+    height: 44,
+  },
+  nodeIndex: {
+    fontSize: 10,
+    fontWeight: "900",
+    marginRight: 12,
+  },
+  nodeInput: {
+    flex: 1,
+    fontSize: 13,
+    fontFamily: "Jost_400Regular",
+  },
+  divider: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 40,
+    gap: 10,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: "rgba(0,0,0,0.05)",
+  },
+  dividerText: {
+    fontSize: 9,
+    color: "#52525b",
+    fontWeight: "600",
+    letterSpacing: 3,
+    fontFamily: "Jost_600SemiBold",
+  },
+  previewContainer: {
+    alignItems: "center",
+    marginBottom: 40,
+  },
+  miniCard: {
+    width: 280,
+    padding: 20,
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.2,
+    shadowRadius: 15,
+    elevation: 10,
+  },
+  miniCardHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 16,
+  },
+  miniCardTitle: {
+    fontSize: 12,
+    fontWeight: "900",
+    color: "#18181b",
+    letterSpacing: 1,
+  },
+  miniCardAccent: {
+    height: 3,
+    width: 20,
+    marginTop: 4,
+    borderRadius: 2,
+  },
+  miniCardYear: {
+    fontSize: 11,
+    color: "#d4d4d8",
+    fontFamily: "Jost_300Light",
+  },
+  miniCardBody: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 16,
+  },
+  miniCardLeft: {
+    width: '45%',
+    alignItems: "center",
+  },
+  miniAvatarFrame: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: "#f4f4f5",
+    overflow: "hidden",
+    borderWidth: 3,
+    borderColor: "#fff",
+  },
+  miniPlaceholder: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  miniInfoPill: {
+    marginTop: -10,
+    backgroundColor: theme.accent,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 10,
+  },
+  miniInfoText: {
+    color: "#fff",
+    fontSize: 10,
+    fontWeight: "900",
+  },
+  miniCardRight: {
+    width: '45%',
+    gap: 8,
+  },
+  miniGroupFrame: {
+    width: '100%',
+    height: 60,
+    borderRadius: 12,
+    backgroundColor: "#f4f4f5",
+    overflow: "hidden",
+  },
+  miniConnections: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 4,
+  },
+  miniDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: "#e4e4e7",
+  },
+  miniCardFooter: {
+    borderTopWidth: 1,
+    borderTopColor: "#f4f4f5",
+    paddingTop: 12,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  miniFooterText: {
+    fontSize: 7,
+    fontWeight: "900",
+    color: "#a1a1aa",
+    textTransform: "uppercase",
+  },
+  bottomBar: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 24,
+    paddingBottom: Platform.OS === 'ios' ? 40 : 24,
+    borderTopWidth: 1,
+  },
+  nextBtn: {
+    height: 56,
+    borderRadius: 16,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  nextBtnText: {
+    fontSize: 14,
+    fontWeight: "600",
+    letterSpacing: 2,
+    fontFamily: "Jost_600SemiBold",
+  },
+});
+
+// ── MAIN COMPONENT ──
 
 export default function LayoutBuilder() {
   const router = useRouter();
@@ -239,488 +553,199 @@ export default function LayoutBuilder() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
-      <StatusBar barStyle={theme.isDark ? "light-content" : "dark-content"} />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-      >
-        {/* Header */}
-        <Animated.View entering={FadeInUp.duration(600)} style={[styles.header, { backgroundColor: theme.surface }]}>
-          <View style={styles.headerTop}>
-            <View style={styles.headerInfo}>
-              <View style={[styles.headerIcon, { backgroundColor: theme.accent }]}>
-                <Ionicons name="construct-outline" size={16} color={theme.buttonText} />
-              </View>
-              <View>
-                <Text style={[styles.headerTitle, { color: theme.text }]}>LAYOUT_ENGINE_OS</Text>
-                <Text style={[styles.headerSubtitle, { color: theme.secondaryText }]}>Visual Configuration System</Text>
-              </View>
-            </View>
-            <View style={styles.headerActions}>
-              <SoundButton 
-                style={[styles.actionBtn, { backgroundColor: theme.accent + '20' }]} 
-                onPress={handleManualSave}
-              >
-                <Ionicons name="cloud-upload-outline" size={18} color={theme.accent} />
-              </SoundButton>
-            </View>
-          </View>
-        </Animated.View>
-
-        <ScrollView
-          style={styles.scroll}
-          contentContainerStyle={{ paddingBottom: 120 }}
-          showsVerticalScrollIndicator={false}
+    <View style={{ flex: 1 }}>
+      <PremiumBackground gemColor={gems.sapphire} />
+      <SafeAreaView style={[styles.container, { backgroundColor: "transparent" }]}>
+        <StatusBar barStyle={theme.isDark ? "light-content" : "dark-content"} />
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
         >
-          {/* VISUALS SECTION */}
-          <Animated.View entering={FadeInDown.delay(100)} style={styles.section}>
-            <SectionTitle icon="camera-outline" title="Optical_Inputs" theme={theme} styles={styles} />
-            <View style={styles.photoGrid}>
-              <TouchableOpacity
-                style={[styles.photoBox, { backgroundColor: theme.surface, borderColor: theme.border }]}
-                onPress={() => pickImage(setSubjectPhoto)}
-              >
-                {subjectPhoto ? (
-                   <Image source={{ uri: subjectPhoto }} style={styles.fullImage} />
-                ) : (
-                  <>
-                    <Ionicons name="person-add-outline" size={24} color={theme.accent} />
-                    <Text style={styles.photoLabel}>SUBJECT_SCAN</Text>
-                  </>
-                )}
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.photoBox, { backgroundColor: theme.surface, borderColor: theme.border }]}
-                onPress={() => pickImage(setGroupPhoto)}
-              >
-                {groupPhoto ? (
-                   <Image source={{ uri: groupPhoto }} style={styles.fullImage} />
-                ) : (
-                  <>
-                    <Ionicons name="people-outline" size={24} color={theme.accent} />
-                    <Text style={styles.photoLabel}>GROUP_ARRAY</Text>
-                  </>
-                )}
-              </TouchableOpacity>
+          {/* Header */}
+          <Animated.View entering={FadeInUp.duration(600)} style={[styles.header, { backgroundColor: theme.surface }]}>
+            <View style={styles.headerTop}>
+              <View style={styles.headerInfo}>
+                <View style={[styles.headerIcon, { backgroundColor: theme.accent }]}>
+                  <Ionicons name="construct-outline" size={16} color={theme.buttonText} />
+                </View>
+                <View>
+                  <Text style={[styles.headerTitle, { color: theme.text }]}>IDENTITY PROFILE</Text>
+                  <Text style={[styles.headerSubtitle, { color: theme.secondaryText }]}>Profile Configuration</Text>
+                </View>
+              </View>
+              <View style={styles.headerActions}>
+                <SoundButton 
+                  style={[styles.actionBtn, { backgroundColor: theme.accent + '20' }]} 
+                  onPress={handleManualSave}
+                >
+                  <Ionicons name="cloud-upload-outline" size={18} color={theme.accent} />
+                </SoundButton>
+              </View>
             </View>
           </Animated.View>
 
-          {/* IDENTITY SECTION */}
-          <Animated.View entering={FadeInDown.delay(200)} style={styles.section}>
-            <SectionTitle icon="finger-print-outline" title="Identity_Markers" theme={theme} styles={styles} />
-            <View style={styles.fieldRow}>
-              <View style={styles.flex1}>
-                <FieldLabel label="AGE_PARAMETER" styles={styles} theme={theme} />
-                <TextInput
-                  style={[styles.textInput, { backgroundColor: theme.inputBackground, borderColor: theme.inputBorder, color: theme.text }]}
-                  placeholder="00"
-                  placeholderTextColor={theme.secondaryText + "50"}
-                  keyboardType="numeric"
-                  value={age}
-                  onChangeText={setAge}
-                />
+          <ScrollView
+            style={styles.scroll}
+            contentContainerStyle={{ paddingBottom: 120 }}
+            showsVerticalScrollIndicator={false}
+          >
+            {/* VISUALS SECTION */}
+            <Animated.View entering={FadeInDown.delay(100)} style={styles.section}>
+              <SectionTitle icon="camera-outline" title="Visuals" theme={theme} styles={styles} />
+              <View style={styles.photoGrid}>
+                <TouchableOpacity
+                  style={[styles.photoBox, { backgroundColor: theme.surface, borderColor: theme.border }]}
+                  onPress={() => pickImage(setSubjectPhoto)}
+                >
+                  {subjectPhoto ? (
+                    <Image source={{ uri: subjectPhoto }} style={styles.fullImage} />
+                  ) : (
+                    <>
+                      <Ionicons name="person-add-outline" size={24} color={theme.accent} />
+                      <Text style={styles.photoLabel}>SUBJECT PORTRAIT</Text>
+                    </>
+                  )}
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.photoBox, { backgroundColor: theme.surface, borderColor: theme.border }]}
+                  onPress={() => pickImage(setGroupPhoto)}
+                >
+                  {groupPhoto ? (
+                    <Image source={{ uri: groupPhoto }} style={styles.fullImage} />
+                  ) : (
+                    <>
+                      <Ionicons name="people-outline" size={24} color={theme.accent} />
+                      <Text style={styles.photoLabel}>GROUP PORTRAIT</Text>
+                    </>
+                  )}
+                </TouchableOpacity>
               </View>
-              <View style={styles.flex1}>
-                <FieldLabel label="TEMPORAL_ID (DOB)" styles={styles} theme={theme} />
-                <TextInput
-                  style={[styles.textInput, { backgroundColor: theme.inputBackground, borderColor: theme.inputBorder, color: theme.text }]}
-                  placeholder="DD.MM.YYYY"
-                  placeholderTextColor={theme.secondaryText + "50"}
-                  value={dob}
-                  onChangeText={setDob}
-                />
-              </View>
-            </View>
-            <View style={styles.fieldMargin}>
-              <FieldLabel label="GEOSPATIAL_COORD" styles={styles} theme={theme} />
-              <TextInput
-                style={[styles.textInput, { backgroundColor: theme.inputBackground, borderColor: theme.inputBorder, color: theme.text }]}
-                placeholder="CITY / SECTOR"
-                placeholderTextColor={theme.secondaryText + "50"}
-                value={location}
-                onChangeText={setLocation}
-              />
-            </View>
-          </Animated.View>
+            </Animated.View>
 
-          {/* NETWORK SECTION */}
-          <Animated.View entering={FadeInDown.delay(300)} style={styles.section}>
-            <SectionTitle icon="git-network-outline" title="Neural_Nodes" theme={theme} styles={styles} />
-            <View style={[styles.glassCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-              {connections.map((c, i) => (
-                <View key={i} style={styles.nodeInputRow}>
-                   <Text style={[styles.nodeIndex, { color: theme.accent }]}>0{i+1}</Text>
-                   <TextInput
-                    style={[styles.nodeInput, { color: theme.text }]}
-                    placeholder={`NODE_IDENTIFIER_0${i + 1}`}
-                    placeholderTextColor={theme.secondaryText + "40"}
-                    value={c}
-                    onChangeText={(v) => updateConnection(i, v)}
+            {/* IDENTITY SECTION */}
+            <Animated.View entering={FadeInDown.delay(200)} style={styles.section}>
+              <SectionTitle icon="finger-print-outline" title="Identity Details" theme={theme} styles={styles} />
+              <View style={styles.fieldRow}>
+                <View style={styles.flex1}>
+                  <FieldLabel label="AGE" styles={styles} theme={theme} />
+                  <TextInput
+                    style={[styles.textInput, { backgroundColor: theme.inputBackground, borderColor: theme.inputBorder, color: theme.text }]}
+                    placeholder="00"
+                    placeholderTextColor={theme.secondaryText + "50"}
+                    keyboardType="numeric"
+                    value={age}
+                    onChangeText={setAge}
                   />
                 </View>
-              ))}
+                <View style={styles.flex1}>
+                  <FieldLabel label="DATE OF BIRTH" styles={styles} theme={theme} />
+                  <TextInput
+                    style={[styles.textInput, { backgroundColor: theme.inputBackground, borderColor: theme.inputBorder, color: theme.text }]}
+                    placeholder="DD.MM.YYYY"
+                    placeholderTextColor={theme.secondaryText + "50"}
+                    value={dob}
+                    onChangeText={setDob}
+                  />
+                </View>
+              </View>
+              <View style={styles.fieldMargin}>
+                <FieldLabel label="LOCATION" styles={styles} theme={theme} />
+                <TextInput
+                  style={[styles.textInput, { backgroundColor: theme.inputBackground, borderColor: theme.inputBorder, color: theme.text }]}
+                  placeholder="CITY / SECTOR"
+                  placeholderTextColor={theme.secondaryText + "50"}
+                  value={location}
+                  onChangeText={setLocation}
+                />
+              </View>
+            </Animated.View>
+
+            {/* NETWORK SECTION */}
+            <Animated.View entering={FadeInDown.delay(300)} style={styles.section}>
+              <SectionTitle icon="git-network-outline" title="Connections" theme={theme} styles={styles} />
+              <View style={[styles.glassCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+                {connections.map((c, i) => (
+                  <View key={i} style={styles.nodeInputRow}>
+                    <Text style={[styles.nodeIndex, { color: theme.accent }]}>0{i+1}</Text>
+                    <TextInput
+                      style={[styles.nodeInput, { color: theme.text }]}
+                      placeholder={`CONNECTION 0${i + 1}`}
+                      placeholderTextColor={theme.secondaryText + "40"}
+                      value={c}
+                      onChangeText={(v) => updateConnection(i, v)}
+                    />
+                  </View>
+                ))}
+              </View>
+            </Animated.View>
+
+            {/* PREVIEW RENDERING */}
+            <View style={styles.divider}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>REALTIME PREVIEW</Text>
+              <View style={styles.dividerLine} />
             </View>
-          </Animated.View>
 
-          {/* PREVIEW RENDERING */}
-          <View style={styles.divider}>
-             <View style={styles.dividerLine} />
-             <Text style={styles.dividerText}>REALTIME_RENDER_PREVIEW</Text>
-             <View style={styles.dividerLine} />
-          </View>
-
-          <Animated.View entering={ZoomIn.delay(400)} style={styles.previewContainer}>
-             <View style={[styles.miniCard, { backgroundColor: "#fff" }]}>
+            <Animated.View entering={ZoomIn.delay(400)} style={styles.previewContainer}>
+              <View style={[styles.miniCard, { backgroundColor: "#fff" }]}>
                 <View style={styles.miniCardHeader}>
-                   <View>
-                      <Text style={styles.miniCardTitle}>IDENTITY_REPORT</Text>
-                      <View style={[styles.miniCardAccent, { backgroundColor: theme.accent }]} />
-                   </View>
-                   <Text style={styles.miniCardYear}>{currentYear}</Text>
+                  <View>
+                    <Text style={styles.miniCardTitle}>IDENTITY_REPORT</Text>
+                    <View style={[styles.miniCardAccent, { backgroundColor: theme.accent }]} />
+                  </View>
+                  <Text style={styles.miniCardYear}>{currentYear}</Text>
                 </View>
                 
                 <View style={styles.miniCardBody}>
-                   <View style={styles.miniCardLeft}>
-                      <View style={styles.miniAvatarFrame}>
-                        {subjectPhoto ? <Image source={{ uri: subjectPhoto }} style={styles.fullImage} /> : <View style={styles.miniPlaceholder}><Text>👤</Text></View>}
-                      </View>
-                      <View style={styles.miniInfoPill}>
-                         <Text style={styles.miniInfoText}>{age || "00"}</Text>
-                      </View>
-                   </View>
-                   <View style={styles.miniCardRight}>
-                      <View style={styles.miniGroupFrame}>
-                        {groupPhoto ? <Image source={{ uri: groupPhoto }} style={styles.fullImage} /> : <View style={styles.miniPlaceholder}><Text>🖼️</Text></View>}
-                      </View>
-                      <View style={styles.miniConnections}>
-                         {connections.map((_, i) => <View key={i} style={styles.miniDot} />)}
-                      </View>
-                   </View>
+                  <View style={styles.miniCardLeft}>
+                    <View style={styles.miniAvatarFrame}>
+                      {subjectPhoto ? (
+                        <Image source={{ uri: subjectPhoto }} style={styles.fullImage} />
+                      ) : (
+                        <View style={styles.miniPlaceholder}>
+                          <Text style={{ fontSize: 24 }}>👤</Text>
+                        </View>
+                      )}
+                    </View>
+                    <View style={styles.miniInfoPill}>
+                      <Text style={styles.miniInfoText}>{age || "00"}</Text>
+                    </View>
+                  </View>
+                  <View style={styles.miniCardRight}>
+                    <View style={styles.miniGroupFrame}>
+                      {groupPhoto ? (
+                        <Image source={{ uri: groupPhoto }} style={styles.fullImage} />
+                      ) : (
+                        <View style={styles.miniPlaceholder}>
+                          <Text style={{ fontSize: 24 }}>🖼️</Text>
+                        </View>
+                      )}
+                    </View>
+                    <View style={styles.miniConnections}>
+                      {connections.map((_, i) => <View key={i} style={styles.miniDot} />)}
+                    </View>
+                  </View>
                 </View>
 
                 <View style={styles.miniCardFooter}>
-                   <Text style={styles.miniFooterText}>{location || "LOCATION_PENDING"}</Text>
-                   <Text style={styles.miniFooterText}>{dob || "TEMPORAL_PENDING"}</Text>
+                  <Text style={styles.miniFooterText}>{location || "LOCATION_PENDING"}</Text>
+                  <Text style={styles.miniFooterText}>{dob || "TEMPORAL_PENDING"}</Text>
                 </View>
-             </View>
+              </View>
+            </Animated.View>
+
+          </ScrollView>
+
+          <Animated.View entering={FadeInUp.delay(500)} style={[styles.bottomBar, { backgroundColor: theme.surface, borderTopColor: theme.border }]}>
+            <SoundButton
+              style={[styles.nextBtn, { backgroundColor: theme.accent }]}
+              onPress={handleNext}
+            >
+              <Text style={[styles.nextBtnText, { color: theme.buttonText }]}>SAVE & NEXT →</Text>
+            </SoundButton>
           </Animated.View>
-
-        </ScrollView>
-
-        <Animated.View entering={FadeInUp.delay(500)} style={[styles.bottomBar, { backgroundColor: theme.surface, borderTopColor: theme.border }]}>
-           <SoundButton
-            style={[styles.nextBtn, { backgroundColor: theme.accent }]}
-            onPress={handleNext}
-          >
-            <Text style={[styles.nextBtnText, { color: theme.buttonText }]}>COMMIT_CHANGES →</Text>
-          </SoundButton>
-        </Animated.View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
-  );
-}
-
-const SectionTitle = ({ icon, title, styles, theme }) => {
-  return (
-    <View style={styles.sectionHeader}>
-      <Ionicons name={icon} size={14} color={theme.accent} />
-      <Text style={[styles.sectionText, { color: theme.text }]}>{title.toUpperCase()}</Text>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
     </View>
   );
-};
-
-const FieldLabel = ({ label, styles, theme }) => {
-  return <Text style={[styles.label, { color: theme.secondaryText }]}>{label}</Text>;
-};
-
-const getStyles = (theme) => StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.05)',
-  },
-  headerTop: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  headerInfo: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  headerIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 12,
-  },
-  headerTitle: {
-    fontSize: 14,
-    fontWeight: "900",
-    letterSpacing: 1,
-    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
-  },
-  headerSubtitle: {
-    fontSize: 10,
-    fontWeight: "600",
-    opacity: 0.7,
-  },
-  headerActions: {
-    flexDirection: "row",
-    gap: 8,
-  },
-  actionBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "rgba(0,0,0,0.05)",
-  },
-  scroll: {
-    flex: 1,
-    padding: 20,
-  },
-  section: {
-    marginBottom: 32,
-  },
-  sectionHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 16,
-    gap: 8,
-  },
-  sectionText: {
-    fontSize: 10,
-    fontWeight: "900",
-    letterSpacing: 2,
-    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
-  },
-  photoGrid: {
-    flexDirection: "row",
-    gap: 12,
-  },
-  photoBox: {
-    flex: 1,
-    height: 110,
-    borderRadius: 16,
-    borderWidth: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    overflow: "hidden",
-  },
-  fullImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
-  photoLabel: {
-    fontSize: 8,
-    fontWeight: "900",
-    marginTop: 8,
-    color: "#71717a",
-    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
-  },
-  fieldRow: {
-    flexDirection: "row",
-    gap: 12,
-  },
-  flex1: {
-    flex: 1,
-  },
-  label: {
-    fontSize: 9,
-    fontWeight: "900",
-    marginBottom: 8,
-    letterSpacing: 1,
-    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
-  },
-  textInput: {
-    height: 48,
-    borderRadius: 12,
-    borderWidth: 1,
-    paddingHorizontal: 16,
-    fontSize: 13,
-    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
-  },
-  fieldMargin: {
-    marginTop: 16,
-  },
-  glassCard: {
-    borderRadius: 20,
-    borderWidth: 1,
-    padding: 8,
-  },
-  nodeInputRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 12,
-    height: 44,
-  },
-  nodeIndex: {
-    fontSize: 10,
-    fontWeight: "900",
-    marginRight: 12,
-  },
-  nodeInput: {
-    flex: 1,
-    fontSize: 12,
-    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
-  },
-  divider: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 40,
-    gap: 10,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: "rgba(0,0,0,0.05)",
-  },
-  dividerText: {
-    fontSize: 8,
-    color: "#52525b",
-    fontWeight: "900",
-    letterSpacing: 2,
-    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
-  },
-  previewContainer: {
-    alignItems: "center",
-    marginBottom: 40,
-  },
-  miniCard: {
-    width: 280,
-    padding: 20,
-    borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.2,
-    shadowRadius: 15,
-    elevation: 10,
-  },
-  miniCardHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 16,
-  },
-  miniCardTitle: {
-    fontSize: 12,
-    fontWeight: "900",
-    color: "#18181b",
-    letterSpacing: 1,
-  },
-  miniCardAccent: {
-    height: 3,
-    width: 20,
-    marginTop: 4,
-    borderRadius: 2,
-  },
-  miniCardYear: {
-    fontSize: 10,
-    color: "#d4d4d8",
-    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
-  },
-  miniCardBody: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 16,
-  },
-  miniCardLeft: {
-    width: '45%',
-    alignItems: "center",
-  },
-  miniAvatarFrame: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: "#f4f4f5",
-    overflow: "hidden",
-    borderWidth: 3,
-    borderColor: "#fff",
-  },
-  miniPlaceholder: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  miniInfoPill: {
-    marginTop: -10,
-    backgroundColor: theme.accent,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 10,
-  },
-  miniInfoText: {
-    color: "#fff",
-    fontSize: 10,
-    fontWeight: "900",
-  },
-  miniCardRight: {
-    width: '45%',
-    gap: 8,
-  },
-  miniGroupFrame: {
-    width: '100%',
-    height: 60,
-    borderRadius: 12,
-    backgroundColor: "#f4f4f5",
-    overflow: "hidden",
-  },
-  miniConnections: {
-    flexDirection: "row",
-    justifyContent: "center",
-    gap: 4,
-  },
-  miniDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: "#e4e4e7",
-  },
-  miniCardFooter: {
-    borderTopWidth: 1,
-    borderTopColor: "#f4f4f5",
-    paddingTop: 12,
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  miniFooterText: {
-    fontSize: 7,
-    fontWeight: "900",
-    color: "#a1a1aa",
-    textTransform: "uppercase",
-  },
-  bottomBar: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    padding: 24,
-    paddingBottom: Platform.OS === 'ios' ? 40 : 24,
-    borderTopWidth: 1,
-  },
-  nextBtn: {
-    height: 56,
-    borderRadius: 16,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  nextBtnText: {
-    fontSize: 14,
-    fontWeight: "900",
-    letterSpacing: 2,
-  },
-});
+}

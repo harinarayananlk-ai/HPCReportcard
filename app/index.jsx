@@ -10,7 +10,10 @@ import {
   Alert,
   ActivityIndicator,
   Dimensions,
+  LogBox,
 } from "react-native";
+
+LogBox.ignoreLogs(['timer exceeded', '6000ms']);
 import Animated, { 
   FadeInDown, 
   FadeInUp, 
@@ -22,10 +25,13 @@ import Animated, {
 } from "react-native-reanimated";
 import DigitBoxes from "../components/DigitBoxes";
 import SoundButton from "../components/SoundButton";
+import GemButton from "../components/GemButton";
+import PremiumBackground from "../components/PremiumBackground";
 import { useTheme, useAuth, API_URL } from "../context/GlobalContext";
 
-import { useVideoPlayer, VideoView } from "expo-video";
+import { Image } from "react-native";
 import { useRef } from "react";
+import Svg, { Rect, Defs, LinearGradient, Stop } from 'react-native-svg';
 
 const { width, height } = Dimensions.get("window");
 
@@ -37,11 +43,6 @@ export default function LoginScreen() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const player = useVideoPlayer(require("../assets/images/Background_animation_forest.mp4"), (p) => {
-    p.loop = true;
-    p.play();
-    p.muted = true;
-  });
   
   // Teacher Explicit Field States
   const [udise, setUdise] = useState("");
@@ -85,25 +86,28 @@ export default function LoginScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.rootContainer}>
       <StatusBar barStyle={theme.isDark ? "light-content" : "dark-content"} />
 
-      {/* Cinematic Video Background */}
-      <VideoView
-        player={player}
-        style={StyleSheet.absoluteFill}
-        contentFit="cover"
-        nativeControls={false}
-      />
-      {/* Glass Overlay for Depth */}
-      <View style={[StyleSheet.absoluteFill, { backgroundColor: theme.isDark ? "rgba(0,0,0,0.5)" : "rgba(255,255,255,0.3)" }]} />
+      <PremiumBackground gemColor={theme.accent} />
 
-      <Animated.View 
+      <View style={styles.contentContainer}>
+        <Animated.View 
         entering={FadeInUp.duration(1000).springify()}
         style={styles.headerSection}
       >
         <Text style={styles.brandTitle}>ACADEMIA</Text>
-        <View style={styles.brandLine} />
+        <View style={styles.brandLineWrapper}>
+          <Svg height="2" width="40" preserveAspectRatio="none">
+            <Defs>
+              <LinearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <Stop offset="0%" stopColor="#D4AF37" />
+                <Stop offset="100%" stopColor="#F9E29C" />
+              </LinearGradient>
+            </Defs>
+            <Rect x="0" y="0" width="40" height="2" fill="url(#goldGrad)" />
+          </Svg>
+        </View>
       </Animated.View>
 
       <Animated.View 
@@ -190,10 +194,8 @@ export default function LoginScreen() {
         </Animated.View>
 
         {/* Login Button */}
-        <SoundButton
-          style={[styles.button, { backgroundColor: theme.accent }]}
+        <GemButton
           onPress={() => handleLogin()}
-          activeOpacity={0.8}
           disabled={loading}
         >
           {loading ? (
@@ -201,200 +203,211 @@ export default function LoginScreen() {
           ) : (
              <Text style={styles.buttonText}>LOGIN</Text>
           )}
-        </SoundButton>
-
-        {/* Quick Login - More subtle */}
-        <View style={styles.bypassContainer}>
-          <Text style={styles.bypassHeader}>DEBUG_BYPASS</Text>
-          <View style={styles.bypassRow}>
-            <SoundButton
-              style={[styles.smallBypassBtn, { backgroundColor: theme.surface }]}
-              onPress={() => handleLogin({ username: 's_ladoo', password: 'pass123', role: 'student' })}
-            >
-              <Text style={[styles.smallBypassText, { color: theme.text }]}>LADOO</Text>
-            </SoundButton>
-            
-            <SoundButton
-              style={[styles.smallBypassBtn, { backgroundColor: theme.surface }]}
-              onPress={() => handleLogin({ username: 't_murugan', password: 'pass123', role: 'teacher' })}
-            >
-              <Text style={[styles.smallBypassText, { color: theme.text }]}>MURUGAN</Text>
-            </SoundButton>
-
-            <SoundButton
-              style={[styles.smallBypassBtn, { backgroundColor: theme.surface }]}
-              onPress={() => handleLogin({ username: 'superadmin', password: 'admin123', role: 'superadmin' })}
-            >
-              <Text style={[styles.smallBypassText, { color: theme.text }]}>ADMIN</Text>
-            </SoundButton>
-          </View>
-        </View>
+        </GemButton>
 
       </Animated.View>
+      </View>
+
+      {/* Tiny Bypass Buttons on Sides - Simplified */}
+      <View style={styles.absoluteBypassLeft}>
+        <SoundButton
+          style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0' }]}
+          onPress={() => handleLogin({ username: 's_ladoo', password: 'pass123', role: 'student' })}
+        >
+          <Text style={styles.tinyBypassText}>S</Text>
+        </SoundButton>
+      </View>
+
+      <View style={styles.absoluteBypassLeftRight}>
+        <SoundButton
+          style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]}
+          onPress={() => handleLogin({ username: 't_murugan', password: 'pass123', role: 'teacher' })}
+        >
+          <Text style={styles.tinyBypassText}>T</Text>
+        </SoundButton>
+        <SoundButton
+          style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]}
+          onPress={() => handleLogin({ username: 'superadmin', password: 'admin123', role: 'superadmin' })}
+        >
+          <Text style={styles.tinyBypassText}>A</Text>
+        </SoundButton>
+      </View>
     </View>
   );
 }
 
 const getStyles = (theme) => StyleSheet.create({
-  container: {
+  rootContainer: {
+    flex: 1,
+    backgroundColor: theme.background,
+  },
+  contentContainer: {
     flex: 1,
     justifyContent: "center",
     padding: 24,
-    backgroundColor: theme.background,
   },
   headerSection: {
     alignItems: "center",
-    marginBottom: 40,
+    marginBottom: 48,
   },
   brandTitle: {
-    fontSize: 28,
-    fontWeight: "900",
+    fontSize: 24,
+    fontWeight: "300", // Sleek minimalist thinner font
     color: theme.text,
-    letterSpacing: 4,
-    fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif',
+    letterSpacing: 8,
+    fontFamily: "Jost_300Light",
+    textShadowColor: "rgba(0,0,0,0.2)", // Neutral subtle shadow
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 10,
   },
-  brandLine: {
-    width: 40,
-    height: 4,
-    backgroundColor: theme.accent,
-    marginTop: 8,
-    borderRadius: 2,
+  brandLineWrapper: {
+    marginTop: 12,
+    alignItems: "center",
   },
   card: {
     backgroundColor: theme.glass || theme.card,
-    borderRadius: 24,
+    borderRadius: 16, // Softer less extreme border radius
     padding: 32,
-    borderWidth: 1,
-    borderColor: theme.border,
+    borderWidth: 1, // Gold line
+    borderColor: theme.primary + '80', // Gold highlight
     ...Platform.select({
       ios: {
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 12 },
-        shadowOpacity: 0.2,
-        shadowRadius: 24,
+        shadowColor: theme.isDark ? "#000" : theme.secondaryText,
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.1,
+        shadowRadius: 20,
       },
       android: {
-        elevation: 12,
+        elevation: 4,
       },
     }),
   },
   title: {
-    fontSize: 18,
-    fontWeight: "900",
+    fontSize: 16,
+    fontWeight: "600",
     color: theme.text,
     textAlign: "center",
-    marginBottom: 4,
-    letterSpacing: 2,
-    fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif',
+    marginBottom: 6,
+    letterSpacing: 3,
+    fontFamily: "Jost_600SemiBold",
   },
   subtitle: {
     fontSize: 10,
     color: theme.secondaryText,
     textAlign: "center",
     marginBottom: 32,
-    fontWeight: "600",
+    fontWeight: "400",
     textTransform: "uppercase",
-    letterSpacing: 1,
+    letterSpacing: 2,
+    fontFamily: "Jost_400Regular",
   },
   roleSelector: {
     flexDirection: "row",
-    backgroundColor: theme.background,
-    borderRadius: 14,
-    padding: 4,
-    marginBottom: 32,
+    backgroundColor: 'transparent',
+    borderRadius: 8,
+    padding: 2,
+    marginBottom: 36,
     borderWidth: 1,
-    borderColor: theme.border,
+    borderColor: theme.primary + '50', // Gold highlight
   },
   roleButton: {
     flex: 1,
-    paddingVertical: 12,
-    borderRadius: 10,
+    paddingVertical: 10,
+    borderRadius: 6,
     alignItems: "center",
   },
   activeRoleButton: {
-    backgroundColor: theme.accent,
+    backgroundColor: theme.background,
+    shadowColor: theme.accent, // Frugal sapphire highlight
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.9, // MORE SHINE
+    shadowRadius: 16, // MORE SHINE
+    borderColor: theme.accent, // Subtle sapphire border
+    borderWidth: 1,
   },
   roleText: {
-    fontSize: 10,
-    fontWeight: "800",
+    fontSize: 9,
+    fontWeight: "500",
     color: theme.secondaryText,
-    letterSpacing: 1,
+    letterSpacing: 1.5,
+    fontFamily: "Jost_400Regular",
   },
   activeRoleText: {
-    color: theme.buttonText,
+    color: theme.text,
+    fontWeight: "700",
   },
   inputContainer: {
     marginBottom: 10,
   },
   inputWrapper: {
-    marginBottom: 20,
+    marginBottom: 24,
   },
   inputLabel: {
     fontSize: 9,
-    fontWeight: "900",
+    fontWeight: "600",
     color: theme.secondaryText,
     letterSpacing: 2,
     marginBottom: 8,
-    fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif',
+    fontFamily: "Jost_600SemiBold",
   },
   input: {
-    height: 52,
-    borderWidth: 1,
-    borderColor: theme.inputBorder,
-    borderRadius: 12,
-    paddingHorizontal: 18,
-    backgroundColor: theme.inputBackground,
+    height: 48,
+    borderBottomWidth: 1,
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    borderColor: "#2E5894", // Sapphire Blue Underline
+    paddingHorizontal: 8,
+    backgroundColor: 'transparent',
     color: theme.text,
     fontSize: 14,
-    fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif',
+    fontFamily: "Jost_400Regular",
   },
   button: {
-    paddingVertical: 18,
-    borderRadius: 12,
+    paddingVertical: 16,
+    borderRadius: 8, // Sleek radius
     marginTop: 12,
-    shadowColor: theme.accent,
+    shadowColor: theme.isDark ? "#000" : theme.primary,
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
+    shadowOpacity: 0.2,
+    shadowRadius: 12,
     elevation: 4,
+    backgroundColor: theme.primary,
   },
   buttonText: {
     color: theme.buttonText,
-    fontSize: 13,
+    fontSize: 12,
     textAlign: "center",
-    fontWeight: "900",
-    letterSpacing: 2,
-  },
-  bypassContainer: {
-    marginTop: 32,
-    paddingTop: 24,
-    borderTopWidth: 1,
-    borderTopColor: theme.border,
-    alignItems: "center",
-  },
-  bypassHeader: {
-    fontSize: 8,
-    fontWeight: "900",
-    color: theme.secondaryText,
+    fontWeight: "700",
     letterSpacing: 3,
-    marginBottom: 16,
+    fontFamily: "Jost_600SemiBold",
   },
-  bypassRow: {
-    flexDirection: "row",
-    gap: 12,
+  absoluteBypassLeft: {
+    position: 'absolute',
+    left: 20,
+    bottom: 40,
+    zIndex: 10,
   },
-  smallBypassBtn: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 10,
-    minWidth: 90,
+  absoluteBypassLeftRight: {
+    position: 'absolute',
+    left: 20,
+    bottom: 80,
+    zIndex: 10,
+  },
+  tinyBypassBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: theme.border,
+    borderColor: '#B89336', // Gold border
+    elevation: 0, // Remove shadow
+    shadowOpacity: 0, // Remove shadow
   },
-  smallBypassText: {
-    fontSize: 9,
-    fontWeight: "900",
-    letterSpacing: 1,
+  tinyBypassText: {
+    fontSize: 10,
+    fontWeight: "800",
+    color: '#B89336', // Gold text
   },
 });

@@ -13,6 +13,7 @@
     "dev": "concurrently --raw --kill-others -n \"PY_BACKEND,EXPO\" -c \"magenta,cyan\" \"npm run backend\" \"npm start\""
   },
   "dependencies": {
+    "@expo-google-fonts/jost": "^0.4.2",
     "@expo-google-fonts/outfit": "^0.4.3",
     "@expo/vector-icons": "^15.0.3",
     "@react-native-community/datetimepicker": "8.4.4",

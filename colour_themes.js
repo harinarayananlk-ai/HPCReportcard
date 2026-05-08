@@ -1,74 +1,51 @@
+export const gems = {
+  sapphire: "#2E5894", // Muted B'dazzled Blue
+  emerald: "#2E8B57",  // Sea Green (Matte)
+  jade: "#669966",     // Desaturated Jade
+  topaz: "#C67121",    // Raw Sienna
+  citrine: "#E4D00A",  // Citrine (Muted)
+  ruby: "#962828",     // Dark Matte Red
+  amethyst: "#6F4E37", // Coffee/Deep Purple Muted
+  onyx: "#2F2F2F",     // Matte Charcoal
+  moonstone: "#708090", // Slate Grey
+  pearl: "#E5E4E2",    // Platinum Silver
+};
+
 export const themes = {
-  ebony: {
-    name: "Ebony Black",
-    background: "#050505",
-    surface: "#0f0f0f",
-    card: "#141414",
-    text: "#ffffff",
-    secondaryText: "#a1a1aa",
-    accent: "#ffffff", // Pure white accent for sleek contrast
-    primary: "#ffffff",
-    buttonText: "#000000",
-    border: "rgba(255, 255, 255, 0.1)",
-    inputBackground: "#0a0a0a",
-    inputBorder: "rgba(255, 255, 255, 0.2)",
-    statusBadge: "#1a1a1a",
-    error: "#ff4444",
-    glass: "rgba(20, 20, 20, 0.8)",
-    isDark: true,
-  },
-  white: {
-    name: "Aura White",
-    background: "#ffffff",
-    surface: "#f8f9fa",
-    card: "#ffffff",
-    text: "#1a1a1a",
-    secondaryText: "#71717a",
-    accent: "#000000", // Black accent for minimalism
-    primary: "#000000",
-    buttonText: "#ffffff",
-    border: "#e5e7eb",
-    inputBackground: "#f3f4f6",
-    inputBorder: "#d1d5db",
-    statusBadge: "#f3f4f6",
-    error: "#ef4444",
-    glass: "rgba(255, 255, 255, 0.9)",
+  light: {
+    name: "Light Mode",
+    background: "#F2F2F2", // Matte Bone
+    surface: "#E0E0E0", // Matte Platinum
+    card: "#FFFFFF",
+    text: "#333333",
+    secondaryText: "#777777",
+    accent: "#2E5894", // Muted Sapphire
+    primary: "#B89336", // Matte Gold
+    buttonText: "#FFFFFF",
+    border: "#D1D1D1",
+    inputBackground: "#FFFFFF",
+    inputBorder: "#E0E0E0",
+    statusBadge: "#F2F2F2",
+    error: "#962828",
+    glass: "rgba(255, 255, 255, 0.6)",
     isDark: false,
   },
-  midnight: {
-    name: "Midnight Blue",
-    background: "#010409",
-    surface: "#0d1117",
-    card: "#161b22",
-    text: "#c9d1d9",
-    secondaryText: "#8b949e",
-    accent: "#58a6ff", // Classical GitHub-style blue
-    primary: "#58a6ff",
-    buttonText: "#0d1117",
-    border: "rgba(48, 54, 61, 0.8)",
-    inputBackground: "#0d1117",
-    inputBorder: "#30363d",
-    statusBadge: "#21262d",
-    error: "#f85149",
-    glass: "rgba(13, 17, 23, 0.85)",
-    isDark: true,
-  },
-  mono: {
-    name: "Sleek Mono",
-    background: "#000000",
-    surface: "#111111",
-    card: "#1a1a1a",
-    text: "#ffffff",
+  dark: {
+    name: "Dark Mode",
+    background: "#121212", // Matte Obsidian
+    surface: "#2A2A2A", // Matte Anthracite
+    card: "#1E1E1E", // Deep Charcoal
+    text: "#CCCCCC", // Matte Silver text
     secondaryText: "#888888",
-    accent: "#ffffff",
-    primary: "#ffffff",
-    buttonText: "#000000",
+    accent: "#4A90E2", // Soft Sapphire
+    primary: "#8C733E", // Muted Bronze-Gold
+    buttonText: "#FFFFFF",
     border: "#333333",
-    inputBackground: "#000000",
-    inputBorder: "#444444",
-    statusBadge: "#222222",
-    error: "#ff0000",
-    glass: "rgba(0, 0, 0, 0.8)",
+    inputBackground: "#2A2A2A",
+    inputBorder: "#8C733E",
+    statusBadge: "#2A2A2A",
+    error: "#962828",
+    glass: "rgba(30, 30, 30, 0.9)",
     isDark: true,
   },
 };

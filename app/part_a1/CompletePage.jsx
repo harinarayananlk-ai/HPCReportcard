@@ -12,11 +12,12 @@ import { useTheme, useAuth, API_URL } from "../../context/GlobalContext";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import SoundButton from "../../components/SoundButton";
-import ShootingStars from "../../components/ShootingStars";
+import PremiumBackground from "../../components/PremiumBackground";
 
 const MONTHS = ["Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar"];
 
-const ACCENT = "#ffb347"; // lantern orange — kept intentional regardless of theme
+const ACCENT = "#D4AF37"; // Premium Gold
+const SILVER = "#C0C0C0"; 
 
 export default function AttendancePage() {
   const { theme } = useTheme();
@@ -162,8 +163,9 @@ export default function AttendancePage() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ShootingStars theme={theme} />
+    <View style={{ flex: 1 }}>
+      <PremiumBackground />
+      <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
 
       {/* Header */}
@@ -271,6 +273,7 @@ export default function AttendancePage() {
         <View style={{ height: 40 }} />
       </ScrollView>
     </SafeAreaView>
+    </View>
   );
 }
 
@@ -298,26 +301,22 @@ const getStyles = (theme) => StyleSheet.create({
     fontWeight: "bold",
   },
   title: {
-    color: ACCENT,
-    fontSize: 18,
-    fontWeight: "800",
-    textShadowColor: "orange",
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 8,
+    color: theme.text,
+    fontSize: 20,
+    fontWeight: "300",
+    fontFamily: "Jost_300Light",
+    letterSpacing: 4,
+    textTransform: "uppercase",
   },
   scrollContent: {
     padding: 16,
   },
   card: {
-    backgroundColor: theme.card + "CC", // 80% opacity for glass effect
-    borderRadius: 12,
+    backgroundColor: "rgba(255,255,255,0.05)",
+    borderRadius: 20,
     overflow: "hidden",
-    // Lantern glow effect via shadow (iOS) / elevation (Android)
-    shadowColor: "#ff8c00",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.4,
-    shadowRadius: 20,
-    elevation: 10,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.1)",
   },
   tableRow: {
     flexDirection: "row",
@@ -328,10 +327,10 @@ const getStyles = (theme) => StyleSheet.create({
     borderBottomColor: "#222",
   },
   rowEven: {
-    backgroundColor: "#111",
+    backgroundColor: "rgba(255,255,255,0.03)",
   },
   rowOdd: {
-    backgroundColor: "#141414",
+    backgroundColor: "transparent",
   },
   summaryRow: {
     flexDirection: "row",
@@ -368,22 +367,24 @@ const getStyles = (theme) => StyleSheet.create({
     fontWeight: "600",
   },
   nextSectionBtn: {
-    backgroundColor: "#ffb347",
+    backgroundColor: theme.primary,
     marginHorizontal: 16,
     marginTop: 32,
     paddingVertical: 18,
-    borderRadius: 12,
+    borderRadius: 30, // Pill shape
     alignItems: "center",
-    shadowColor: "#ffb347",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.5,
-    shadowRadius: 10,
-    elevation: 8,
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 5,
   },
   nextSectionBtnText: {
-    color: "#000",
-    fontSize: 16,
-    fontWeight: "800",
-    letterSpacing: 0.5,
+    color: theme.buttonText,
+    fontSize: 14,
+    fontWeight: "600",
+    letterSpacing: 2,
+    fontFamily: "Jost_600SemiBold",
+    textTransform: "uppercase",
   },
 });

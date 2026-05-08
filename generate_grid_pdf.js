@@ -55,10 +55,10 @@ const htmlContent = `
 <html>
 <head>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Playfair+Display:wght@700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;600&family=Outfit:wght@300;400;600&display=swap');
         
         * { box-sizing: border-box; }
-        body { font-family: 'Outfit', sans-serif; margin: 0; padding: 0; background: #fff; color: #333; }
+        body { font-family: 'Jost', sans-serif; margin: 0; padding: 0; background: #fff; color: #1a1a1a; }
         
         .page { 
             width: 210mm; height: 297mm; padding: 15mm; position: relative; overflow: hidden; 
@@ -73,22 +73,24 @@ const htmlContent = `
 
         .content { position: relative; z-index: 1; }
 
-        .header { text-align: center; margin-bottom: 30px; border-bottom: 4px solid #6c5ce7; padding-bottom: 10px; }
-        .header h1 { font-family: 'Playfair Display', serif; font-size: 32px; margin: 0; color: #6c5ce7; text-transform: uppercase; }
+        .header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid #e0e0e0; padding-bottom: 15px; position: relative; }
+        .header::after { content: ''; position: absolute; bottom: -1px; left: 50%; transform: translateX(-50%); width: 40px; height: 3px; background: #D4AF37; }
+        .header h1 { font-family: 'Jost', sans-serif; font-size: 28px; font-weight: 300; margin: 0; color: #1a1a1a; text-transform: uppercase; letter-spacing: 4px; }
 
         .form-grid { 
             display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px;
         }
         .form-box { 
-            border: 1.5px solid #6c5ce7; border-radius: 4px; padding: 10px; background: #fff; min-height: 45px;
+            border: 1px solid #eee; border-radius: 4px; padding: 10px; background: #fff; min-height: 45px;
             display: flex; flex-direction: column; justify-content: center;
         }
-        .label { font-size: 9px; font-weight: 800; color: #6c5ce7; text-transform: uppercase; margin-bottom: 2px; }
+        .label { font-size: 8px; font-weight: 600; color: #999; text-transform: uppercase; margin-bottom: 2px; letter-spacing: 1px; }
         .value { font-size: 14px; font-weight: 600; color: #000; }
 
         .section-title { 
-            background: #6c5ce7; color: #fff; padding: 8px 15px; font-weight: 800; 
-            text-transform: uppercase; font-size: 14px; margin: 25px 0 10px 0; border-radius: 4px;
+            background: #fafafa; color: #444; padding: 10px 15px; font-weight: 600; 
+            text-transform: uppercase; font-size: 11px; margin: 25px 0 10px 0; border-left: 3px solid #D4AF37;
+            letter-spacing: 1.5px;
         }
 
         .full-box { border: 2px solid #333; padding: 15px; font-size: 14px; min-height: 100px; background: #fff; margin-bottom: 15px; position: relative; }
@@ -99,8 +101,9 @@ const htmlContent = `
         .rubric-icon { width: 60px; height: 60px; object-fit: contain; }
 
         .scan-box { 
-            width: 180px; height: 100px; border: 2px dashed #6c5ce7; background: #f9f9ff; 
-            display: flex; align-items: center; justify-content: center; font-size: 10px; color: #6c5ce7; font-weight: bold;
+            width: 180px; height: 100px; border: 1px solid #eee; background: #fdfdfd; 
+            display: flex; align-items: center; justify-content: center; font-size: 9px; color: #bbb; font-weight: 400;
+            text-transform: uppercase; letter-spacing: 1px;
         }
 
         .certificate-page {
@@ -118,10 +121,10 @@ const htmlContent = `
     <div class="page">
         <div class="grid-bg"></div>
         <div class="content" style="text-align: center; margin-top: 60mm;">
-            <img src="${images.cheerful}" style="width: 180px;" />
-            <h1 style="font-family: 'Playfair Display', serif; font-size: 56px; color: #6c5ce7; margin: 20px 0;">HOLISTIC</h1>
-            <h2 style="font-size: 28px; letter-spacing: 8px; color: #333;">PROGRESS CARD</h2>
-            <div style="margin-top: 40mm; font-size: 22px; font-weight: 800;">SESSION 2025 - 2026</div>
+            <img src="${images.cheerful}" style="width: 180px; opacity: 0.8;" />
+            <h1 style="font-family: 'Jost', sans-serif; font-size: 56px; font-weight: 300; color: #1a1a1a; margin: 20px 0; letter-spacing: 10px;">HOLISTIC</h1>
+            <h2 style="font-size: 14px; letter-spacing: 8px; color: #D4AF37; font-weight: 600; text-transform: uppercase;">PROGRESS CARD</h2>
+            <div style="margin-top: 40mm; font-size: 18px; font-weight: 300; letter-spacing: 4px; color: #666;">SESSION 2025 - 2026</div>
         </div>
         <div class="page-num">Page 1</div>
     </div>
@@ -248,7 +251,7 @@ const htmlContent = `
     <!-- PAGE 15: FINAL CERTIFICATE & SCANS -->
     <div class="page certificate-page">
         <div style="z-index: 1;">
-            <h1 style="font-family: 'Playfair Display', serif; font-size: 42px; color: #6c5ce7;">Mastery Completion</h1>
+            <h1 style="font-family: 'Jost', sans-serif; font-size: 42px; font-weight: 300; color: #D4AF37; letter-spacing: 5px;">Mastery Completion</h1>
             <p style="font-size: 18px; margin: 20px 0;">This certifies that</p>
             <h2 style="font-size: 32px; border-bottom: 2px solid #333; display: inline-block; padding: 0 40px;">${studentData.profile.name}</h2>
             <p style="font-size: 18px; margin: 20px 0;">has successfully completed the developmental milestones for</p>

@@ -1,6 +1,7 @@
 import React, { useCallback } from "react";
 import { TouchableOpacity } from "react-native";
 import { createAudioPlayer } from "expo-audio";
+import * as Haptics from "expo-haptics";
 import { useAuth } from "../context/GlobalContext";
 
 const SOUND_FILE = require("../assets/Sounds/notification_sound.mp3");
@@ -25,6 +26,11 @@ export default function SoundButton({ onPress, children, ...props }) {
   
   const handlePress = useCallback(
     async (...args) => {
+      // Trigger subtle haptic feedback
+      if (process.env.EXPO_OS !== 'web') {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      }
+      
       await playNotificationSound(soundEnabled);
       onPress?.(...args);
     },

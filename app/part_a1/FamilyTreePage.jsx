@@ -19,7 +19,7 @@ import {
   View
 } from "react-native";
 import AmbientIcon from "../../components/AmbientIcon";
-import PaperPlaneAnimation from "../../components/PaperPlaneAnimation";
+import PremiumBackground from "../../components/PremiumBackground";
 import SoundButton from "../../components/SoundButton";
 import { API_URL, useAuth, useTheme } from "../../context/GlobalContext";
 
@@ -188,58 +188,6 @@ export default function FamilyTreeScreen() {
       Alert.alert("Success", "Family details saved!");
     } catch (e) {
       Alert.alert("Error", "Failed to save manually.");
-    }
-  };
-
-  const handleExportAndFinish = async () => {
-    if (!user) return router.push("/StudentHomepage");
-    if (selectedDesign === 'original') {
-      return Alert.alert("Maintenance", "The legacy original design is currently under maintenance. Please use the 'Original Cloned' or 'Premium' options.");
-    }
-
-    try {
-      setLoading(true);
-      const exportData = {
-        userId: targetUserId,
-        profileData: targetProfile || profile,
-        design: selectedDesign,
-        timestamp: new Date().toISOString()
-      };
-      const response = await fetch(`${API_URL}/export/pdf`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(exportData)
-      });
-      const result = await response.json();
-      if (!response.ok || result.status === 'error' || !result.fileName) {
-        setLoading(false);
-        return Alert.alert("Export Failed", result.message || "An error occurred during rendering.");
-      }
-      const pdfUrl = `${API_URL.replace('/api', '')}${result.url}`;
-      const localUri = FileSystem.cacheDirectory + result.fileName;
-      const { uri } = await FileSystem.downloadAsync(pdfUrl, localUri);
-      if (Platform.OS === 'android') {
-        const permissions = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
-        if (permissions.granted) {
-          const base64Data = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
-          const finalFileName = result.fileName.endsWith('.pdf') ? result.fileName : `${result.fileName}.pdf`;
-          const newUri = await FileSystem.StorageAccessFramework.createFileAsync(
-            permissions.directoryUri,
-            finalFileName,
-            'application/pdf'
-          );
-          await FileSystem.writeAsStringAsync(newUri, base64Data, { encoding: FileSystem.EncodingType.Base64 });
-          Alert.alert("Success", "Progress Card generated and saved successfully!", [{ text: "Finish", onPress: () => router.push(user?.role === "teacher" || user?.role === "superadmin" ? "/TeacherTracking" : "/StudentHomepage") }]);
-        } else {
-          await Sharing.shareAsync(uri);
-        }
-      } else {
-        await Sharing.shareAsync(uri);
-      }
-      setLoading(false);
-    } catch (err) {
-      setLoading(false);
-      Alert.alert("Export Error", err.message || "Failed to generate PDF.");
     }
   };
 
@@ -481,8 +429,7 @@ export default function FamilyTreeScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={[StyleSheet.absoluteFill, { backgroundColor: theme.background }]} />
-      <PaperPlaneAnimation />
+      <PremiumBackground />
       <StatusBar barStyle="light-content" />
       <View style={{ position: 'absolute', top: 50, left: 20, right: 20, flexDirection: 'row', justifyContent: 'space-between', zIndex: 100 }}>
         <SoundButton style={{ backgroundColor: theme.surface + '90', padding: 10, borderRadius: 12, borderWidth: 1, borderColor: theme.border }} onPress={() => router.back()}>
@@ -851,9 +798,10 @@ const getStyles = (theme) => StyleSheet.create({
   },
   cardMemberName: {
     fontSize: 14,
-    fontWeight: "800",
+    fontWeight: "600",
     color: theme.text,
     textAlign: "center",
+    fontFamily: "Jost_600SemiBold",
   },
   cardBadge: {
     marginTop: 4,
@@ -866,6 +814,7 @@ const getStyles = (theme) => StyleSheet.create({
     fontSize: 10,
     fontWeight: "600",
     color: theme.primary,
+    fontFamily: "Jost_600SemiBold",
   },
 
   /* ── Expanded Overlay ── */
@@ -894,8 +843,10 @@ const getStyles = (theme) => StyleSheet.create({
   },
   expandedTitle: {
     fontSize: 24,
-    fontWeight: "900",
+    fontWeight: "300",
     color: theme.text,
+    fontFamily: "Jost_300Light",
+    letterSpacing: 2,
   },
   expandedContent: {
     alignItems: "center",
@@ -927,23 +878,26 @@ const getStyles = (theme) => StyleSheet.create({
   },
   expandedLabel: {
     alignSelf: "flex-start",
-    fontSize: 12,
-    fontWeight: "700",
+    fontSize: 10,
+    fontWeight: "600",
     color: theme.secondaryText,
     marginBottom: 6,
     marginLeft: 4,
     textTransform: "uppercase",
+    letterSpacing: 1,
+    fontFamily: "Jost_600SemiBold",
   },
   expandedInput: {
     width: "100%",
     backgroundColor: theme.inputBackground,
     borderWidth: 1,
     borderColor: theme.border,
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 14,
     fontSize: 16,
     color: theme.text,
     marginBottom: 16,
+    fontFamily: "Jost_400Regular",
   },
   expandedTextArea: {
     height: 80,
@@ -970,8 +924,11 @@ const getStyles = (theme) => StyleSheet.create({
   },
   expandedDoneText: {
     color: theme.buttonText,
-    fontSize: 16,
-    fontWeight: "900",
+    fontSize: 14,
+    fontWeight: "600",
+    textTransform: "uppercase",
+    letterSpacing: 2,
+    fontFamily: "Jost_600SemiBold",
   },
 
   /* ── Sibling fixed input box ── */
@@ -1025,15 +982,17 @@ const getStyles = (theme) => StyleSheet.create({
     paddingHorizontal: 6,
   },
   sibTitle: {
-    fontWeight: "700",
-    fontSize: 14,
+    fontWeight: "600",
+    fontSize: 12,
     color: theme.text,
+    fontFamily: "Jost_600SemiBold",
+    letterSpacing: 1,
   },
   sibInput: {
     width: "100%",
     borderWidth: 1,
     borderColor: theme.border,
-    borderRadius: 6,
+    borderRadius: 8,
     backgroundColor: theme.inputBackground,
     textAlign: "center",
     paddingVertical: 6,
@@ -1041,6 +1000,7 @@ const getStyles = (theme) => StyleSheet.create({
     fontSize: 14,
     color: theme.text,
     marginBottom: 6,
+    fontFamily: "Jost_400Regular",
   },
 
   /* ── Floating buttons ── */
@@ -1071,8 +1031,11 @@ const getStyles = (theme) => StyleSheet.create({
   },
   nextBtnText: {
     color: theme.buttonText,
-    fontWeight: "800",
-    fontSize: 15,
+    fontWeight: "600",
+    fontSize: 14,
+    textTransform: "uppercase",
+    letterSpacing: 2,
+    fontFamily: "Jost_600SemiBold",
   },
 
   /* ── Modal ── */

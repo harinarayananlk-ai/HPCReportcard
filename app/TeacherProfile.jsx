@@ -12,7 +12,9 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import SoundButton from "../components/SoundButton";
+import PremiumBackground from "../components/PremiumBackground";
 import { useTheme } from "../context/GlobalContext";
+import { gems } from "../colour_themes";
 
 export default function TeacherProfile() {
   const router = useRouter();
@@ -39,139 +41,163 @@ export default function TeacherProfile() {
         value={value}
         onChangeText={onChange}
         placeholder={placeholder}
-        placeholderTextColor={theme.secondaryText}
+        placeholderTextColor={theme.secondaryText + "80"}
         keyboardType={keyboardType}
       />
     </View>
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={theme.isDark ? "light-content" : "dark-content"} />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-      >
-        <View style={styles.header}>
-          <SoundButton onPress={() => router.back()} style={styles.backButton}>
-            <Text style={styles.backText}>←</Text>
-          </SoundButton>
-          <Text style={styles.headerTitle}>Edit Profile</Text>
-          <View style={{ width: 40 }} />
-        </View>
+    <View style={{ flex: 1 }}>
+      <PremiumBackground gemColor={gems.jade} />
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle={theme.isDark ? "light-content" : "dark-content"} />
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+        >
+          <View style={styles.header}>
+            <SoundButton onPress={() => router.back()} style={styles.backButton}>
+              <Text style={styles.backText}>←</Text>
+            </SoundButton>
+            <Text style={styles.headerTitle}>TEACHER IDENTITY</Text>
+            <View style={{ width: 40 }} />
+          </View>
 
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-          <View style={styles.avatarSection}>
-            <View style={styles.avatarLarge}>
-              <Text style={styles.avatarInitial}>{name ? name[0].toUpperCase() : "T"}</Text>
+          <ScrollView 
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+          >
+            <View style={styles.avatarSection}>
+              <View style={[styles.avatarLarge, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+                <Text style={styles.avatarInitial}>{name ? name[0].toUpperCase() : "T"}</Text>
+              </View>
+              <Text style={styles.avatarSubtitle}>RECONFIGURE VISUAL UPLINK</Text>
             </View>
-            <Text style={styles.avatarSubtitle}>Tap to change photo</Text>
-          </View>
 
-          <View style={styles.form}>
-            {renderField("Full Name", name, "Enter your full name", setName)}
-            {renderField("UDISE Code", udiseCode, "11-digit school code", setUdiseCode, "numeric")}
-            {renderField("Place of Employment", schoolName, "School name", setSchoolName)}
-            {renderField("Teacher Code", teacherCode, "3-digit code", setTeacherCode, "numeric")}
-          </View>
+            <View style={styles.form}>
+              {renderField("Full Name", name, "NAME_STRING", setName)}
+              {renderField("UDISE Code", udiseCode, "11_DIGIT_ID", setUdiseCode, "numeric")}
+              {renderField("Place of Employment", schoolName, "LOC_NODE", setSchoolName)}
+              {renderField("Teacher Code", teacherCode, "ACCESS_KEY", setTeacherCode, "numeric")}
+            </View>
 
-          <SoundButton style={styles.saveButton} onPress={handleSave} activeOpacity={0.8}>
-            <Text style={styles.saveButtonText}>Save Profile</Text>
-          </SoundButton>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+            <SoundButton style={styles.saveButton} onPress={handleSave} activeOpacity={0.8}>
+              <Text style={styles.saveButtonText}>COMMIT CHANGES</Text>
+            </SoundButton>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </View>
   );
 }
 
 const getStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.background,
+    backgroundColor: "transparent",
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.border,
+    paddingHorizontal: 24,
+    paddingVertical: 20,
   },
   backButton: {
-    padding: 8,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: theme.surface + '80',
   },
   backText: {
     color: theme.text,
-    fontSize: 24,
-    fontWeight: "bold",
+    fontSize: 20,
+    fontFamily: "Jost_600SemiBold",
   },
   headerTitle: {
     color: theme.text,
-    fontSize: 18,
-    fontWeight: "800",
+    fontSize: 14,
+    fontFamily: "Jost_600SemiBold",
+    letterSpacing: 3,
   },
   scrollContent: {
-    padding: 24,
+    padding: 30,
   },
   avatarSection: {
     alignItems: "center",
-    marginBottom: 32,
+    marginBottom: 40,
   },
   avatarLarge: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: theme.surface,
+    width: 110,
+    height: 110,
+    borderRadius: 55,
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: 2,
-    borderColor: theme.border,
-    marginBottom: 12,
+    borderWidth: 1,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.1,
+    shadowRadius: 15,
+    elevation: 5,
+    marginBottom: 16,
   },
   avatarInitial: {
     color: theme.text,
-    fontSize: 40,
-    fontWeight: "800",
+    fontSize: 44,
+    fontFamily: "Jost_300Light",
   },
   avatarSubtitle: {
     color: theme.secondaryText,
-    fontSize: 13,
-    fontWeight: "600",
+    fontSize: 10,
+    fontFamily: "Jost_600SemiBold",
+    letterSpacing: 2,
+    opacity: 0.7,
   },
   form: {
     marginBottom: 40,
+    gap: 24,
   },
   fieldContainer: {
-    marginBottom: 20,
+    marginBottom: 0,
   },
   label: {
     color: theme.secondaryText,
-    fontSize: 12,
-    fontWeight: "700",
+    fontSize: 10,
+    fontFamily: "Jost_600SemiBold",
     textTransform: "uppercase",
-    letterSpacing: 1,
-    marginBottom: 8,
+    letterSpacing: 2,
+    marginBottom: 10,
+    opacity: 0.8,
   },
   input: {
-    backgroundColor: theme.card,
-    borderRadius: 12,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
+    backgroundColor: theme.surface + '50',
+    borderRadius: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
     color: theme.text,
-    fontSize: 16,
+    fontSize: 15,
+    fontFamily: "Jost_400Regular",
     borderWidth: 1,
-    borderColor: theme.border,
+    borderColor: theme.border + '50',
   },
   saveButton: {
     backgroundColor: theme.primary,
-    borderRadius: 14,
-    paddingVertical: 16,
+    borderRadius: 30,
+    paddingVertical: 18,
     alignItems: "center",
+    shadowColor: theme.primary,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 8,
   },
   saveButtonText: {
     color: theme.buttonText,
-    fontSize: 16,
-    fontWeight: "800",
+    fontSize: 14,
+    fontFamily: "Jost_600SemiBold",
+    letterSpacing: 3,
   },
 });

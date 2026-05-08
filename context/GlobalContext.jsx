@@ -8,7 +8,7 @@ export const API_URL = `http://${origin}:3000/api`;
 
 // Theme Context
 export const ThemeContext = createContext({
-  theme: themes.ebony,
+  theme: themes.light,
   setThemeName: (name) => {},
 });
 
@@ -30,13 +30,13 @@ export const useTheme = () => useContext(ThemeContext);
 export const useAuth = () => useContext(AuthContext);
 
 export const GlobalContextProvider = ({ children }) => {
-  const [themeName, setThemeName] = useState("ebony");
+  const [themeName, setThemeName] = useState("light");
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [activeStudentId, setActiveStudentId] = useState(null);
   const [activeStudentProfile, setActiveStudentProfile] = useState(null);
   const [soundEnabled, setSoundEnabled] = useState(true);
-  const currentTheme = themes[themeName] || themes.ebony;
+  const currentTheme = themes[themeName] || themes.light;
 
   return (
     <ThemeContext.Provider value={{ theme: currentTheme, setThemeName }}>

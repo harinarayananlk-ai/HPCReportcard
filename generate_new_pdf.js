@@ -28,26 +28,27 @@ const htmlContent = `
 <html>
 <head>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
-        body { font-family: 'Inter', sans-serif; padding: 40px; color: #333; line-height: 1.5; }
-        .header { text-align: center; border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 30px; }
-        .header h1 { margin: 0; font-size: 24px; text-transform: uppercase; }
-        .header p { margin: 5px 0; font-weight: bold; }
+        @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;600&display=swap');
+        body { font-family: 'Jost', sans-serif; padding: 50px; color: #1a1a1a; line-height: 1.6; background: #fff; }
+        .header { text-align: center; border-bottom: 1px solid #e0e0e0; padding-bottom: 25px; margin-bottom: 40px; position: relative; }
+        .header::after { content: ''; position: absolute; bottom: -1px; left: 50%; transform: translateX(-50%); width: 60px; height: 3px; background: #D4AF37; }
+        .header h1 { margin: 0; font-size: 28px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; color: #1a1a1a; }
+        .header p { margin: 6px 0; font-weight: 400; color: #D4AF37; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
         
-        .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 30px; }
-        .profile-item { border-bottom: 1px solid #eee; padding: 5px 0; }
-        .label { font-weight: bold; font-size: 12px; color: #666; text-transform: uppercase; }
-        .value { font-size: 14px; font-weight: bold; }
+        .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 40px; }
+        .profile-item { border-bottom: 1px solid #f0f0f0; padding: 8px 0; }
+        .label { font-weight: 600; font-size: 9px; color: #999; text-transform: uppercase; letter-spacing: 1px; }
+        .value { font-size: 14px; font-weight: 400; color: #1a1a1a; margin-top: 2px; }
 
-        .section-title { background: #f0f0f0; padding: 8px; font-weight: bold; margin-top: 20px; border-left: 5px solid #333; text-transform: uppercase; font-size: 14px; }
-        .content-box { border: 1px solid #ddd; padding: 15px; margin-top: 5px; min-height: 60px; font-size: 13px; }
+        .section-title { background: #fafafa; padding: 10px 15px; font-weight: 600; margin-top: 30px; border-left: 3px solid #D4AF37; text-transform: uppercase; font-size: 10px; letter-spacing: 1.5px; color: #444; }
+        .content-box { border: 1px solid #f0f0f0; padding: 15px; margin-top: 8px; min-height: 60px; font-size: 13px; color: #333; background: #fdfdfd; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #333; padding: 12px; text-align: left; vertical-align: top; }
-        th { background: #f9f9f9; font-size: 12px; text-transform: uppercase; }
-        .matrix-cell { font-size: 12px; min-height: 50px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #eee; padding: 12px; text-align: center; }
+        th { background: #1a1a1a; color: #fff; font-size: 8px; text-transform: uppercase; letter-spacing: 1px; font-weight: 400; }
+        .matrix-cell { font-size: 12px; color: #1a1a1a; }
         
-        .footer { margin-top: 50px; display: flex; justify-content: space-between; font-size: 12px; font-weight: bold; border-top: 1px solid #333; padding-top: 20px; }
+        .footer { margin-top: 80px; display: flex; justify-content: space-between; font-size: 10px; font-weight: 400; text-transform: uppercase; letter-spacing: 1px; color: #999; }
     </style>
 </head>
 <body>

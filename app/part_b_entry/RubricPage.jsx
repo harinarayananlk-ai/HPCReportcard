@@ -7,7 +7,7 @@ import InfoModal from './InfoModal';
 import Animated, { FadeInDown, useSharedValue, useAnimatedStyle, withTiming, withSequence, withRepeat } from 'react-native-reanimated';
 import { Waves, Mountain, Cloud, Eye, Feather, Wand2, CloudUpload } from 'lucide-react-native';
 import { ActivityIndicator } from 'react-native';
-import { useVideoPlayer, VideoView } from 'expo-video';
+import PremiumBackground from '../../components/PremiumBackground';
 import SoundButton from '../../components/SoundButton';
 
 // ── Theme-aware Icons ──────────────────────────────────────────────────
@@ -109,11 +109,7 @@ export default function RubricPage() {
     const [selfAssessment, setSelfAssessment] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [isSyncing, setIsSyncing] = useState(false);
-    const player = useVideoPlayer(require('../../assets/images/Background_animation_forest.mp4'), (p) => {
-        p.loop = true;
-        p.play();
-        p.muted = true;
-    });
+
 
     useEffect(() => {
         if (user?.role === 'student') {
@@ -251,15 +247,7 @@ export default function RubricPage() {
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.background }}>
-            {/* Cinematic Video Background */}
-            <VideoView
-                player={player}
-                style={StyleSheet.absoluteFill}
-                contentFit="cover"
-                nativeControls={false}
-            />
-            {/* Dark overlay */}
-            <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.4)' }]} />
+            <PremiumBackground />
 
             <SafeAreaView style={{ flex: 1 }}>
             <StatusBar translucent barStyle={theme.isDark ? "light-content" : "dark-content"} backgroundColor="transparent" />

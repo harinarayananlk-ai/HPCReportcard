@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import SoundButton from "../../components/SoundButton";
 import AmbientIcon from "../../components/AmbientIcon";
 import { useTheme, useAuth, API_URL } from "../../context/GlobalContext";
+import PremiumBackground from "../../components/PremiumBackground";
 
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
@@ -20,11 +21,10 @@ export default function TransitionScreen() {
   const [loading, setLoading] = useState(false);
   const [selectedDesign, setSelectedDesign] = useState('original');
 
-  const DESIGNS = [
-    { id: 'cloned', name: 'Original Cloned (15 Page)', status: 'Ready', icon: 'copy' },
-    { id: 'premium', name: 'Premium Design', status: 'Ready', icon: 'star' },
-    { id: 'comprehensive', name: 'Full Mastery Report', status: 'Ready', icon: 'document-text' },
-    { id: 'original', name: 'Legacy Original', status: 'Under Maintenance', icon: 'alert-circle' },
+   const DESIGNS = [
+    { id: 'cloned', name: 'Original Grid (15 Page)', status: 'Premium', icon: 'copy' },
+    { id: 'premium', name: 'Minimalist Luxe', status: 'Ready', icon: 'star' },
+    { id: 'comprehensive', name: 'Mastery Report', status: 'Ready', icon: 'document-text' },
   ];
 
   const handleExportAndFinish = async () => {
@@ -92,7 +92,9 @@ export default function TransitionScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+    <View style={{ flex: 1 }}>
+      <PremiumBackground />
+      <SafeAreaView style={styles.container}>
       <StatusBar barStyle={theme.isDark ? "light-content" : "dark-content"} />
       
       <View style={styles.header}>
@@ -165,13 +167,15 @@ export default function TransitionScreen() {
           <Text style={{ color: theme.secondaryText }}>Go Back</Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "transparent",
   },
   header: {
     padding: 30,
@@ -179,13 +183,18 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: "900",
-    letterSpacing: 1,
+    fontWeight: "300",
+    letterSpacing: 2,
+    color: "#000", // Will be overridden
+    fontFamily: "Jost_300Light",
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: 12,
     marginTop: 8,
     lineHeight: 20,
+    fontFamily: "Jost_300Light",
+    textTransform: "uppercase",
+    letterSpacing: 1,
   },
   designChoice: {
     paddingHorizontal: 30,
@@ -193,9 +202,10 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 10,
-    fontWeight: "800",
+    fontWeight: "600",
     letterSpacing: 2,
     marginBottom: 20,
+    fontFamily: "Jost_600SemiBold",
   },
   designRow: {
     gap: 12,
@@ -206,11 +216,12 @@ const styles = StyleSheet.create({
     padding: 18,
     borderRadius: 16,
     borderWidth: 1,
+    backgroundColor: "rgba(255,255,255,0.05)",
   },
   designName: {
-    marginLeft: 15,
     fontSize: 15,
     fontWeight: "500",
+    fontFamily: "Jost_400Regular",
   },
   footer: {
     position: "absolute",
@@ -223,18 +234,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     height: 60,
     width: "100%",
-    borderRadius: 18,
+    borderRadius: 30, // Pill shape
     justifyContent: "center",
     alignItems: "center",
     gap: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.1,
+    shadowRadius: 20,
+    elevation: 10,
   },
   exportText: {
-    fontSize: 15,
-    fontWeight: "900",
-    letterSpacing: 1,
+    fontSize: 14,
+    fontWeight: "600",
+    letterSpacing: 3,
+    fontFamily: "Jost_600SemiBold",
   },
   backBtn: {
-    marginTop: 20,
+    marginTop: 24,
     padding: 10,
   }
 });

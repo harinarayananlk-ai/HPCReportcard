@@ -7,9 +7,17 @@ import CornerLogo from "../components/CornerLogo";
 import GearGroup from "../components/GearGroup";
 
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { useFonts, Jost_300Light, Jost_400Regular, Jost_600SemiBold } from '@expo-google-fonts/jost';
 
 export default function RootLayout() {
+  const [fontsLoaded] = useFonts({
+    Jost_300Light,
+    Jost_400Regular,
+    Jost_600SemiBold,
+  });
   const [appReady, setAppReady] = useState(false);
+
+  if (!fontsLoaded) return null;
 
   return (
     <GlobalContextProvider>

@@ -21,7 +21,9 @@ import { Ionicons } from "@expo/vector-icons";
 import SoundButton from "../components/SoundButton";
 import { useTheme, useAuth, API_URL } from "../context/GlobalContext";
 import { useEffect, useState, useRef } from "react";
-import { useVideoPlayer, VideoView } from "expo-video";
+import { Image } from "react-native";
+import { gems } from "../colour_themes";
+import PremiumBackground from "../components/PremiumBackground";
 
 const { width } = Dimensions.get("window");
 
@@ -31,11 +33,7 @@ export default function StudentHomepage() {
   const { user, profile, setProfile, activeStudentId } = useAuth();
   const [reports, setReports] = useState([]);
   const styles = getStyles(theme);
-  const player = useVideoPlayer(require("../assets/images/Background_animation_forest.mp4"), (p) => {
-    p.loop = true;
-    p.play();
-    p.muted = true;
-  });
+  const accentColor = gems.moonstone;
 
   const targetUserId = activeStudentId || user?.id;
 
@@ -92,7 +90,7 @@ export default function StudentHomepage() {
 
     return [
       { label: "Attendance", value: attendance, icon: "calendar-outline", color: "#6366f1" },
-      { label: "Class", value: avgGrade, icon: "school-outline", color: theme.accent },
+      { label: "Class", value: avgGrade, icon: "school-outline", color: accentColor },
       { label: "Score", value: points, icon: "star-outline", color: "#fb923c" },
     ];
   };
@@ -101,7 +99,7 @@ export default function StudentHomepage() {
 
   const quickActions = [
     { id: "1", title: "Personalization", icon: "create-outline", route: "/part_a2/LayoutBuilder", color: "#6366f1", desc: "Build your card" },
-    { id: "2", title: "View Progress", icon: "bar-chart-outline", route: "/part_b/viewer", color: theme.accent, desc: "Digital reports" },
+    { id: "2", title: "View Progress", icon: "bar-chart-outline", route: "/part_b/viewer", color: accentColor, desc: "Digital reports" },
     { id: "3", title: "Family Sync", icon: "people-outline", route: "/part_a1/FamilyTreePage", color: "#ec4899", desc: "Manage nodes" },
   ];
 
@@ -109,15 +107,7 @@ export default function StudentHomepage() {
     <View style={styles.container}>
       <StatusBar barStyle={theme.isDark ? "light-content" : "dark-content"} />
       
-      {/* Cinematic Video Background */}
-      <VideoView
-        player={player}
-        style={StyleSheet.absoluteFill}
-        contentFit="cover"
-        nativeControls={false}
-      />
-      {/* Glass Overlay for Depth */}
-      <View style={[StyleSheet.absoluteFill, { backgroundColor: theme.isDark ? "rgba(0,0,0,0.6)" : "rgba(255,255,255,0.4)" }]} />
+      <PremiumBackground gemColor={accentColor} />
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 40 }}>
         {/* Header Section */}
@@ -183,14 +173,14 @@ export default function StudentHomepage() {
                 >
                   <SoundButton style={styles.historyCard}>
                      <View style={styles.historyIconBox}>
-                        <Ionicons name="document-text-outline" size={20} color={theme.accent} />
+                        <Ionicons name="document-text-outline" size={20} color={accentColor} />
                      </View>
                      <View style={styles.historyInfo}>
                        <Text style={styles.historyYear}>{report.year} SESSION</Text>
                        <Text style={styles.historyTerm}>{report.term || "Annual Evaluation"}</Text>
                      </View>
                      <View style={styles.viewBadge}>
-                        <Text style={[styles.historyBadgeText, { color: theme.accent }]}>VIEW</Text>
+                        <Text style={[styles.historyBadgeText, { color: accentColor }]}>VIEW</Text>
                      </View>
                   </SoundButton>
                 </Animated.View>
@@ -238,7 +228,7 @@ export default function StudentHomepage() {
                           <Text style={styles.monthLabel}>{MONTH_NAMES[idx] || "???"}</Text>
                           <Text style={styles.monthValue}>{attended}/{working}</Text>
                           <View style={styles.progressContainer}>
-                            <View style={[styles.progressBar, { width: `${pct}%`, backgroundColor: theme.accent }]} />
+                            <View style={[styles.progressBar, { width: `${pct}%`, backgroundColor: accentColor }]} />
                           </View>
                           <Text style={styles.monthPct}>{pct}%</Text>
                         </Animated.View>
@@ -278,22 +268,23 @@ const getStyles = (theme) => StyleSheet.create({
   },
   greeting: {
     fontSize: 10,
-    color: theme.accent,
+    color: gems.emerald,
     fontWeight: "900",
     letterSpacing: 2,
-    fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif',
+    fontFamily: "Jost_600SemiBold",
   },
   userName: {
     fontSize: 24,
-    fontWeight: "900",
+    fontWeight: "300",
     color: theme.text,
     marginTop: 4,
+    fontFamily: "Jost_300Light",
   },
   avatar: {
     width: 48,
     height: 48,
     borderRadius: 14,
-    backgroundColor: theme.accent,
+    backgroundColor: gems.emerald,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 2,
@@ -302,7 +293,8 @@ const getStyles = (theme) => StyleSheet.create({
   avatarText: {
     color: theme.buttonText,
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: "600",
+    fontFamily: "Jost_600SemiBold",
   },
   statsRow: {
     flexDirection: "row",
@@ -327,16 +319,18 @@ const getStyles = (theme) => StyleSheet.create({
   },
   statValue: {
     fontSize: 18,
-    fontWeight: "900",
+    fontWeight: "600",
     color: theme.text,
+    fontFamily: "Jost_600SemiBold",
   },
   statLabel: {
     fontSize: 10,
     color: theme.secondaryText,
     marginTop: 2,
-    fontWeight: "700",
+    fontWeight: "300",
     textTransform: "uppercase",
     letterSpacing: 0.5,
+    fontFamily: "Jost_300Light",
   },
   content: {
     padding: 24,
@@ -348,7 +342,7 @@ const getStyles = (theme) => StyleSheet.create({
     textTransform: "uppercase",
     letterSpacing: 2,
     marginBottom: 20,
-    fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif',
+    fontFamily: "Jost_600SemiBold",
   },
   actionList: {
     gap: 12,
@@ -375,13 +369,15 @@ const getStyles = (theme) => StyleSheet.create({
   },
   actionTitle: {
     fontSize: 15,
-    fontWeight: "900",
+    fontWeight: "600",
     color: theme.text,
+    fontFamily: "Jost_600SemiBold",
   },
   actionDesc: {
     fontSize: 11,
     color: theme.secondaryText,
     marginTop: 2,
+    fontFamily: "Jost_300Light",
   },
   historySection: {
     marginTop: 40,
@@ -410,14 +406,16 @@ const getStyles = (theme) => StyleSheet.create({
   },
   historyYear: {
     fontSize: 12,
-    fontWeight: "900",
+    fontWeight: "600",
     color: theme.text,
     letterSpacing: 1,
+    fontFamily: "Jost_600SemiBold",
   },
   historyTerm: {
     fontSize: 10,
     color: theme.secondaryText,
     marginTop: 2,
+    fontFamily: "Jost_300Light",
   },
   viewBadge: {
     paddingHorizontal: 12,
@@ -427,8 +425,9 @@ const getStyles = (theme) => StyleSheet.create({
   },
   historyBadgeText: {
     fontSize: 9,
-    fontWeight: "900",
+    fontWeight: "600",
     letterSpacing: 1,
+    fontFamily: "Jost_600SemiBold",
   },
   emptyCard: {
     padding: 40,
@@ -443,7 +442,8 @@ const getStyles = (theme) => StyleSheet.create({
     color: theme.secondaryText,
     fontSize: 12,
     marginTop: 12,
-    fontWeight: "600",
+    fontWeight: "300",
+    fontFamily: "Jost_300Light",
   },
   monthCard: {
     width: 80,
@@ -455,16 +455,18 @@ const getStyles = (theme) => StyleSheet.create({
   },
   monthLabel: {
     fontSize: 10,
-    fontWeight: "900",
-    color: theme.accent,
+    fontWeight: "600",
+    color: gems.emerald,
     marginBottom: 4,
     textTransform: "uppercase",
+    fontFamily: "Jost_600SemiBold",
   },
   monthValue: {
     fontSize: 13,
-    fontWeight: "800",
+    fontWeight: "600",
     color: theme.text,
     marginBottom: 8,
+    fontFamily: "Jost_600SemiBold",
   },
   progressContainer: {
     width: "100%",
@@ -480,7 +482,8 @@ const getStyles = (theme) => StyleSheet.create({
   },
   monthPct: {
     fontSize: 10,
-    fontWeight: "700",
+    fontWeight: "300",
     color: theme.secondaryText,
+    fontFamily: "Jost_300Light",
   },
 });

@@ -88,17 +88,18 @@ const htmlContent = `
 <html>
 <head>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:wght@700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;600&family=Outfit:wght@300;400;600&display=swap');
         
         * { box-sizing: border-box; }
-        body { font-family: 'Outfit', sans-serif; margin: 0; padding: 0; background: #fff; color: #2d3436; }
+        body { font-family: 'Jost', sans-serif; margin: 0; padding: 0; background: #fff; color: #1a1a1a; }
         .page { 
             width: 210mm; 
             height: 297mm; 
-            padding: 15mm; 
+            padding: 18mm; 
             position: relative; 
             overflow: hidden; 
             page-break-after: always;
+            background: linear-gradient(135deg, #ffffff 0%, #f9f9f9 100%);
         }
         
         /* Decorative Background */
@@ -106,15 +107,16 @@ const htmlContent = `
         .bg-top-left { position: absolute; top: -20px; left: -20px; width: 200px; opacity: 0.05; z-index: 0; transform: rotate(-15deg); }
 
         .header { 
-            text-align: center; border-bottom: 4px solid #6c5ce7; padding-bottom: 10px; margin-bottom: 20px; position: relative; z-index: 1;
+            text-align: center; border-bottom: 1px solid #e0e0e0; padding-bottom: 15px; margin-bottom: 25px; position: relative; z-index: 1;
         }
-        .header h1 { font-family: 'Playfair Display', serif; font-size: 28px; margin: 0; color: #6c5ce7; text-transform: uppercase; }
-        .header p { margin: 2px 0; font-weight: 600; color: #636e72; font-size: 14px; }
+        .header h1 { font-family: 'Jost', sans-serif; font-size: 32px; font-weight: 300; margin: 0; color: #1a1a1a; text-transform: uppercase; letter-spacing: 4px; }
+        .header p { margin: 4px 0; font-weight: 400; color: #D4AF37; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; }
 
         .section-title { 
-            background: #f1f2f6; padding: 8px 15px; border-radius: 8px; font-weight: 800; 
-            text-transform: uppercase; font-size: 14px; color: #2d3436; margin: 20px 0 10px 0;
-            border-left: 6px solid #6c5ce7;
+            background: #f8f9fa; padding: 10px 20px; font-weight: 600; 
+            text-transform: uppercase; font-size: 11px; color: #444; margin: 25px 0 12px 0;
+            border-left: 3px solid #D4AF37;
+            letter-spacing: 1.5px;
         }
 
         .data-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 10px; }
@@ -122,15 +124,16 @@ const htmlContent = `
         .label { font-size: 9px; font-weight: 800; color: #b2bec3; text-transform: uppercase; letter-spacing: 0.5px; }
         .value { font-size: 12px; font-weight: 600; color: #2d3436; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 1.5px solid #dfe6e9; border-radius: 8px; overflow: hidden; }
-        th, td { border: 1px solid #dfe6e9; padding: 8px; font-size: 10px; text-align: center; }
-        th { background: #6c5ce7; color: #fff; text-transform: uppercase; font-size: 9px; }
-        .att-table td { font-size: 9px; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; border: 1px solid #eee; }
+        th, td { border: 1px solid #eee; padding: 10px; font-size: 10px; text-align: center; }
+        th { background: #1a1a1a; color: #fff; text-transform: uppercase; font-size: 8px; letter-spacing: 1px; font-weight: 400; }
+        .att-table td { font-size: 10px; color: #444; }
 
-        .matrix-table th { background: #a29bfe; font-size: 8px; }
-        .matrix-table td { font-size: 10px; min-height: 30px; }
+        .matrix-table th { background: #D4AF37; color: #fff; }
+        .matrix-table td { font-size: 11px; color: #1a1a1a; }
+        .row-head { font-weight: 600; text-transform: uppercase; font-size: 9px; background: #fafafa; }
 
-        .footer-decor { position: absolute; bottom: 10mm; left: 50%; transform: translateX(-50%); width: 60%; opacity: 0.5; }
+
     </style>
 </head>
 <body>
@@ -284,7 +287,7 @@ const htmlContent = `
             `).join('')}
         </div>
         
-        <img src="${images.schoolItems}" class="footer-decor" />
+
     </div>
 </body>
 </html>

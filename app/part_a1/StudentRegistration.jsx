@@ -19,8 +19,17 @@ import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import DigitBoxes from "../../components/DigitBoxes";
 import SoundButton from "../../components/SoundButton";
-import ShootingStars from "../../components/ShootingStars";
+import GemButton from "../../components/GemButton";
 import { useTheme, useAuth, API_URL } from "../../context/GlobalContext";
+import { gems } from "../../colour_themes";
+import * as Haptics from 'expo-haptics';
+import Animated, { 
+  useAnimatedStyle, 
+  useSharedValue, 
+  withTiming 
+} from "react-native-reanimated";
+import Svg, { Path, Circle } from 'react-native-svg';
+import PremiumBackground from "../../components/PremiumBackground";
 
 export default function SchoolScreen() {
   const router = useRouter();
@@ -28,9 +37,25 @@ export default function SchoolScreen() {
   const { user, profile, setProfile: setAuthProfile, activeStudentId, activeStudentProfile } = useAuth();
   const isTeacher = user?.role === 'teacher' || user?.role === 'superadmin';
   const targetUserId = (isTeacher && activeStudentId) ? activeStudentId : user?.id;
-  const styles = getStyles(theme);
+  const accentColor = "#FF8C00"; // Topaz Orange
+  const styles = getStyles(theme, accentColor);
 
-  // Tooltip & DatePicker States
+  // --- Gold Thread Progress Logic ---
+  const filledFields = [schoolName, studentName, registrationNumber, dateOfBirth, phoneNumber].filter(f => f && f.length > 0).length;
+  const progressPercent = filledFields / 5;
+  const progressWidth = useSharedValue(0);
+  useEffect(() => {
+    progressWidth.value = withTiming(progressPercent, { duration: 500 });
+  }, [progressPercent]);
+
+  const progressStyle = useAnimatedStyle(() => ({
+    width: `${progressWidth.value * 100}%`
+  }));
+
+  const triggerHaptic = () => {
+    // selectionAsync is more reliable on Android devices like Redmi
+    Haptics.selectionAsync();
+  };
   const [infoTooltip, setInfoTooltip] = useState({ visible: false, title: "", content: "" });
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [dobDate, setDobDate] = useState(new Date());
@@ -266,15 +291,16 @@ export default function SchoolScreen() {
         selectionColor={theme.text}
         color={theme.text}
         editable={!(config.teacherOnly && !isTeacher)}
+        onFocus={triggerHaptic}
       />
     </View>
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Background Animation */}
-      <ShootingStars theme={theme} />
+    <View style={styles.rootContainer}>
+      <PremiumBackground gemColor={accentColor} />
       
+      <SafeAreaView style={styles.container}>
       <StatusBar barStyle={theme.isDark ? "light-content" : "dark-content"} />
 
       {/* Header */}
@@ -308,6 +334,11 @@ export default function SchoolScreen() {
             </SoundButton>
           </View>
         </View>
+
+        {/* Gold Thread Progress Tracker - Integrated into Header */}
+        <View style={styles.goldThreadTrack}>
+          <Animated.View style={[styles.goldThread, progressStyle]} />
+        </View>
       </View>
 
       <ScrollView
@@ -317,7 +348,13 @@ export default function SchoolScreen() {
       >
         {/* ── Section: School Information ── */}
         <View style={styles.card}>
-          <Text style={styles.sectionTitle}>SCHOOL INFORMATION</Text>
+          <View style={styles.inlaidHeader}>
+            <View style={styles.inlaidIconBox}>
+              <Ionicons name="school-outline" size={18} color={theme.text} />
+              <View style={styles.iconGem} />
+            </View>
+            <Text style={styles.sectionTitle}>SCHOOL INFORMATION</Text>
+          </View>
           <View style={styles.sectionDivider} />
 
           {renderTrigger("Name of School", schoolName, "Enter school name", setSchoolName, { multiline: true })}
@@ -340,9 +377,15 @@ export default function SchoolScreen() {
         </View>
 
         {/* ── Section: Student Information ── */}
-        <View style={styles.card}>
-          <Text style={styles.sectionTitle}>STUDENT INFORMATION</Text>
-          <View style={styles.sectionDivider} />
+        <View style={[styles.card, { borderColor: gems.topaz + '40', shadowColor: gems.topaz }]}>
+          <View style={styles.inlaidHeader}>
+            <View style={[styles.inlaidIconBox, { borderColor: gems.topaz + '60' }]}>
+              <Ionicons name="person-outline" size={18} color={gems.topaz} />
+              <View style={[styles.iconGem, { backgroundColor: gems.topaz }]} />
+            </View>
+            <Text style={[styles.sectionTitle, { color: gems.topaz }]}>STUDENT INFORMATION</Text>
+          </View>
+          <View style={[styles.sectionDivider, { backgroundColor: gems.topaz + '30' }]} />
 
           {renderTrigger("Student Name", studentName, "Enter full name", setStudentName, { multiline: true })}
 
@@ -413,9 +456,15 @@ export default function SchoolScreen() {
         </View>
 
         {/* ── Section: Preferences ── */}
-        <View style={styles.card}>
-          <Text style={styles.sectionTitle}>PREFERENCES</Text>
-          <View style={styles.sectionDivider} />
+        <View style={[styles.card, { borderColor: gems.topaz + '40', shadowColor: gems.topaz }]}>
+          <View style={styles.inlaidHeader}>
+            <View style={[styles.inlaidIconBox, { borderColor: gems.topaz + '60' }]}>
+              <Ionicons name="settings-outline" size={18} color={gems.topaz} />
+              <View style={[styles.iconGem, { backgroundColor: gems.topaz }]} />
+            </View>
+            <Text style={[styles.sectionTitle, { color: gems.topaz }]}>PREFERENCES</Text>
+          </View>
+          <View style={[styles.sectionDivider, { backgroundColor: gems.topaz + '30' }]} />
 
           <Text style={styles.label}>Rural / Urban</Text>
           <View style={styles.pickerWrapper}>
@@ -456,13 +505,14 @@ export default function SchoolScreen() {
         </View>
 
         {/* ── Submit Button ── */}
-        <SoundButton
-          style={styles.nextButton}
+        <GemButton
+          gemType="topaz"
+          style={{marginTop: 8}}
           onPress={handleNext}
-          activeOpacity={0.8}
+          disabled={false}
         >
-          <Text style={styles.nextButtonText}>Next →</Text>
-        </SoundButton>
+          <Text style={styles.nextButtonText}>NEXT STEP</Text>
+        </GemButton>
 
         <View style={{ height: 40 }} />
       </ScrollView>
@@ -479,23 +529,28 @@ export default function SchoolScreen() {
             <Text style={styles.tooltipTitle}>{infoTooltip.title}</Text>
             <Text style={styles.tooltipText}>{infoTooltip.content}</Text>
             <SoundButton 
-              style={styles.tooltipButton} 
+              style={styles.tooltipButton}
               onPress={() => setInfoTooltip({ visible: false, title: "", content: "" })}
             >
-              <Text style={styles.tooltipButtonText}>Got it</Text>
+              <Text style={styles.tooltipButtonText}>GOT IT</Text>
             </SoundButton>
           </View>
         </View>
       </Modal>
 
     </SafeAreaView>
+    </View>
   );
 }
 
-const getStyles = (theme) => StyleSheet.create({
-  container: {
+const getStyles = (theme, accentColor) => StyleSheet.create({
+  rootContainer: {
     flex: 1,
     backgroundColor: theme.background,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: 'transparent',
   },
 
   /* ── Header ── */
@@ -510,21 +565,26 @@ const getStyles = (theme) => StyleSheet.create({
   headerAccent: {
     height: 3,
     width: 50,
-    backgroundColor: theme.accent,
+    backgroundColor: "#FF8C00", // Topaz Orange
     borderRadius: 2,
     marginBottom: 14,
   },
   headerTitle: {
     fontSize: 22,
-    fontWeight: "800",
+    fontWeight: "300",
     color: theme.text,
-    letterSpacing: 0.3,
+    letterSpacing: 2,
+    textTransform: "uppercase",
+    fontFamily: "Jost_300Light",
   },
   headerSubtitle: {
-    fontSize: 12,
-    color: theme.secondaryText,
+    fontSize: 10,
+    color: accentColor,
     fontWeight: "600",
-    marginTop: 2,
+    marginTop: 4,
+    letterSpacing: 2,
+    textTransform: "uppercase",
+    fontFamily: "Jost_600SemiBold",
   },
   syncBtn: {
     width: 40,
@@ -558,10 +618,11 @@ const getStyles = (theme) => StyleSheet.create({
   /* ── Section Headers ── */
   sectionTitle: {
     fontSize: 11,
-    fontWeight: "700",
+    fontWeight: "600",
     color: theme.secondaryText,
     letterSpacing: 2,
     marginBottom: 6,
+    fontFamily: "Jost_600SemiBold",
   },
   sectionDivider: {
     height: 1,
@@ -572,18 +633,26 @@ const getStyles = (theme) => StyleSheet.create({
   /* ── Labels & Triggers ── */
   label: {
     fontSize: 13,
-    fontWeight: "600",
+    fontWeight: "300",
     color: theme.secondaryText,
     marginBottom: 6,
     marginTop: 14,
+    fontFamily: "Jost_300Light",
   },
   input: {
-    backgroundColor: theme.inputBackground,
-    borderWidth: 1,
-    borderColor: theme.inputBorder,
-    borderRadius: 10,
-    paddingHorizontal: 14,
+    backgroundColor: "rgba(255,255,255,0.02)",
+    borderBottomWidth: 1.5,
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    borderColor: "#C67121", // Topaz Orange Underline
+    color: theme.text,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    fontSize: 14,
     minHeight: 50,
+    fontFamily: "Jost_400Regular",
+    borderRadius: 8,
   },
   multilineInput: {
     minHeight: 60,
@@ -613,19 +682,12 @@ const getStyles = (theme) => StyleSheet.create({
     height: 55,
   },
 
-  /* ── Next Button ── */
-  nextButton: {
-    backgroundColor: theme.primary,
-    paddingVertical: 16,
-    borderRadius: 10,
-    alignItems: "center",
-    marginTop: 8,
-  },
   nextButtonText: {
     color: theme.buttonText,
-    fontSize: 15,
-    fontWeight: "800",
-    letterSpacing: 0.5,
+    fontSize: 12,
+    fontWeight: "600",
+    letterSpacing: 2,
+    fontFamily: "Jost_600SemiBold",
   },
 
   /* ── Tooltips ── */
@@ -662,14 +724,16 @@ const getStyles = (theme) => StyleSheet.create({
   tooltipTitle: {
     color: theme.accent,
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: "600",
     marginBottom: 12,
+    fontFamily: "Jost_600SemiBold",
   },
   tooltipText: {
     color: theme.text,
     fontSize: 15,
     lineHeight: 22,
     marginBottom: 24,
+    fontFamily: "Jost_300Light",
   },
   tooltipButton: {
     backgroundColor: theme.primary,
@@ -681,5 +745,53 @@ const getStyles = (theme) => StyleSheet.create({
     color: theme.buttonText,
     fontSize: 15,
     fontWeight: "bold",
+  },
+  /* --- Gold Thread --- */
+  goldThreadTrack: {
+    height: 1,
+    width: '100%',
+    backgroundColor: 'rgba(0,0,0,0.05)',
+    marginTop: 15, // Gap from the buttons above
+  },
+  goldThread: {
+    height: 2,
+    backgroundColor: '#D4AF37',
+    shadowColor: '#F9E29C',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 1,
+    shadowRadius: 3,
+  },
+  /* --- Inlaid Icons --- */
+  inlaidHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+    gap: 12,
+  },
+  inlaidIconBox: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    backgroundColor: 'rgba(0,0,0,0.2)', // Inset look
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.05)',
+  },
+  iconGem: {
+    position: 'absolute',
+    top: -3,
+    right: -3,
+    width: 10,
+    height: 10,
+    borderRadius: 2,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.4)',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    elevation: 2,
+    transform: [{ rotate: "45deg" }], // Diamond cut look
   },
 });

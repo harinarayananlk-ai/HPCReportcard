@@ -15,7 +15,10 @@ import { Waves, Mountain, Cloud, Eye, Feather, Wand2, CloudUpload } from 'lucide
 import { Ionicons } from "@expo/vector-icons";
 import { ActivityIndicator } from 'react-native';
 import SoundButton from '../../components/SoundButton';
-import PaperPlaneAnimation from '../../components/PaperPlaneAnimation';
+import GemButton from '../../components/GemButton';
+import { gems } from '../../colour_themes';
+import { Image } from 'react-native';
+import PremiumBackground from '../../components/PremiumBackground';
 
 const { width: W, height: H } = Dimensions.get('window');
 
@@ -103,7 +106,8 @@ export default function UnifiedRubric() {
     const router = useRouter();
     const { theme } = useTheme();
     const { user, profile, activeStudentId, activeStudentProfile, setActiveStudentProfile } = useAuth();
-    const styles = getStyles(theme);
+    const accentColor = gems.citrine;
+    const styles = getStyles(theme, accentColor);
 
     const targetUserId = activeStudentId || user?.id;
     const targetProfile = activeStudentProfile || profile;
@@ -125,11 +129,7 @@ export default function UnifiedRubric() {
     const [selfAssessment, setSelfAssessment] = useState("");
     const [isLoading, setIsLoading] = useState(true);
     const [isSyncing, setIsSyncing] = useState(false);
-    const player = useVideoPlayer(require('../../assets/images/Background_animation_forest.mp4'), (p) => {
-        p.loop = true;
-        p.play();
-        p.muted = true;
-    });
+    // Removed video background useVideoPlayer
 
     // ── LOAD DATA ──────────────────────────────────────────
     useEffect(() => {
@@ -328,9 +328,7 @@ export default function UnifiedRubric() {
     return (
         <View style={{ flex: 1 }}>
             <StatusBar translucent barStyle="light-content" />
-            <View style={[StyleSheet.absoluteFill, { backgroundColor: theme.background }]} />
-            <PaperPlaneAnimation />
-            <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.5)' }]} />
+            <PremiumBackground gemColor={accentColor} />
 
             <SafeAreaView style={{ flex: 1 }}>
                 <View style={styles.header}>
@@ -341,7 +339,7 @@ export default function UnifiedRubric() {
                         <Text style={styles.headerTitle}>Part B: Holistic Progress</Text>
                         <TouchableOpacity onPress={handleBackup} disabled={isSyncing} style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
                             <Text style={styles.headerSub}>Rubric & Selection Engine</Text>
-                            {isSyncing ? <ActivityIndicator size="small" color={theme.primary} /> : <CloudUpload color={theme.primary} size={14} />}
+                            {isSyncing ? <ActivityIndicator size="small" color={accentColor} /> : <CloudUpload color={accentColor} size={14} />}
                         </TouchableOpacity>
                     </View>
                     <View style={{ width: 44 }} />
@@ -489,13 +487,14 @@ export default function UnifiedRubric() {
                         </View>
                     </Animated.View>
 
-                    <SoundButton 
-                        style={[styles.finishBtn, isLoading && { opacity: 0.5 }]} 
+                    <GemButton 
+                        gemType="citrine"
+                        style={{marginTop: 30}}
                         onPress={handleFinish}
                         disabled={isLoading}
                     >
-                        {isLoading ? <ActivityIndicator color={theme.buttonText} /> : <Text style={styles.finishBtnText}>FINALIZE ASSESSMENT →</Text>}
-                    </SoundButton>
+                        {isLoading ? <ActivityIndicator color={theme.buttonText} /> : <Text style={styles.finishBtnText}>FINALIZE ASSESSMENT</Text>}
+                    </GemButton>
                     
                     <View style={{ height: 100 }} />
                 </ScrollView>
@@ -504,30 +503,29 @@ export default function UnifiedRubric() {
     );
 }
 
-const getStyles = (theme) => StyleSheet.create({
+const getStyles = (theme, accentColor) => StyleSheet.create({
     scroll: { flex: 1 },
     scrollContent: { padding: 20 },
     header: { flexDirection: 'row', alignItems: 'center', paddingVertical: 15 },
     backBtn: { width: 44, height: 44, justifyContent: 'center' },
-    headerTitle: { color: theme.text, fontSize: 18, fontWeight: '900', letterSpacing: 1 },
-    headerSub: { color: theme.secondaryText, fontSize: 10, fontWeight: '700', textTransform: 'uppercase' },
-    card: { backgroundColor: theme.surface, borderRadius: 24, padding: 20, borderWidth: 1, borderColor: theme.border },
-    sectionLabel: { color: theme.primary, fontSize: 11, fontWeight: '900', letterSpacing: 1, marginBottom: 15 },
+    headerTitle: { color: theme.text, fontSize: 18, fontWeight: '300', letterSpacing: 2, textTransform: 'uppercase', fontFamily: "Jost_300Light" },
+    headerSub: { color: accentColor, fontSize: 10, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 1, fontFamily: "Jost_600SemiBold" },
+    card: { backgroundColor: theme.surface + 'E6', borderRadius: 24, padding: 20, borderWidth: 1, borderColor: theme.border },
+    sectionLabel: { color: accentColor, fontSize: 11, fontWeight: '600', letterSpacing: 1, marginBottom: 15, fontFamily: "Jost_600SemiBold" },
     fieldBlock: { marginBottom: 20 },
-    fieldLabel: { color: theme.secondaryText, fontSize: 10, fontWeight: '800', marginBottom: 10, letterSpacing: 0.5 },
+    fieldLabel: { color: theme.secondaryText, fontSize: 10, fontWeight: '300', marginBottom: 10, letterSpacing: 0.5, fontFamily: "Jost_300Light" },
     labelRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-    textArea: { backgroundColor: theme.background, borderRadius: 12, padding: 15, color: theme.text, fontSize: 13, minHeight: 80, textAlignVertical: 'top', borderWidth: 1, borderColor: theme.border },
-    note: { fontSize: 10, color: theme.muted, marginBottom: 15, fontStyle: 'italic' },
+    textArea: { backgroundColor: 'transparent', color: theme.text, fontSize: 13, minHeight: 80, textAlignVertical: 'top', borderBottomWidth: StyleSheet.hairlineWidth, borderColor: accentColor + '80', fontFamily: "Jost_400Regular" },
+    note: { fontSize: 10, color: theme.muted, marginBottom: 15, fontStyle: 'italic', fontFamily: "Jost_300Light" },
     table: { borderWidth: 1, borderRadius: 16, overflow: 'hidden', borderColor: theme.border },
     row: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: theme.border, minHeight: 80 },
     headerCellBase: { backgroundColor: theme.background, justifyContent: 'center', alignItems: 'center', borderRightWidth: 1, borderRightColor: theme.border, padding: 5 },
     cellBase: { justifyContent: 'center', borderRightWidth: 1, borderRightColor: theme.border, backgroundColor: theme.surface },
-    headerTitles: { fontSize: 8, fontWeight: '900', color: theme.secondaryText, textAlign: 'center' },
+    headerTitles: { fontSize: 8, fontWeight: '600', color: theme.secondaryText, textAlign: 'center', fontFamily: "Jost_600SemiBold" },
     iconContainer: { alignItems: 'center', gap: 2 },
-    iconText: { fontSize: 7, fontWeight: '900' },
+    iconText: { fontSize: 7, fontWeight: '300', fontFamily: "Jost_300Light" },
     sideHeader: { alignItems: 'center', gap: 4 },
-    sideIconText: { fontSize: 7, fontWeight: '900', color: theme.secondaryText },
-    inputCell: { flex: 1, fontSize: 11, textAlign: 'center', padding: 4 },
-    finishBtn: { marginTop: 30, backgroundColor: theme.primary, paddingVertical: 18, borderRadius: 20, alignItems: 'center' },
-    finishBtnText: { color: theme.buttonText, fontWeight: '900', letterSpacing: 1, fontSize: 14 }
+    sideIconText: { fontSize: 7, fontWeight: '300', color: theme.secondaryText, fontFamily: "Jost_300Light" },
+    inputCell: { flex: 1, fontSize: 11, textAlign: 'center', padding: 4, fontFamily: "Jost_400Regular" },
+    finishBtnText: { color: theme.buttonText, fontWeight: '600', letterSpacing: 2, fontSize: 12, fontFamily: "Jost_600SemiBold" }
 });

@@ -9,7 +9,9 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import SoundButton from "../components/SoundButton";
+import PremiumBackground from "../components/PremiumBackground";
 import { useTheme, useAuth } from "../context/GlobalContext";
+import { gems } from "../colour_themes";
 
 const { width } = Dimensions.get("window");
 
@@ -24,11 +26,14 @@ export default function TeacherHome() {
     { title: "Manage Class", icon: "≡", path: "/TeacherTracking", primary: false },
   ];
 
-  const styles = getStyles(theme);
+  const accentColor = gems.jade;
+  const styles = getStyles(theme, accentColor);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={theme.isDark ? "light-content" : "dark-content"} />
+    <View style={styles.rootContainer}>
+      <PremiumBackground gemColor={accentColor} />
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle={theme.isDark ? "light-content" : "dark-content"} />
       
       {/* ── HEADER ── */}
       <View style={styles.header}>
@@ -83,13 +88,18 @@ export default function TeacherHome() {
         <View style={{ height: 40 }} />
       </ScrollView>
     </SafeAreaView>
+    </View>
   );
 }
 
-const getStyles = (theme) => StyleSheet.create({
-  container: {
+const getStyles = (theme, accentColor) => StyleSheet.create({
+  rootContainer: {
     flex: 1,
     backgroundColor: theme.background,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: "transparent",
   },
   scrollContent: {
     padding: 24,
@@ -103,15 +113,20 @@ const getStyles = (theme) => StyleSheet.create({
     paddingBottom: 30,
   },
   greeting: {
-    fontSize: 14,
-    color: theme.secondaryText,
+    fontSize: 10,
+    color: accentColor,
     fontWeight: "600",
+    letterSpacing: 2,
+    textTransform: "uppercase",
+    fontFamily: "Jost_600SemiBold",
   },
   teacherName: {
-    fontSize: 22,
-    fontWeight: "800",
+    fontSize: 24,
+    fontWeight: "300",
     color: theme.text,
-    marginTop: 2,
+    letterSpacing: 2,
+    marginTop: 4,
+    fontFamily: "Jost_300Light",
   },
   avatarContainer: {
     position: "relative",
@@ -128,8 +143,9 @@ const getStyles = (theme) => StyleSheet.create({
   },
   avatarText: {
     color: theme.text,
-    fontWeight: "bold",
+    fontWeight: "600",
     fontSize: 18,
+    fontFamily: "Jost_600SemiBold",
   },
   editBadge: {
     position: "absolute",
@@ -150,12 +166,13 @@ const getStyles = (theme) => StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 12,
-    fontWeight: "800",
+    fontWeight: "600",
     color: theme.secondaryText,
     textTransform: "uppercase",
     letterSpacing: 1.5,
     marginBottom: 20,
     marginLeft: 4,
+    fontFamily: "Jost_600SemiBold",
   },
   grid: {
     flexDirection: "row",
@@ -163,10 +180,10 @@ const getStyles = (theme) => StyleSheet.create({
     justifyContent: "space-between",
   },
   boxCard: {
-    backgroundColor: theme.card,
+    backgroundColor: theme.surface,
     width: (width - 60) / 2,
     padding: 24,
-    borderRadius: 24,
+    borderRadius: 16,
     marginBottom: 12,
     borderWidth: 1,
     borderColor: theme.border,
@@ -174,8 +191,13 @@ const getStyles = (theme) => StyleSheet.create({
     justifyContent: "center",
   },
   primaryBoxCard: {
-    backgroundColor: theme.primary,
-    borderColor: theme.border,
+    backgroundColor: theme.background,
+    borderColor: accentColor,
+    shadowColor: accentColor,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 4,
   },
   boxIcon: {
     fontSize: 24,
@@ -183,15 +205,18 @@ const getStyles = (theme) => StyleSheet.create({
     marginBottom: 12,
   },
   primaryBoxIcon: {
-    color: theme.buttonText,
+    color: accentColor,
   },
   boxTitle: {
-    fontSize: 14,
-    fontWeight: "800",
+    fontSize: 12,
+    fontWeight: "600",
     color: theme.text,
+    textTransform: "uppercase",
+    letterSpacing: 1,
+    fontFamily: "Jost_600SemiBold",
   },
   primaryBoxTitle: {
-    color: theme.buttonText,
+    color: accentColor,
   },
   logoutButton: {
     marginTop: 40,
@@ -203,8 +228,9 @@ const getStyles = (theme) => StyleSheet.create({
   logoutText: {
     color: theme.secondaryText,
     fontSize: 14,
-    fontWeight: "700",
+    fontWeight: "300",
     textTransform: "uppercase",
     letterSpacing: 1,
+    fontFamily: "Jost_300Light",
   },
 });
