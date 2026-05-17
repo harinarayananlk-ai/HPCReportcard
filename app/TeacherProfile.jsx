@@ -13,18 +13,19 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import SoundButton from "../components/SoundButton";
 import PremiumBackground from "../components/PremiumBackground";
-import { useTheme } from "../context/GlobalContext";
+import { useTheme, useAuth } from "../context/GlobalContext";
 import { gems } from "../colour_themes";
 
 export default function TeacherProfile() {
   const router = useRouter();
   const { theme } = useTheme();
+  const { user, schoolInfo, teacherInfo } = useAuth();
 
-  // Profile Detail States
-  const [name, setName] = useState("");
-  const [udiseCode, setUdiseCode] = useState("");
-  const [schoolName, setSchoolName] = useState("");
-  const [teacherCode, setTeacherCode] = useState("");
+  // Profile Detail States — pre-filled from context
+  const [name, setName] = useState(teacherInfo?.full_name || user?.full_name || "");
+  const [udiseCode, setUdiseCode] = useState(schoolInfo?.udise_code || "");
+  const [schoolName, setSchoolName] = useState(schoolInfo?.name || "");
+  const [teacherCode, setTeacherCode] = useState(teacherInfo?.teacher_code || "");
 
   const styles = getStyles(theme);
 

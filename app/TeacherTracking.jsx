@@ -20,7 +20,7 @@ import { gems } from "../colour_themes";
 export default function TeacherTracking() {
   const router = useRouter();
   const { theme } = useTheme();
-  const { setActiveStudentId, setActiveStudentProfile } = useAuth();
+  const { user, setActiveStudentId, setActiveStudentProfile } = useAuth();
   const accentColor = gems.jade;
   const styles = getStyles(theme, accentColor);
   const [students, setStudents] = useState([]);
@@ -58,7 +58,7 @@ export default function TeacherTracking() {
     setExpandedStudents(prev => ({ ...prev, [studentId]: !prev[studentId] }));
   };
 
-  // Fetch initial list of students
+  // Fetch initial list of students — filtered by role
   useEffect(() => {
     fetchStudents();
   }, []);
@@ -66,7 +66,11 @@ export default function TeacherTracking() {
   const fetchStudents = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`${API_URL}/admin/students`);
+      // Teachers see only their class; superadmins see all
+      const endpoint = user?.role === 'teacher'
+        ? `${API_URL}/teacher/students/${user.id}`
+        : `${API_URL}/admin/students`;
+      const res = await fetch(endpoint);
       if (!res.ok) throw new Error("Failed to fetch");
       const data = await res.json();
       setStudents(data);
@@ -74,7 +78,7 @@ export default function TeacherTracking() {
       console.warn("Server connection error:", error);
       Alert.alert(
         "Connection Error",
-        "Could not connect to the backend server. Make sure 'node server.js' is running."
+        "Could not connect to the backend server. Make sure the backend is running."
       );
     } finally {
       setLoading(false);
@@ -196,7 +200,7 @@ export default function TeacherTracking() {
                           onPress={() => toggleStudent(student.user_id)}
                           style={[styles.studentRow, { backgroundColor: theme.card }]}
                         >
-                          <Text style={styles.studentNameText}>{student.username}</Text>
+                          <Text style={styles.studentNameText}>{student.full_name || student.username}</Text>
                           <Text style={styles.studentIdLabel}>UID: {student.registration_number}</Text>
                         </SoundButton>
 
@@ -208,19 +212,50 @@ export default function TeacherTracking() {
                             </View>
                             <View style={styles.detailRow}>
                               <Text style={styles.detailLabel}>PASSWORD:</Text>
-                              <Text style={[styles.detailValue, { color: accentColor }]} selectable>{student.plain_password || student.password || 'pass123'}</Text>
+                              <Text style={[styles.detailValue, { color: accentColor }]} selectable>{student.plain_password || 'pass123'}</Text>
                             </View>
 
                             <GemButton 
                               style={{marginTop: 16}}
+                              gemType="aquamarine"
+                              onPress={async () => {
+                                  setActiveStudentId(student.user_id);
+                                  // Fetch full profile before navigating
+                                  try {
+                                    const res = await fetch(`${API_URL}/students/profile/${student.user_id}`);
+                                    const data = await res.json();
+                                    setActiveStudentProfile(data || { registration_number: student.registration_number });
+                                  } catch (e) {
+                                    setActiveStudentProfile({ registration_number: student.registration_number });
+                                  }
+                                  router.push("/part_a1/StudentRegistration");
+                              }}
+                            >
+                              <Text style={{color: theme.buttonText, fontWeight: '700', fontSize: 11, letterSpacing: 1}}>VIEW/EDIT CARD</Text>
+                            </GemButton>
+
+                            <GemButton 
+                              style={{marginTop: 12}}
                               gemType="jade"
                               onPress={() => {
                                   setActiveStudentId(student.user_id);
                                   setActiveStudentProfile({ registration_number: student.registration_number });
-                                  router.push("/part_a1/StudentRegistration");
+                                  router.push("/part_b_preparatory/SelectionPage");
                               }}
                             >
-                              <Text style={{color: theme.buttonText, fontWeight: '700', fontSize: 12, letterSpacing: 2}}>VIEW/EDIT CARD</Text>
+                              <Text style={{color: theme.buttonText, fontWeight: '700', fontSize: 11, letterSpacing: 1}}>ASSESS PREPARATORY (PART B)</Text>
+                            </GemButton>
+
+                            <GemButton 
+                              style={{marginTop: 12}}
+                              gemType="topaz"
+                              onPress={() => {
+                                  setActiveStudentId(student.user_id);
+                                  setActiveStudentProfile({ registration_number: student.registration_number });
+                                  router.push("/part_c_preparatory/YearEndSummary");
+                              }}
+                            >
+                              <Text style={{color: theme.buttonText, fontWeight: '700', fontSize: 11, letterSpacing: 1}}>YEAR-END SUMMARY (PART C)</Text>
                             </GemButton>
                           </View>
                         )}
@@ -280,18 +315,19 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     fontFamily: "Jost_600SemiBold",
   },
   input: {
-    backgroundColor: 'transparent',
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    backgroundColor: 'rgba(255,255,255,0.4)',
+    borderBottomWidth: 1.5,
     borderTopWidth: 0,
     borderLeftWidth: 0,
     borderRightWidth: 0,
-    borderColor: accentColor + '80',
-    color: theme.text,
-    paddingHorizontal: 8,
+    borderColor: accentColor,
+    color: '#222',
+    paddingHorizontal: 12,
     paddingVertical: 12,
     fontSize: 14,
     marginBottom: 20,
     fontFamily: "Jost_400Regular",
+    borderRadius: 8,
   },
   addBtn: {
     backgroundColor: theme.primary,
@@ -373,9 +409,10 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
   studentDetailCard: {
     marginTop: 2,
     padding: 16,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderStyle: 'dashed',
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: gems.topaz,
+    backgroundColor: "rgba(245, 245, 245, 0.85)",
   },
   detailRow: {
     flexDirection: 'row',

@@ -37,7 +37,7 @@ const { width, height } = Dimensions.get("window");
 
 export default function LoginScreen() {
   const { theme } = useTheme();
-  const { setUser, setProfile } = useAuth();
+  const { setUser, setProfile, setSchoolInfo, setTeacherInfo } = useAuth();
   const [role, setRole] = useState("student");
   const router = useRouter();
   const [username, setUsername] = useState("");
@@ -47,25 +47,37 @@ export default function LoginScreen() {
   // Teacher Explicit Field States
   const [udise, setUdise] = useState("");
   const [teacherCode, setTeacherCode] = useState("");
+  const [showTeacherMenu, setShowTeacherMenu] = useState(false);
+  const [showStudentMenu, setShowStudentMenu] = useState(false);
 
   const styles = getStyles(theme);
 
   const handleLogin = async (bypassCreds = null) => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
     try {
       setLoading(true);
       const loginPayload = bypassCreds || { username, password, role };
       
+      console.log(`[Login] Hitting endpoint: ${API_URL}/login`);
+
       const res = await fetch(`${API_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(loginPayload)
+        body: JSON.stringify(loginPayload),
+        signal: controller.signal
       });
+      
+      clearTimeout(timeoutId);
       const data = await res.json();
       setLoading(false);
 
       if (res.ok) {
         setUser(data.user);
         setProfile(data.profile || null);
+        setSchoolInfo(data.schoolInfo || null);
+        setTeacherInfo(data.teacherInfo || null);
         
         const targetRole = data.user.role || loginPayload.role;
 
@@ -81,7 +93,12 @@ export default function LoginScreen() {
       }
     } catch (err) {
       setLoading(false);
-      Alert.alert("Error", "Could not connect to server. Ensure 'python Backend/main.py' is running!");
+      clearTimeout(timeoutId);
+      console.error("[Login] Error:", err);
+      const msg = err.name === 'AbortError' 
+        ? "Request timed out. Is the backend running at " + API_URL + "?"
+        : "Could not connect to server. Check your network or backend logs.";
+      Alert.alert("Connection Error", msg);
     }
   };
 
@@ -210,21 +227,55 @@ export default function LoginScreen() {
 
       {/* Tiny Bypass Buttons on Sides - Simplified */}
       <View style={styles.absoluteBypassLeft}>
-        <SoundButton
-          style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0' }]}
-          onPress={() => handleLogin({ username: 's_ladoo', password: 'pass123', role: 'student' })}
-        >
-          <Text style={styles.tinyBypassText}>S</Text>
-        </SoundButton>
+        {showStudentMenu ? (
+          <>
+            <SoundButton style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]} onPress={() => handleLogin({ username: 's_ladoo', password: 'pass123', role: 'student' })}>
+              <Text style={[styles.tinyBypassText, {fontSize: 8}]}>SF</Text>
+            </SoundButton>
+            <SoundButton style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]} onPress={() => handleLogin({ username: 's_bittoo', password: 'pass123', role: 'student' })}>
+              <Text style={[styles.tinyBypassText, {fontSize: 8}]}>SP</Text>
+            </SoundButton>
+            <SoundButton style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]} onPress={() => handleLogin({ username: 's_imli_6a', password: 'pass123', role: 'student' })}>
+              <Text style={[styles.tinyBypassText, {fontSize: 8}]}>SM</Text>
+            </SoundButton>
+            <SoundButton style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]} onPress={() => handleLogin({ username: 's_urad_9a', password: 'pass123', role: 'student' })}>
+              <Text style={[styles.tinyBypassText, {fontSize: 8}]}>SS</Text>
+            </SoundButton>
+          </>
+        ) : (
+          <SoundButton
+            style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0' }]}
+            onPress={() => setShowStudentMenu(true)}
+          >
+            <Text style={styles.tinyBypassText}>S</Text>
+          </SoundButton>
+        )}
       </View>
 
       <View style={styles.absoluteBypassLeftRight}>
-        <SoundButton
-          style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]}
-          onPress={() => handleLogin({ username: 't_murugan', password: 'pass123', role: 'teacher' })}
-        >
-          <Text style={styles.tinyBypassText}>T</Text>
-        </SoundButton>
+        {showTeacherMenu ? (
+          <>
+            <SoundButton style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]} onPress={() => handleLogin({ username: 't_murugan', password: 'pass123', role: 'teacher' })}>
+              <Text style={[styles.tinyBypassText, {fontSize: 8}]}>TF</Text>
+            </SoundButton>
+            <SoundButton style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]} onPress={() => handleLogin({ username: 't_chai', password: 'pass123', role: 'teacher' })}>
+              <Text style={[styles.tinyBypassText, {fontSize: 8}]}>TP</Text>
+            </SoundButton>
+            <SoundButton style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]} onPress={() => handleLogin({ username: 't_roti', password: 'pass123', role: 'teacher' })}>
+              <Text style={[styles.tinyBypassText, {fontSize: 8}]}>TM</Text>
+            </SoundButton>
+            <SoundButton style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]} onPress={() => handleLogin({ username: 't_laddu', password: 'pass123', role: 'teacher' })}>
+              <Text style={[styles.tinyBypassText, {fontSize: 8}]}>TS</Text>
+            </SoundButton>
+          </>
+        ) : (
+          <SoundButton
+            style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]}
+            onPress={() => setShowTeacherMenu(true)}
+          >
+            <Text style={styles.tinyBypassText}>T</Text>
+          </SoundButton>
+        )}
         <SoundButton
           style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]}
           onPress={() => handleLogin({ username: 'superadmin', password: 'admin123', role: 'superadmin' })}
@@ -265,7 +316,7 @@ const getStyles = (theme) => StyleSheet.create({
     alignItems: "center",
   },
   card: {
-    backgroundColor: theme.glass || theme.card,
+    backgroundColor: "rgba(245, 245, 245, 0.85)", // Consistent Silver Plate
     borderRadius: 16, // Softer less extreme border radius
     padding: 32,
     borderWidth: 1, // Gold line
@@ -387,12 +438,14 @@ const getStyles = (theme) => StyleSheet.create({
     left: 20,
     bottom: 40,
     zIndex: 10,
+    flexDirection: 'column-reverse',
   },
   absoluteBypassLeftRight: {
     position: 'absolute',
     left: 20,
     bottom: 80,
     zIndex: 10,
+    flexDirection: 'column-reverse',
   },
   tinyBypassBtn: {
     width: 36,

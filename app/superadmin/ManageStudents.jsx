@@ -140,7 +140,7 @@ export default function ManageStudents() {
                 const res = await fetch(`${API_URL}/students/profile/${item.user_id}`);
                 const data = await res.json();
                 setProfile(data || { user_id: item.user_id, registration_number: item.registration_number });
-                router.push("/part_a1/FamilyTreePage");
+                router.push("/part_a1/ParentRegistration");
              } catch(e) { Alert.alert("Error", "Tree Sync Failed."); }
              finally { setLoading(false); }
           }}

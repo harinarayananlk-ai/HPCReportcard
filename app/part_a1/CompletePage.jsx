@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   View,
   Text,
@@ -6,385 +6,405 @@ import {
   StyleSheet,
   ScrollView,
   StatusBar,
+  TouchableOpacity,
+  Dimensions,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme, useAuth, API_URL } from "../../context/GlobalContext";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import SoundButton from "../../components/SoundButton";
+import GemButton from "../../components/GemButton";
 import PremiumBackground from "../../components/PremiumBackground";
+import { gems } from "../../colour_themes";
 
-const MONTHS = ["Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar"];
+const { width } = Dimensions.get('window');
 
-const ACCENT = "#D4AF37"; // Premium Gold
-const SILVER = "#C0C0C0"; 
+const baseMonths = [
+    { name: "Apr", days: 30 },
+    { name: "May", days: 31 },
+    { name: "Jun", days: 30 },
+    { name: "Jul", days: 31 },
+    { name: "Aug", days: 31 },
+    { name: "Sep", days: 30 },
+    { name: "Oct", days: 31 },
+    { name: "Nov", days: 30 },
+    { name: "Dec", days: 31 },
+    { name: "Jan", days: 31 },
+    { name: "Feb", days: 28 }, // Simplified, ignore leap year for now
+    { name: "Mar", days: 31 }
+];
 
-export default function AttendancePage() {
+const DAYS_OF_WEEK = ["M", "T", "W", "T", "F", "S", "S"];
+
+export default function CompletePage() {
   const { theme } = useTheme();
-  const { user, profile, setProfile: setAuthProfile, activeStudentId, activeStudentProfile } = useAuth();
+  const { user, profile, setProfile: setAuthProfile, activeStudentId, activeStudentProfile, setActiveStudentProfile } = useAuth();
   const isTeacher = user?.role === 'teacher' || user?.role === 'superadmin';
   const targetUserId = (isTeacher && activeStudentId) ? activeStudentId : user?.id;
   const targetProfile = (isTeacher && activeStudentProfile) ? activeStudentProfile : profile;
   const router = useRouter();
-  const styles = getStyles(theme);
 
-  // Each month stores { working: "", attended: "" }
-  const [rows, setRows] = useState(
-    MONTHS.map(() => ({ working: "", attended: "" }))
-  );
+  const [schoolCalendar, setSchoolCalendar] = useState({ startMonthIdx: 0, workingDaysMap: {} });
+  const [activeMonthIdx, setActiveMonthIdx] = useState(0);
+  
+  // Compute MONTHS after we have the start index
+  const MONTHS = useMemo(() => {
+    const start = schoolCalendar.startMonthIdx ?? 0;
+    return [...baseMonths.slice(start), ...baseMonths.slice(0, start)];
+  }, [schoolCalendar.startMonthIdx]);
+
+  // State maps month index (0-11) to array of absent day numbers (1-31)
+  const [absentDaysByMonth, setAbsentDaysByMonth] = useState({});
+  const [lowAttendanceReason, setLowAttendanceReason] = useState("");
+  const [loading, setLoading] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const fetchProfile = async () => {
-    if (!targetUserId) return;
-    
+  useEffect(() => {
+    if (targetUserId) {
+      fetchAttendance();
+      fetchGlobalCalendar();
+    }
+  }, [targetUserId]);
+
+  const fetchAttendance = async () => {
     try {
-      const resp = await fetch(`${API_URL}/students/profile/${targetUserId}`);
-      const data = await resp.json();
-      
-      let tableToSet = null;
-
-      // 1. Check assessments
-      if (data.assessments) {
-        const assess = typeof data.assessments === 'string' ? JSON.parse(data.assessments) : data.assessments;
-        if (assess?.attendanceTable && Array.isArray(assess.attendanceTable) && assess.attendanceTable.length === 12) {
-          tableToSet = assess.attendanceTable;
-        }
-      }
-
-      // 2. Check family_details
-      if (!tableToSet && data.family_details) {
+      setLoading(true);
+      const res = await fetch(`${API_URL}/students/profile/${targetUserId}`);
+      const data = await res.json();
+      if (data && data.family_details) {
         const fd = typeof data.family_details === 'string' ? JSON.parse(data.family_details) : data.family_details;
-        if (fd?.attendance && Array.isArray(fd.attendance) && fd.attendance.length === 12) {
-          tableToSet = fd.attendance;
-        }
+        if (fd.attendanceCal) setAbsentDaysByMonth(fd.attendanceCal);
+        if (fd.lowAttendanceReason) setLowAttendanceReason(fd.lowAttendanceReason);
       }
-
-      if (tableToSet) {
-        setRows(tableToSet);
-      } else {
-        setRows(MONTHS.map(() => ({ working: "", attended: "" })));
-      }
-    } catch (e) {
-      console.warn("Attendance fetch failed", e);
+    } catch (err) {
+      console.warn("[CompletePage] Fetch failed:", err);
     } finally {
+      setLoading(false);
       setIsLoaded(true);
     }
   };
 
-  // Auto-Sync Logic
-  useEffect(() => {
-    if (targetUserId) {
-       fetchProfile();
+  const fetchGlobalCalendar = async () => {
+    try {
+      const res = await fetch(`${API_URL}/students/profile/${'global_school_settings'}`);
+      const data = await res.json();
+      const sd = data?.schoolCalendar || {};
+      setSchoolCalendar({ startMonthIdx: sd.startMonthIdx ?? 0, workingDaysMap: sd.workingDaysMap ?? {} });
+    } catch (e) {
+      console.warn('Failed to load global school settings', e);
     }
-  }, [targetUserId]);
+  };
 
-  // Auto-Save Behavior for Attendance (Teacher Only)
-  useEffect(() => {
-    if (!isLoaded || rows.length === 0 || !isTeacher) return;
-    const timer = setTimeout(() => {
-      const saveSilently = async () => {
-         try {
-          const payload = {
-            userId: targetUserId,
-            registrationNumber: targetProfile?.registration_number,
-            assessments: { 
-              ...targetProfile?.assessments,
-              attendanceTable: rows 
-            }
-          };
-          await fetch(`${API_URL}/students/profile`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-          });
-         } catch (e) {}
+
+  const getMonthStats = (monthIdx) => {
+    const monthInfo = MONTHS[monthIdx];
+    let workingDays = 0;
+    
+    // Calculate working days (Total days - Sundays)
+    // For simplicity, let's assume month starts on a Wednesday (offset = 2) for rendering, 
+    // but Sundays are offset + day % 7 == 6.
+    const startOffset = (monthIdx * 2) % 7; // Pseudo random start day for visual variation
+    for (let d = 1; d <= monthInfo.days; d++) {
+        const col = (startOffset + d - 1) % 7;
+        if (col !== 6) workingDays++; // Not Sunday
+    }
+
+    const absent = (absentDaysByMonth[monthIdx] || []).length;
+    const attended = Math.max(0, workingDays - absent);
+    const pct = workingDays > 0 ? Math.round((attended / workingDays) * 100) : 0;
+    
+    return { working: workingDays, attended, pct };
+  };
+
+  const saveAttendance = async () => {
+    if (!isTeacher || !targetUserId) return;
+    setLoading(true);
+    try {
+      // Build summary for legacy compatibility
+      const attendanceSummary = MONTHS.map((m, idx) => {
+        const stats = getMonthStats(idx);
+        return { 
+          month: m.name, 
+          working: stats.working.toString(), 
+          attended: stats.attended.toString() 
+        };
+      });
+
+      const familyDetails = { 
+        ...targetProfile?.family_details, 
+        attendance: attendanceSummary, 
+        attendanceCal: absentDaysByMonth,
+        lowAttendanceReason 
       };
-      saveSilently();
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, [rows]);
-
-  const handleSaveAndNext = async () => {
-    if (isTeacher && user?.id) {
-       // Save to student profile
-       try {
-         const familyDetails = { 
-           ...profile?.family_details,
-           attendance: rows 
-         };
-
-         const payload = {
-           userId: user.id, // Current student being edited
-           registrationNumber: profile?.registration_number,
-           familyDetails
-         };
-
-         const res = await fetch(`${API_URL}/students/profile`, {
-           method: 'POST',
-           headers: { 'Content-Type': 'application/json' },
-           body: JSON.stringify(payload)
-         });
-
-         if (res.ok) {
-           setAuthProfile({
-             ...targetProfile,
-             family_details: familyDetails
-           });
-         }
-       } catch (err) {
-         console.warn("Save attendance failed", err);
-       }
+      const payload = { userId: targetUserId, registrationNumber: targetProfile?.registration_number, familyDetails };
+      const res = await fetch(`${API_URL}/students/profile`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        const updated = { ...targetProfile, family_details: familyDetails };
+        if (isTeacher && activeStudentId) setActiveStudentProfile(updated);
+        else setAuthProfile(updated);
+        Alert.alert("Success", "Attendance records updated.");
+      }
+    } catch (e) {
+      Alert.alert("Error", "Could not save records.");
+    } finally {
+      setLoading(false);
     }
-    router.push("/part_a2/LayoutBuilder");
   };
 
-  const updateRow = (index, field, value) => {
-    const updated = [...rows];
-    updated[index] = { ...updated[index], [field]: value };
-    setRows(updated);
+  const toggleAbsent = (monthIdx, day) => {
+    if (!isTeacher) return;
+    setAbsentDaysByMonth(prev => {
+        const current = prev[monthIdx] || [];
+        if (current.includes(day)) {
+            return { ...prev, [monthIdx]: current.filter(d => d !== day) };
+        } else {
+            return { ...prev, [monthIdx]: [...current, day] };
+        }
+    });
   };
 
-  const getPercent = (row) => {
-    const w = parseFloat(row.working);
-    const a = parseFloat(row.attended);
-    if (!w || w <= 0) return "—";
-    const p = ((a / w) * 100).toFixed(1);
-    return `${p}%`;
-  };
+  const renderCalendar = (monthIdx) => {
+      const monthInfo = MONTHS[monthIdx];
+      const startOffset = (monthIdx * 2) % 7;
+      
+      const grid = [];
+      let currentWeek = [];
+      
+      // Empty cells for offset
+      for(let i = 0; i < startOffset; i++) {
+          currentWeek.push(<View key={`empty-${i}`} style={styles.calCell} />);
+      }
 
-  const getPercentColor = (row) => {
-    const w = parseFloat(row.working);
-    const a = parseFloat(row.attended);
-    if (!w || w <= 0) return theme.secondaryText;
-    const p = (a / w) * 100;
-    if (p >= 75) return "#00ffcc";
-    if (p >= 50) return "#ffb347";
-    return theme.error;
+      for (let d = 1; d <= monthInfo.days; d++) {
+          const col = (startOffset + d - 1) % 7;
+          const isSunday = col === 6;
+          const isAbsent = (absentDaysByMonth[monthIdx] || []).includes(d);
+
+          currentWeek.push(
+              <TouchableOpacity 
+                key={`day-${d}`} 
+                style={[
+                    styles.calCell, 
+                    isSunday ? styles.calCellSunday : null,
+                    isAbsent ? styles.calCellAbsent : null
+                ]}
+                disabled={isSunday || !isTeacher}
+                onPress={() => toggleAbsent(monthIdx, d)}
+              >
+                  <Text style={[
+                      styles.calDayText,
+                      isSunday ? styles.calDayTextSunday : null,
+                      isAbsent ? styles.calDayTextAbsent : null,
+                      { color: isAbsent ? '#FFF' : theme.text }
+                  ]}>
+                      {d}
+                  </Text>
+                  {isAbsent && <View style={styles.absentDot} />}
+              </TouchableOpacity>
+          );
+
+          if (currentWeek.length === 7) {
+              grid.push(<View key={`week-${d}`} style={styles.calRow}>{currentWeek}</View>);
+              currentWeek = [];
+          }
+      }
+
+      if (currentWeek.length > 0) {
+          while(currentWeek.length < 7) {
+              currentWeek.push(<View key={`empty-end-${currentWeek.length}`} style={styles.calCell} />);
+          }
+          grid.push(<View key="week-last" style={styles.calRow}>{currentWeek}</View>);
+      }
+
+      const stats = getMonthStats(monthIdx);
+
+      return (
+          <View style={styles.calendarContainer}>
+              <View style={styles.calHeaderRow}>
+                  {DAYS_OF_WEEK.map((d, i) => (
+                      <View key={i} style={styles.calHeaderCell}>
+                          <Text style={[styles.calHeaderText, i===6 && {color: 'rgba(255,0,0,0.5)'}]}>{d}</Text>
+                      </View>
+                  ))}
+              </View>
+              {grid}
+
+              <View style={styles.statsContainer}>
+                  <View style={styles.statBox}>
+                      <Text style={styles.statVal}>{stats.working}</Text>
+                      <Text style={styles.statLbl}>WORKING</Text>
+                  </View>
+                  <View style={[styles.statBox, { borderLeftWidth: 1, borderRightWidth: 1, borderColor: theme.border }]}>
+                      <Text style={styles.statVal}>{stats.attended}</Text>
+                      <Text style={styles.statLbl}>ATTENDED</Text>
+                  </View>
+                  <View style={styles.statBox}>
+                      <Text style={[styles.statVal, { color: gems.sapphire }]}>{stats.pct}%</Text>
+                      <Text style={styles.statLbl}>ATTENDANCE</Text>
+                  </View>
+              </View>
+          </View>
+      );
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: theme.background }}>
       <PremiumBackground />
       <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="light-content" />
-
-      {/* Header */}
-      <View style={styles.header}>
-        <SoundButton onPress={() => router.back()} style={styles.backBtn}>
-          <Text style={styles.backText}>←</Text>
-        </SoundButton>
-        <View style={{ flex: 1, alignItems: 'center' }}>
-          <Text style={styles.title}>Attendance Register</Text>
+        <StatusBar barStyle="light-content" />
+        <View style={styles.header}>
+          <SoundButton onPress={() => router.back()} style={styles.backBtn}><Ionicons name="chevron-back" size={24} color={theme.text} /></SoundButton>
+          <View style={styles.headerTitleContainer}>
+            <Text style={styles.title}>ATTENDANCE</Text>
+            <Text style={styles.subtitle}>Monthly Calendar</Text>
+          </View>
+          <SoundButton onPress={saveAttendance} style={[styles.saveHeaderBtn, { borderColor: gems.sapphire }]}><Ionicons name="checkmark-done" size={22} color={gems.sapphire} /></SoundButton>
         </View>
-        <SoundButton 
-          style={{ backgroundColor: theme.primary + '30', padding: 8, borderRadius: 10, borderWidth: 1, borderColor: theme.primary }} 
-          onPress={handleSaveAndNext}
-        >
-          <Ionicons name="save-outline" size={22} color={theme.primary} />
-        </SoundButton>
-      </View>
 
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        <View style={styles.card}>
-          {/* Table Header */}
-          <View style={styles.tableRow}>
-            <Text style={[styles.th, { flex: 1 }]}>Month</Text>
-            <Text style={[styles.th, { flex: 1.4 }]}>Working Days</Text>
-            <Text style={[styles.th, { flex: 1.4 }]}>Days Attended</Text>
-            <Text style={[styles.th, { flex: 1 }]}>% Att.</Text>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+          
+          <View style={styles.monthSelector}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {MONTHS.map((m, idx) => (
+                    <TouchableOpacity 
+                        key={m.name} 
+                        onPress={() => setActiveMonthIdx(idx)}
+                        style={[
+                            styles.monthPill, 
+                            activeMonthIdx === idx ? { backgroundColor: gems.sapphire } : { backgroundColor: 'rgba(245,245,245,0.8)' }
+                        ]}
+                    >
+                        <Text style={[
+                            styles.monthPillText,
+                            activeMonthIdx === idx ? { color: '#FFF' } : { color: theme.text }
+                        ]}>{m.name}</Text>
+                    </TouchableOpacity>
+                ))}
+            </ScrollView>
           </View>
 
-          {/* Table Body */}
-          {rows.map((row, i) => (
-            <View
-              key={i}
-              style={[styles.tableRow, i % 2 === 0 ? styles.rowEven : styles.rowOdd]}
-            >
-              <Text style={[styles.td, { flex: 1, fontWeight: "700", color: ACCENT }]}>
-                {MONTHS[i]}
-              </Text>
-
-              <View style={{ flex: 1.4, alignItems: "center" }}>
-                <TextInput
-                  style={styles.input}
-                  keyboardType="numeric"
-                  placeholder="0"
-                  placeholderTextColor={theme.secondaryText}
-                  value={row.working}
-                  onChangeText={(v) => updateRow(i, "working", v)}
-                  maxLength={2}
-                  editable={isTeacher}
-                />
+          <View style={[styles.card, { borderColor: gems.sapphire }]}>
+            <View style={styles.inlaidHeader}>
+              <View style={[styles.inlaidIconBox, { borderColor: gems.sapphire }]}>
+                <Ionicons name="calendar-outline" size={18} color={gems.sapphire} />
               </View>
-
-              <View style={{ flex: 1.4, alignItems: "center" }}>
-                <TextInput
-                  style={styles.input}
-                  keyboardType="numeric"
-                  placeholder="0"
-                  placeholderTextColor={theme.secondaryText}
-                  value={row.attended}
-                  onChangeText={(v) => updateRow(i, "attended", v)}
-                  maxLength={2}
-                  editable={isTeacher}
-                />
-              </View>
-
-              <Text style={[styles.td, { flex: 1, fontWeight: "800", color: getPercentColor(row) }]}>
-                {getPercent(row)}
-              </Text>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>{MONTHS[activeMonthIdx].name.toUpperCase()} CALENDAR</Text>
             </View>
-          ))}
+            <View style={[styles.sectionDivider, { backgroundColor: theme.border }]} />
+            
+            {renderCalendar(activeMonthIdx)}
+            
+            <Text style={styles.helperText}>* Tap on a day to mark as absent. Sundays are disabled.</Text>
+          </View>
 
-          {/* Summary Row */}
-          {(() => {
-            const totalWorking = rows.reduce((s, r) => s + (parseFloat(r.working) || 0), 0);
-            const totalAttended = rows.reduce((s, r) => s + (parseFloat(r.attended) || 0), 0);
-            const overall = totalWorking > 0
-              ? `${((totalAttended / totalWorking) * 100).toFixed(1)}%`
-              : "—";
-            const overallColor = totalWorking > 0
-              ? ((totalAttended / totalWorking) * 100) >= 75 ? "#00ffcc"
-              : ((totalAttended / totalWorking) * 100) >= 50 ? "#ffb347"
-              : theme.error
-              : theme.secondaryText;
-
-            return (
-              <View style={styles.summaryRow}>
-                <Text style={[styles.th, { flex: 1 }]}>Total</Text>
-                <Text style={[styles.th, { flex: 1.4, color: theme.text }]}>{totalWorking}</Text>
-                <Text style={[styles.th, { flex: 1.4, color: theme.text }]}>{totalAttended}</Text>
-                <Text style={[styles.th, { flex: 1, color: overallColor }]}>{overall}</Text>
+          <View style={[styles.card, { borderColor: theme.border }]}>
+            <View style={styles.inlaidHeader}>
+              <View style={[styles.inlaidIconBox, { borderColor: theme.border }]}>
+                <Ionicons name="alert-circle-outline" size={18} color={gems.sapphire} />
               </View>
-            );
-          })()}
-        </View>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>REASONS</Text>
+            </View>
+            <View style={[styles.sectionDivider, { backgroundColor: theme.border }]} />
+            
+            <Text style={styles.label}>If attendance is low then reasons there of</Text>
+            <TextInput
+              style={[styles.reasonInput, { color: theme.text, borderColor: theme.border }]}
+              placeholder="Enter reason here..."
+              placeholderTextColor={theme.secondaryText + '80'}
+              value={lowAttendanceReason}
+              onChangeText={setLowAttendanceReason}
+              multiline
+              editable={isTeacher}
+            />
+          </View>
 
-        <SoundButton
-          style={[styles.nextSectionBtn, !isTeacher && { backgroundColor: theme.surface, borderColor: theme.border, borderWidth: 1 }]}
-          onPress={handleSaveAndNext}
-          activeOpacity={0.8}
-        >
-          <Text style={[styles.nextSectionBtnText, !isTeacher && { color: theme.secondaryText }]}>
-             {isTeacher ? "Save & Go to Part A2 →" : "View Part A2 →"}
-          </Text>
-        </SoundButton>
+          {isTeacher && (
+            <GemButton 
+              onPress={saveAttendance} 
+              disabled={loading} 
+              colors={[gems.sapphire, gems.moonstone]}
+              style={{ marginTop: 10, borderRadius: 16 }}
+            >
+              {loading ? <ActivityIndicator color="#FFF" /> : <Text style={styles.saveBtnText}>SAVE RECORDS</Text>}
+            </GemButton>
+          )}
 
-        <View style={{ height: 40 }} />
-      </ScrollView>
-    </SafeAreaView>
+          <SoundButton onPress={() => {
+            // Stage-aware routing based on class
+            const cls = (targetProfile?.class_name || '').toLowerCase().trim();
+            let route = '/part_a2/LayoutBuilder'; // fallback
+            if (cls.includes('bal vatika') || cls === 'kg' || cls === 'kindergarten' || cls === 'grade 1' || cls === 'grade 2') {
+              route = '/part_a2_foundational/AboutMe';
+            } else if (cls === 'grade 3' || cls === 'grade 4' || cls === 'grade 5') {
+              route = '/part_a2_preparatory/AboutMe';
+            }
+            console.log("[CompletePage] Routing student", targetProfile?.full_name, "with class:", cls, "to:", route);
+            // Middle (6-8) and Secondary (9-12) fall through to LayoutBuilder for now
+            router.push(route);
+          }} style={styles.finishBtn}>
+            <Text style={styles.finishBtnText}>PROCEED TO PART A2</Text>
+            <Ionicons name="arrow-forward" size={18} color="rgba(255,255,255,0.6)" />
+          </SoundButton>
+
+        </ScrollView>
+      </SafeAreaView>
     </View>
   );
 }
 
-const getStyles = (theme) => StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.background, // Respect the selected theme
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#222",
-  },
-  backBtn: {
-    padding: 4,
-    width: 40,
-  },
-  backText: {
-    color: "#ffb347",
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-  title: {
-    color: theme.text,
-    fontSize: 20,
-    fontWeight: "300",
-    fontFamily: "Jost_300Light",
-    letterSpacing: 4,
-    textTransform: "uppercase",
-  },
-  scrollContent: {
-    padding: 16,
-  },
-  card: {
-    backgroundColor: "rgba(255,255,255,0.05)",
-    borderRadius: 20,
-    overflow: "hidden",
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.1)",
-  },
-  tableRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 10,
-    paddingHorizontal: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: "#222",
-  },
-  rowEven: {
-    backgroundColor: "rgba(255,255,255,0.03)",
-  },
-  rowOdd: {
-    backgroundColor: "transparent",
-  },
-  summaryRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 8,
-    backgroundColor: "#1a1a1a",
-    borderTopWidth: 1,
-    borderTopColor: "#333",
-  },
-  th: {
-    color: ACCENT,
-    fontWeight: "700",
-    fontSize: 12,
-    textAlign: "center",
-    paddingVertical: 4,
-  },
-  td: {
-    color: "#fff",
-    fontSize: 13,
-    textAlign: "center",
-  },
-  input: {
-    width: 60,
-    paddingVertical: 6,
-    paddingHorizontal: 4,
-    backgroundColor: "#000",
-    color: "#fff",
-    borderWidth: 1,
-    borderColor: "#555",
-    borderRadius: 6,
-    textAlign: "center",
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  nextSectionBtn: {
-    backgroundColor: theme.primary,
-    marginHorizontal: 16,
-    marginTop: 32,
-    paddingVertical: 18,
-    borderRadius: 30, // Pill shape
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 5,
-  },
-  nextSectionBtnText: {
-    color: theme.buttonText,
-    fontSize: 14,
-    fontWeight: "600",
-    letterSpacing: 2,
-    fontFamily: "Jost_600SemiBold",
-    textTransform: "uppercase",
-  },
+const styles = StyleSheet.create({
+  container: { flex: 1 },
+  header: { flexDirection: "row", alignItems: "center", paddingHorizontal: 20, paddingVertical: 15 },
+  backBtn: { width: 44, height: 44, borderRadius: 12, backgroundColor: "rgba(255,255,255,0.05)", justifyContent: "center", alignItems: "center", borderWidth: 1, borderColor: "rgba(255,255,255,0.1)" },
+  saveHeaderBtn: { width: 44, height: 44, borderRadius: 12, justifyContent: "center", alignItems: "center", borderWidth: 1, backgroundColor: 'rgba(255,255,255,0.05)' },
+  headerTitleContainer: { flex: 1, alignItems: "center" },
+  title: { fontSize: 18, fontWeight: "300", color: "#FFFFFF", letterSpacing: 4, fontFamily: "Jost_300Light" },
+  subtitle: { fontSize: 9, color: "rgba(255,255,255,0.5)", letterSpacing: 1, marginTop: 2, textTransform: "uppercase", fontFamily: "Jost_400Regular" },
+  
+  monthSelector: { paddingHorizontal: 20, marginBottom: 20 },
+  monthPill: { paddingHorizontal: 20, paddingVertical: 10, borderRadius: 20, marginRight: 10, borderWidth: 1, borderColor: 'rgba(0,0,0,0.05)' },
+  monthPillText: { fontSize: 12, fontWeight: '700', fontFamily: 'Jost_600SemiBold', letterSpacing: 1 },
+
+  scrollContent: { padding: 20, paddingBottom: 60, paddingTop: 0 },
+  card: { backgroundColor: "rgba(245, 245, 245, 0.85)", borderRadius: 24, padding: 20, marginBottom: 20, borderWidth: 1.5 },
+  inlaidHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 15 },
+  inlaidIconBox: { width: 36, height: 36, borderRadius: 10, borderWidth: 1, justifyContent: 'center', alignItems: 'center', marginRight: 12 },
+  sectionTitle: { fontSize: 13, fontWeight: '700', letterSpacing: 1, fontFamily: 'Jost_600SemiBold' },
+  sectionDivider: { height: 1, marginBottom: 20, borderRadius: 1 },
+
+  calendarContainer: { width: '100%' },
+  calHeaderRow: { flexDirection: 'row', marginBottom: 10 },
+  calHeaderCell: { flex: 1, alignItems: 'center' },
+  calHeaderText: { fontSize: 11, fontWeight: '700', color: '#666', fontFamily: 'Jost_600SemiBold' },
+  calRow: { flexDirection: 'row', marginBottom: 10 },
+  calCell: { flex: 1, height: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 8 },
+  calCellSunday: { backgroundColor: 'rgba(0,0,0,0.03)', opacity: 0.5 },
+  calCellAbsent: { backgroundColor: '#ef4444' },
+  calCellNotWorking: { backgroundColor: '#9ca3af', opacity: 0.5 },
+  calDayText: { fontSize: 14, fontFamily: 'Jost_400Regular' },
+  calDayTextSunday: { color: 'rgba(0,0,0,0.3)' },
+  calDayTextAbsent: { fontWeight: '700' },
+  absentDot: { position: 'absolute', bottom: 4, width: 4, height: 4, borderRadius: 2, backgroundColor: '#FFF' },
+
+  statsContainer: { flexDirection: 'row', marginTop: 20, borderTopWidth: 1, paddingTop: 20, borderColor: 'rgba(0,0,0,0.1)' },
+  statBox: { flex: 1, alignItems: 'center' },
+  statVal: { fontSize: 18, fontWeight: '700', fontFamily: 'Jost_600SemiBold', marginBottom: 4 },
+  statLbl: { fontSize: 9, color: '#666', letterSpacing: 1, fontFamily: 'Jost_300Light' },
+
+  helperText: { fontSize: 10, color: '#888', marginTop: 15, fontStyle: 'italic', textAlign: 'center' },
+
+  label: { fontSize: 10, color: '#666', fontWeight: '700', marginBottom: 8, letterSpacing: 1, textTransform: 'uppercase' },
+  reasonInput: { backgroundColor: 'rgba(255,255,255,0.5)', borderRadius: 12, padding: 15, minHeight: 80, textAlignVertical: 'top', fontSize: 14, fontFamily: 'Jost_400Regular', marginTop: 10, borderWidth: 1 },
+
+  saveBtnText: { color: '#FFF', fontSize: 14, fontWeight: '700', letterSpacing: 2, fontFamily: 'Jost_600SemiBold', paddingVertical: 18 },
+
+  finishBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 30, gap: 10 },
+  finishBtnText: { color: 'rgba(255,255,255,0.6)', fontSize: 11, fontWeight: '600', letterSpacing: 1.5 },
 });

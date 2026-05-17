@@ -25,6 +25,16 @@ import { Image } from "react-native";
 import { gems } from "../colour_themes";
 import PremiumBackground from "../components/PremiumBackground";
 
+// ── Sparkle Decoration ────────────────────────────────────────────────
+const Sparkle = ({ style, size = 15, color = '#FFF', delay = 0 }) => (
+    <Animated.View 
+        entering={FadeInDown.delay(delay).springify()}
+        style={[{ position: 'absolute', zIndex: 10 }, style]}
+    >
+        <Ionicons name="sparkles" size={size} color={color} style={{ opacity: 0.8 }} />
+    </Animated.View>
+);
+
 const { width } = Dimensions.get("window");
 
 export default function StudentHomepage() {
@@ -97,11 +107,31 @@ export default function StudentHomepage() {
 
   const headerStats = getDynamicStats();
 
-  const quickActions = [
-    { id: "1", title: "Personalization", icon: "create-outline", route: "/part_a2/LayoutBuilder", color: "#6366f1", desc: "Build your card" },
-    { id: "2", title: "View Progress", icon: "bar-chart-outline", route: "/part_b/viewer", color: accentColor, desc: "Digital reports" },
-    { id: "3", title: "Family Sync", icon: "people-outline", route: "/part_a1/FamilyTreePage", color: "#ec4899", desc: "Manage nodes" },
+  const isTeacher = user?.role === 'teacher' || user?.role === 'superadmin';
+
+  // Stage-aware A2 route
+  const getA2Route = () => {
+    const cls = (profile?.class_name || '').toLowerCase().trim();
+    console.log("[StudentHome] Routing for class:", cls);
+    if (cls.includes('bal vatika') || cls === 'kg' || cls === 'kindergarten' || cls === 'grade 1' || cls === 'grade 2') {
+        return '/part_a2_foundational/AboutMe';
+    }
+    if (cls === 'grade 3' || cls === 'grade 4' || cls === 'grade 5') {
+        return '/part_a2_preparatory/AboutMe';
+    }
+    return '/part_a2/LayoutBuilder';
+  };
+
+  const allActions = [
+    { id: "1", title: "My Treasure Card", icon: "create-outline", route: getA2Route(), color: gems.sapphire, desc: "Personalize your journey" },
+    { id: "2", title: "Achievement Vault", icon: "bar-chart-outline", route: "/part_b/viewer", color: gems.emerald, desc: "View your progress" },
+    { id: "3", title: "Profile Studio", icon: "person-outline", route: "/part_a1/ParentRegistration", color: gems.ruby, desc: "Update your details" },
+    { id: "4", title: "Domain Master", icon: "book-outline", route: "/part_b_preparatory/SelectionPage", color: gems.topaz, desc: "Record Activities" },
+    { id: "5", title: "Year End Party", icon: "ribbon-outline", route: "/part_c_preparatory/YearEndSummary", color: gems.amethyst, desc: "Summary & Celebration" }
   ];
+
+  const quickActions = isTeacher ? allActions : allActions.filter(a => a.id === "4");
+
 
   return (
     <View style={styles.container}>
@@ -111,24 +141,34 @@ export default function StudentHomepage() {
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 40 }}>
         {/* Header Section */}
-        <Animated.View entering={FadeInUp.duration(800).springify()} style={[styles.header, { backgroundColor: theme.isDark ? "rgba(18, 18, 22, 0.8)" : "rgba(255,255,255,0.8)" }]}>
+        <Animated.View 
+          entering={FadeInUp.duration(1000).springify()} 
+          style={[
+            styles.header, 
+            { 
+              backgroundColor: theme.isDark ? "rgba(40, 40, 45, 0.7)" : "rgba(255, 255, 255, 0.7)",
+              borderColor: gems.topaz + '40'
+            }
+          ]}
+        >
           <View style={styles.welcomeRow}>
             <View>
-              <Text style={styles.greeting}>Welcome</Text>
-              <Text style={styles.userName}>{profile?.full_name || user?.username || "Student"}</Text>
+              <Text style={styles.greeting}>✨ Hello ✨</Text>
+              <Text style={styles.userName}>{profile?.full_name || user?.username || "Adventurer"}</Text>
             </View>
-            <View style={styles.avatar}>
+            <View style={[styles.avatar, { borderColor: gems.topaz }]}>
                <Text style={styles.avatarText}>{(profile?.full_name || user?.username || "S")[0].toUpperCase()}</Text>
             </View>
           </View>
+          <Sparkle style={{ top: 20, right: 80 }} color={gems.topaz} />
 
           <View style={styles.statsRow}>
             {headerStats.map((stat, i) => (
-              <View key={i} style={[styles.statCard, { backgroundColor: theme.isDark ? "rgba(24, 24, 27, 0.7)" : "rgba(255,255,255,0.7)" }]}>
+              <View key={i} style={[styles.statCard, { backgroundColor: theme.isDark ? "rgba(60, 60, 70, 0.4)" : "rgba(255,255,255,0.6)", borderColor: stat.color + '30' }]}>
                 <View style={[styles.statIconBg, { backgroundColor: stat.color + "15" }]}>
                   <Ionicons name={stat.icon} size={16} color={stat.color} />
                 </View>
-                <Text style={styles.statValue}>{stat.value}</Text>
+                <Text style={[styles.statValue, { color: theme.text }]}>{stat.value}</Text>
                 <Text style={styles.statLabel}>{stat.label}</Text>
               </View>
             ))}
@@ -302,11 +342,11 @@ const getStyles = (theme) => StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    backgroundColor: theme.background,
+    backgroundColor: "rgba(245, 245, 245, 0.85)",
     borderRadius: 20,
     padding: 16,
-    borderWidth: 1,
-    borderColor: theme.border,
+    borderWidth: 1.5,
+    borderColor: gems.topaz,
     alignItems: "flex-start",
   },
   statIconBg: {
@@ -350,11 +390,11 @@ const getStyles = (theme) => StyleSheet.create({
   actionCard: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: theme.surface,
+    backgroundColor: "rgba(245, 245, 245, 0.85)",
     borderRadius: 20,
     padding: 16,
-    borderWidth: 1,
-    borderColor: theme.border,
+    borderWidth: 1.5,
+    borderColor: gems.topaz,
   },
   actionIconContainer: {
     width: 48,
@@ -370,7 +410,7 @@ const getStyles = (theme) => StyleSheet.create({
   actionTitle: {
     fontSize: 15,
     fontWeight: "600",
-    color: theme.text,
+    color: "#222",
     fontFamily: "Jost_600SemiBold",
   },
   actionDesc: {

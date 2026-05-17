@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Platform } from 'react-native';
-import Svg, { Polygon, Defs, LinearGradient, Stop, Path, Rect } from 'react-native-svg';
+import Svg, { Polygon, Defs, LinearGradient, Stop, Path, Rect, Polyline } from 'react-native-svg';
 import SoundButton from './SoundButton';
 import { useTheme } from '../context/GlobalContext';
 import { gems } from '../colour_themes';
@@ -35,6 +35,11 @@ export default function GemButton({ children, onPress, style, disabled, gemType 
     leftColor1 = '#FCFFCC'; leftColor2 = '#E6F233'; bottomColor1 = '#7A8C00';
     bottomColor2 = '#3D4D00'; rightColor1 = '#A3B800'; rightColor2 = '#5C7300';
     topDepth = 20; sideDepth = 10;
+  } else if (gemType === 'aquamarine' || baseColor === gems.aquamarine) {
+    centerColor = '#7FFFD4'; topColor1 = '#FFFFFF'; topColor2 = '#B2FFFF';
+    leftColor1 = '#E0FFFF'; leftColor2 = '#40E0D0'; bottomColor1 = '#00CED1';
+    bottomColor2 = '#008B8B'; rightColor1 = '#48D1CC'; rightColor2 = '#20B2AA';
+    topDepth = 20; sideDepth = 8;
   } else {
     // Sapphire fallback
     centerColor = '#1460D9'; topColor1 = '#FFFFFF'; topColor2 = '#8ABBF5';
@@ -73,15 +78,26 @@ export default function GemButton({ children, onPress, style, disabled, gemType 
               </LinearGradient>
             </Defs>
 
-            {/* Facets - Dynamically Shaped */}
-            <Polygon points={`0,0 100,0 ${p2} ${p1}`} fill="url(#topGradient)" opacity={0.6} />
-            <Polygon points={`0,100 100,100 ${p3} ${p4}`} fill="url(#bottomGradient)" opacity={0.6} />
-            <Polygon points={`0,0 ${p1} ${p4} 0,100`} fill="url(#leftGradient)" opacity={0.6} />
-            <Polygon points={`100,0 ${p2} ${p3} 100,100`} fill="url(#rightGradient)" opacity={0.6} />
+            {/* Facets - Dynamically Shaped with higher opacity for contrast */}
+            <Polygon points={`0,0 100,0 ${p2} ${p1}`} fill="url(#topGradient)" opacity={0.8} />
+            <Polygon points={`0,100 100,100 ${p3} ${p4}`} fill="url(#bottomGradient)" opacity={0.8} />
+            <Polygon points={`0,0 ${p1} ${p4} 0,100`} fill="url(#leftGradient)" opacity={0.8} />
+            <Polygon points={`100,0 ${p2} ${p3} 100,100`} fill="url(#rightGradient)" opacity={0.8} />
             <Polygon points={`${p1} ${p2} ${p3} ${p4}`} fill="url(#centerGradient)" />
             
-            {/* The new single sharp diagonal highlight - Centre Left Shard */}
-            <Path d="M 5 0 L 12 0 L 32 100 L 25 100 Z" fill="rgba(255, 255, 255, 0.25)" />
+            {/* Facet Edge Lines for that cut-glass look */}
+            <Polyline points={`0,0 ${p1}`} stroke="rgba(255,255,255,0.5)" strokeWidth="0.8" />
+            <Polyline points={`100,0 ${p2}`} stroke="rgba(255,255,255,0.5)" strokeWidth="0.8" />
+            <Polyline points={`0,100 ${p4}`} stroke="rgba(0,0,0,0.25)" strokeWidth="0.6" />
+            <Polyline points={`100,100 ${p3}`} stroke="rgba(0,0,0,0.25)" strokeWidth="0.6" />
+            <Polygon points={`${p1} ${p2} ${p3} ${p4}`} fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="0.6" />
+            
+            {/* Realistic refraction highlights */}
+            <Path d="M 8 0 L 22 0 L 42 100 L 28 100 Z" fill="rgba(255, 255, 255, 0.45)" />
+            <Path d="M 58 0 L 61 0 L 81 100 L 78 100 Z" fill="rgba(255, 255, 255, 0.2)" />
+            
+            {/* Sparkle diamond */}
+            <Path d="M 28 18 L 30 14 L 32 18 L 30 22 Z" fill="rgba(255, 255, 255, 0.85)" />
             
             {/* Thin minimalist border */}
             <Rect x="0.5" y="0.5" width="99" height="99" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="0.5" />

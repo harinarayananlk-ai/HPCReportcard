@@ -21,13 +21,13 @@ export default function CornerLogo() {
             {/* Bold Static Frame */}
             <Path
               d={FRAME_PATH}
-              stroke={theme.primary}
+              stroke="#999"
               strokeWidth={40}
               fill="transparent"
             />
             {/* Subtle Bars */}
-            <Path d={BARS_PATH_1} fill={theme.primary} opacity={0.8} />
-            <Path d={BARS_PATH_2} fill={theme.primary} opacity={0.8} />
+            <Path d={BARS_PATH_1} fill="#999" opacity={0.8} />
+            <Path d={BARS_PATH_2} fill="#999" opacity={0.8} />
           </G>
         </Svg>
     </Pressable>

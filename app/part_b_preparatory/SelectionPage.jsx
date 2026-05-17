@@ -7,6 +7,17 @@ import { useRouter } from 'expo-router';
 import { useTheme, useAuth, API_URL } from '../../context/GlobalContext';
 import SleekDropdown from './SleekDropdown';
 import InfoModal from './InfoModal';
+import { Ionicons } from '@expo/vector-icons';
+
+// Simple Checkbox component
+const Checkbox = ({ checked, onPress, styles }) => (
+  <TouchableOpacity onPress={onPress} style={styles.checkboxContainer}>
+    <View style={[styles.checkboxBox, checked && styles.checkboxChecked]}>
+      {checked && <Ionicons name="checkmark" size={12} color="#fff" />}
+    </View>
+  </TouchableOpacity>
+);
+
 import { domains, curricularGoals, competencies } from '../../constants/SelectionData';
 import Animated, { FadeInDown, useSharedValue, useAnimatedStyle, withTiming, withRepeat, withSequence } from 'react-native-reanimated';
 import { Waves, Mountain, Cloud, CloudUpload } from 'lucide-react-native';
@@ -16,49 +27,7 @@ import PremiumBackground from '../../components/PremiumBackground';
 
 const { width: W, height: H } = Dimensions.get('window');
 
-// ── Ambient Animation Components ──────────────────────────────────────────
 
-const AnimatedWaves = ({ color, styles }) => {
-    const offset = useSharedValue(0);
-    useEffect(() => {
-        offset.value = withRepeat(withSequence(withTiming(4, { duration: 1500 }), withTiming(-4, { duration: 1500 })), -1, true);
-    }, []);
-    const animatedStyle = useAnimatedStyle(() => ({ transform: [{ translateX: offset.value }] }));
-    return (
-        <View style={styles.iconContainer}>
-            <Animated.View style={animatedStyle}><Waves color={color} size={24} /></Animated.View>
-            <Text style={[styles.iconText, { color }]}>STREAM</Text>
-        </View>
-    );
-};
-
-const AnimatedMountain = ({ color, styles }) => {
-    const scale = useSharedValue(1);
-    useEffect(() => {
-        scale.value = withRepeat(withTiming(1.15, { duration: 2000 }), -1, true);
-    }, []);
-    const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }], opacity: withTiming(scale.value > 1.1 ? 0.9 : 1) }));
-    return (
-        <View style={styles.iconContainer}>
-            <Animated.View style={animatedStyle}><Mountain color={color} size={24} /></Animated.View>
-            <Text style={[styles.iconText, { color }]}>MOUNTAIN</Text>
-        </View>
-    );
-};
-
-const AnimatedSky = ({ color, styles }) => {
-    const translateY = useSharedValue(0);
-    useEffect(() => {
-        translateY.value = withRepeat(withTiming(-6, { duration: 2500 }), -1, true);
-    }, []);
-    const animatedStyle = useAnimatedStyle(() => ({ transform: [{ translateY: translateY.value }] }));
-    return (
-        <View style={styles.iconContainer}>
-            <Animated.View style={animatedStyle}><Cloud color={color} size={24} /></Animated.View>
-            <Text style={[styles.iconText, { color }]}>SKY</Text>
-        </View>
-    );
-};
 
 export default function SelectionPage() {
     const router = useRouter();
@@ -70,6 +39,10 @@ export default function SelectionPage() {
     const targetUserId = activeStudentId || user?.id;
     const targetProfile = activeStudentProfile || profile;
 
+    const [domainEnabled, setDomainEnabled] = useState(true);
+  const [goalEnabled, setGoalEnabled] = useState(true);
+  const [competencyEnabled, setCompetencyEnabled] = useState(true);
+
     const [domain, setDomain] = useState('');
     const [goal, setGoal] = useState([]);
     const [competency, setCompetency] = useState([]);
@@ -78,12 +51,10 @@ export default function SelectionPage() {
     const [isSyncing, setIsSyncing] = useState(false);
 
 
+
+
     // ── Autofill on mount ────────────────────────────────────────────────────
     useEffect(() => {
-        if (user?.role === 'student') {
-            router.replace("/StudentHomepage");
-            return;
-        }
         if (!targetUserId) return;
         const fetchProfile = async () => {
             try {
@@ -163,7 +134,8 @@ export default function SelectionPage() {
                     // Optionally alert user or try to re-fetch
                 }
 
-                const updatedAssess = { ...currentAssess, domain, goal, competency, activities };
+                const updatedAssess = { ...currentAssess, domain, goal, competency, activities, selectionEnabled: { domain: domainEnabled, goal: goalEnabled, competency: competencyEnabled } };
+
 
                 const res = await fetch(`${API_URL}/students/profile`, {
                     method: 'POST',
@@ -185,7 +157,7 @@ export default function SelectionPage() {
                 setIsSyncing(false);
             }
         }
-        router.push('/part_b_entry/RubricPage');
+        router.push('/part_b_preparatory/RubricPage');
     };
 
     const handleBackup = async () => {
@@ -243,9 +215,7 @@ export default function SelectionPage() {
                             </View>
                         </View>
                         <View style={styles.headerIcons}>
-                            <AnimatedWaves color={theme.primary} styles={styles} />
-                            <AnimatedMountain color={theme.primary} styles={styles} />
-                            <AnimatedSky color={theme.primary} styles={styles} />
+                            <Ionicons name="leaf-outline" size={28} color={theme.primary} />
                         </View>
                     </View>
 
@@ -255,50 +225,58 @@ export default function SelectionPage() {
                 {/* Card */}
                 <View style={styles.card}>
 
-                    {/* Domain */}
-                    <View style={[styles.fieldBlock, isStudent && { opacity: 0.6 }]}>
-                        <Text style={styles.fieldLabel}>🌳 Developmental Domain</Text>
-                        <View pointerEvents={isStudent ? "none" : "auto"}>
-                            <SleekDropdown
-                                label=""
-                                options={domains}
-                                selectedValue={domain}
-                                onSelect={setDomain}
-                            />
-                        </View>
-                    </View>
+            {/* Domain */}
+            <View style={styles.fieldBlock}>
+                <View style={styles.labelRow}>
+                    <Checkbox checked={domainEnabled} onPress={() => setDomainEnabled(prev => !prev)} styles={styles} />
+                    <Text style={styles.fieldLabel}>🌳 Developmental Domain</Text>
+                </View>
+                <View pointerEvents={isStudent ? "none" : "auto"}>
+                    <SleekDropdown
+                        label=""
+                        options={domains}
+                        selectedValue={domain}
+                        onSelect={setDomain}
+                        disabled={!domainEnabled}
+                    />
+                </View>
+            </View>
 
-                    {/* Curricular Goals */}
-                    <View style={[styles.fieldBlock, isStudent && { opacity: 0.6 }]}>
-                        <View style={styles.labelRow}>
-                            <Text style={styles.fieldLabel}>🎯 Curricular Goals</Text>
-                            <InfoModal title="Curricular Goals" items={curricularGoals} />
-                        </View>
-                        <View pointerEvents={isStudent ? "none" : "auto"}>
-                            <SleekDropdown
-                                options={goalOptions}
-                                selectedValue={goal}
-                                onSelect={setGoal}
-                                multiple
-                            />
-                        </View>
-                    </View>
+            {/* Curricular Goals */}
+            <View style={styles.fieldBlock}>
+                <View style={styles.labelRow}>
+                    <Checkbox checked={goalEnabled} onPress={() => setGoalEnabled(prev => !prev)} styles={styles} />
+                    <Text style={styles.fieldLabel}>🎯 Curricular Goals</Text>
+                    <InfoModal title="Curricular Goals" items={curricularGoals} />
+                </View>
+                <View pointerEvents={isStudent ? "none" : "auto"}>
+                    <SleekDropdown
+                        options={goalOptions}
+                        selectedValue={goal}
+                        onSelect={setGoal}
+                        multiple
+                        disabled={!goalEnabled}
+                    />
+                </View>
+            </View>
 
-                    {/* Competencies */}
-                    <View style={[styles.fieldBlock, isStudent && { opacity: 0.6 }]}>
-                        <View style={styles.labelRow}>
-                            <Text style={styles.fieldLabel}>⚡ Competencies</Text>
-                            <InfoModal title="Competencies" items={competencies} />
-                        </View>
-                        <View pointerEvents={isStudent ? "none" : "auto"}>
-                            <SleekDropdown
-                                options={competencyOptions}
-                                selectedValue={competency}
-                                onSelect={setCompetency}
-                                multiple
-                            />
-                        </View>
-                    </View>
+            {/* Competencies */}
+            <View style={styles.fieldBlock}>
+                <View style={styles.labelRow}>
+                    <Checkbox checked={competencyEnabled} onPress={() => setCompetencyEnabled(prev => !prev)} styles={styles} />
+                    <Text style={styles.fieldLabel}>⚡ Competencies</Text>
+                    <InfoModal title="Competencies" items={competencies} />
+                </View>
+                <View pointerEvents={isStudent ? "none" : "auto"}>
+                    <SleekDropdown
+                        options={competencyOptions}
+                        selectedValue={competency}
+                        onSelect={setCompetency}
+                        multiple
+                        disabled={!competencyEnabled}
+                    />
+                </View>
+            </View>
 
                     {/* Activities */}
                     <View style={[styles.fieldBlock, isStudent && { opacity: 0.6 }]}>

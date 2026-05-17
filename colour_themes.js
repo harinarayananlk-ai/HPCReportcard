@@ -1,14 +1,16 @@
 export const gems = {
-  sapphire: "#2E5894", // Muted B'dazzled Blue
-  emerald: "#2E8B57",  // Sea Green (Matte)
-  jade: "#669966",     // Desaturated Jade
-  topaz: "#C67121",    // Raw Sienna
-  citrine: "#E4D00A",  // Citrine (Muted)
-  ruby: "#962828",     // Dark Matte Red
-  amethyst: "#6F4E37", // Coffee/Deep Purple Muted
-  onyx: "#2F2F2F",     // Matte Charcoal
-  moonstone: "#708090", // Slate Grey
-  pearl: "#E5E4E2",    // Platinum Silver
+  sapphire: "#0D47A1",        // Rich Royal Sapphire
+  aquamarine: "#7FFFD4",      // Bright Aquamarine
+  emerald: "#2E8B57",         // Vibrant Emerald
+  jade: "#00A36C",            // Deep Jade
+  topaz: "#B8972E",           // Matte Luxe Gold
+  gold: "#B8972E",            // Alias for gold
+  citrine: "#E4D00A",         // Bright Citrine
+  amethyst: "#9966CC",        // Classic Amethyst
+  ruby: "#D2042D",            // Vibrant Ruby
+  moonstone: "#4682B4",       // Steel Blue Moonstone
+  pearl: "#E5E4E2",           // Platinum Silver
+  onyx: "#2F2F2F",            // Matte Charcoal
 };
 
 export const themes = {
@@ -20,7 +22,7 @@ export const themes = {
     text: "#333333",
     secondaryText: "#777777",
     accent: "#2E5894", // Muted Sapphire
-    primary: "#B89336", // Matte Gold
+    primary: "#2E5894", // Matte Sapphire
     buttonText: "#FFFFFF",
     border: "#D1D1D1",
     inputBackground: "#FFFFFF",

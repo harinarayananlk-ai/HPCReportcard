@@ -548,7 +548,7 @@ export default function LayoutBuilder() {
     if (user?.role === 'student') {
       router.push("/part_a1/CompletePage");
     } else {
-      router.push("/part_b_entry/SelectionPage");
+      router.push("/part_b_preparatory/SelectionPage");
     }
   };
 

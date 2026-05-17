@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../context/GlobalContext";
 import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
+import { gems } from "../colour_themes";
 
 export default function GearGroup({ style }) {
   const { theme } = useTheme();
@@ -147,7 +148,7 @@ export default function GearGroup({ style }) {
           style={[
             styles.glowCircle, 
             { 
-              backgroundColor: theme.primary,
+              backgroundColor: gems.topaz,
               opacity: glowOpacity,
               transform: [{ scale: Animated.add(1, Animated.multiply(glowAnim, 0.2)) }]
             }
@@ -165,7 +166,7 @@ export default function GearGroup({ style }) {
           {/* Center gear - Large */}
           <Animated.View style={[styles.largeGear, { transform: [{ rotate: largeSpin }] }]}>
             <View style={styles.largeGearShadow} />
-            <Ionicons name="settings-sharp" size={42} color={theme.primary} />
+            <Ionicons name="settings-sharp" size={42} color={gems.topaz} />
           </Animated.View>
 
           {/* Bottom right gear - Small */}
