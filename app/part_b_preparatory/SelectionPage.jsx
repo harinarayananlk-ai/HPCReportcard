@@ -8,6 +8,7 @@ import { useTheme, useAuth, API_URL } from '../../context/GlobalContext';
 import SleekDropdown from './SleekDropdown';
 import InfoModal from './InfoModal';
 import { Ionicons } from '@expo/vector-icons';
+import GemButton from '../../components/GemButton';
 
 // Simple Checkbox component
 const Checkbox = ({ checked, onPress, styles }) => (
@@ -298,14 +299,22 @@ export default function SelectionPage() {
                 </View>
 
                 {/* Next button */}
-                <TouchableOpacity 
-                    style={[styles.nextBtn, isLoading && { opacity: 0.5 }]} 
-                    onPress={handleNext} 
-                    activeOpacity={0.85}
+                <GemButton
+                    gemType="silver"
+                    onPress={handleNext}
                     disabled={isLoading}
+                    width={180}
+                    style={styles.nextBtn}
                 >
-                    {isLoading ? <ActivityIndicator color={theme.buttonText} /> : <Text style={styles.nextBtnText}>Proceed to Rubric  →</Text>}
-                </TouchableOpacity>
+                    {isLoading ? (
+                        <ActivityIndicator color={theme.buttonText} />
+                    ) : (
+                        <View style={{ alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+                            <Text style={[styles.nextBtnText, { textAlign: 'center' }]}>Proceed to{"\n"}Rubric</Text>
+                            <Ionicons name="arrow-forward" size={16} color="#FFF" />
+                        </View>
+                    )}
+                </GemButton>
 
                 <View style={{ height: 40 }} />
                 </ScrollView>
@@ -384,11 +393,8 @@ const getStyles = (theme) => StyleSheet.create({
 
     // Next button
     nextBtn: {
-        backgroundColor: theme.primary,
-        paddingVertical: 18,
-        borderRadius: 16,
-        alignItems: 'center',
-        marginTop: 10,
+        marginTop: 20,
+        alignSelf: 'center',
     },
-    nextBtnText: { color: theme.buttonText, fontSize: 14, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 2, fontFamily: "Jost_600SemiBold" },
+    nextBtnText: { color: theme.buttonText, fontSize: 13, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 2, fontFamily: "Jost_600SemiBold", textAlign: 'center' },
 });

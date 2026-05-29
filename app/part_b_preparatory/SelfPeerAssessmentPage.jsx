@@ -7,6 +7,7 @@ import PremiumBackground from '../../components/PremiumBackground';
 import SoundButton from '../../components/SoundButton';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
+import GemButton from '../../components/GemButton';
 
 const { width: W } = Dimensions.get('window');
 
@@ -243,13 +244,22 @@ export default function SelfPeerAssessmentPage() {
                     </View>
                 </Animated.View>
 
-                <TouchableOpacity 
-                    style={[styles.finishBtn, isSyncing && { opacity: 0.5 }]} 
+                <GemButton
+                    gemType="silver"
                     onPress={handleNext}
                     disabled={isSyncing}
+                    width={180}
+                    style={styles.finishBtn}
                 >
-                    {isSyncing ? <ActivityIndicator color={theme.buttonText} /> : <Text style={styles.finishBtnText}>Proceed to Parent Observation →</Text>}
-                </TouchableOpacity>
+                    {isSyncing ? (
+                        <ActivityIndicator color={theme.buttonText} />
+                    ) : (
+                        <View style={{ alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+                            <Text style={[styles.finishBtnText, { textAlign: 'center' }]}>Proceed to{"\n"}Parent{"\n"}Observation</Text>
+                            <Ionicons name="arrow-forward" size={16} color="#FFF" />
+                        </View>
+                    )}
+                </GemButton>
 
                 <View style={{ height: 60 }} />
             </ScrollView>
@@ -355,6 +365,9 @@ const getStyles = (theme) => StyleSheet.create({
         fontSize: 10,
         fontWeight: '500'
     },
-    finishBtn: { marginTop: 30, paddingVertical: 18, borderRadius: 16, alignItems: 'center', backgroundColor: theme.primary },
-    finishBtnText: { color: theme.buttonText, fontWeight: '800', fontSize: 16 }
+    finishBtn: { 
+        marginTop: 30,
+        alignSelf: 'center',
+    },
+    finishBtnText: { color: theme.buttonText, fontWeight: '800', fontSize: 11, textAlign: 'center' }
 });

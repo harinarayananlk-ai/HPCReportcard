@@ -28,6 +28,7 @@ import SoundButton from "../components/SoundButton";
 import GemButton from "../components/GemButton";
 import PremiumBackground from "../components/PremiumBackground";
 import { useTheme, useAuth, API_URL } from "../context/GlobalContext";
+import { BlurView } from "expo-blur";
 
 import { Image } from "react-native";
 import { useRef } from "react";
@@ -131,6 +132,9 @@ export default function LoginScreen() {
         entering={FadeInDown.delay(200).duration(1000).springify()}
         style={styles.card}
       >
+        {Platform.OS !== 'web' && (
+          <BlurView intensity={65} tint="light" style={StyleSheet.absoluteFill} />
+        )}
         <Text style={styles.title}>
           {role === "teacher" ? "Teacher Portal" : role === "superadmin" ? "Admin Access" : "Student Login"}
         </Text>
@@ -229,16 +233,16 @@ export default function LoginScreen() {
       <View style={styles.absoluteBypassLeft}>
         {showStudentMenu ? (
           <>
-            <SoundButton style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]} onPress={() => handleLogin({ username: 's_ladoo', password: 'pass123', role: 'student' })}>
+            <SoundButton style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]} onPress={() => handleLogin({ username: 's_ladoo', password: 'navy-2824-ladoo', role: 'student' })}>
               <Text style={[styles.tinyBypassText, {fontSize: 8}]}>SF</Text>
             </SoundButton>
-            <SoundButton style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]} onPress={() => handleLogin({ username: 's_bittoo', password: 'pass123', role: 'student' })}>
+            <SoundButton style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]} onPress={() => handleLogin({ username: 's_bittoo', password: 'dusk-4150-bittoo', role: 'student' })}>
               <Text style={[styles.tinyBypassText, {fontSize: 8}]}>SP</Text>
             </SoundButton>
-            <SoundButton style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]} onPress={() => handleLogin({ username: 's_imli_6a', password: 'pass123', role: 'student' })}>
+            <SoundButton style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]} onPress={() => handleLogin({ username: 's_imli_6a', password: 'pearl-8573-imli', role: 'student' })}>
               <Text style={[styles.tinyBypassText, {fontSize: 8}]}>SM</Text>
             </SoundButton>
-            <SoundButton style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]} onPress={() => handleLogin({ username: 's_urad_9a', password: 'pass123', role: 'student' })}>
+            <SoundButton style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]} onPress={() => handleLogin({ username: 's_urad_9a', password: 'ruby-5339-urad', role: 'student' })}>
               <Text style={[styles.tinyBypassText, {fontSize: 8}]}>SS</Text>
             </SoundButton>
           </>
@@ -316,11 +320,12 @@ const getStyles = (theme) => StyleSheet.create({
     alignItems: "center",
   },
   card: {
-    backgroundColor: "rgba(245, 245, 245, 0.85)", // Consistent Silver Plate
-    borderRadius: 16, // Softer less extreme border radius
+    backgroundColor: theme.isDark ? "rgba(30, 30, 30, 0.5)" : "rgba(255, 255, 255, 0.45)", // Frosted glass translucent fill
+    borderRadius: 16,
     padding: 32,
-    borderWidth: 1, // Gold line
-    borderColor: theme.primary + '80', // Gold highlight
+    overflow: 'hidden', // Contain the BlurView bounds
+    borderWidth: 1,
+    borderColor: theme.primary + '80', // Gold/Accent border
     ...Platform.select({
       ios: {
         shadowColor: theme.isDark ? "#000" : theme.secondaryText,
@@ -442,11 +447,12 @@ const getStyles = (theme) => StyleSheet.create({
   },
   absoluteBypassLeftRight: {
     position: 'absolute',
-    left: 20,
-    bottom: 80,
+    left: 70, // Positioned side-by-side with student bypass button
+    bottom: 40, // Same bottom level to align horizontally
     zIndex: 10,
     flexDirection: 'column-reverse',
   },
+
   tinyBypassBtn: {
     width: 36,
     height: 36,

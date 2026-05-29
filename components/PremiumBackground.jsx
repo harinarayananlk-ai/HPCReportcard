@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Image, StyleSheet, Platform } from 'react-native';
+import { usePathname } from 'expo-router';
 import { useTheme } from '../context/GlobalContext';
 import { gems } from '../colour_themes';
 import Svg, { Defs, RadialGradient, Stop, Rect } from 'react-native-svg';
@@ -19,13 +20,43 @@ const GlowOrb = ({ color, opacity, size, style }) => (
   </View>
 );
 
-export default function PremiumBackground() {
+const backgrounds = [
+  require("../assets/images/Background images/ultra_monochrome_silver_gold_folds.png"),
+  require("../assets/images/Background images/smooth_silver_gold_folds.png"),
+  require("../assets/images/Background images/premium_login_background.png"),
+  require("../assets/images/river.png"),
+  require("../assets/images/mountain+river.png"),
+];
+
+export default function PremiumBackground({ bgIndex, gemColor }) {
   const { theme } = useTheme();
+  const pathname = usePathname();
+
+  // Resolve background image
+  let selectedBg = backgrounds[0];
+
+  if (typeof bgIndex === 'number' && bgIndex >= 0 && bgIndex < backgrounds.length) {
+    selectedBg = backgrounds[bgIndex];
+  } else {
+    if (pathname === '/' || pathname === '/index') {
+      selectedBg = backgrounds[2]; // Login Screen gets premium_login_background
+    } else {
+      // Dynamic mapping based on path hash to make pages have different backgrounds
+      let hash = 0;
+      const pathStr = pathname || '';
+      for (let i = 0; i < pathStr.length; i++) {
+        hash = pathStr.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      // Pick strictly between index 0 and 1 (the metallic sheet folds backgrounds)
+      const index = Math.abs(hash) % 2;
+      selectedBg = backgrounds[index];
+    }
+  }
   
   return (
     <View style={StyleSheet.absoluteFillObject} pointerEvents="none">
       <Image
-        source={require("../assets/images/ultra_monochrome_silver_gold_folds.png")}
+        source={selectedBg}
         style={StyleSheet.absoluteFillObject}
         resizeMode="cover"
         blurRadius={Platform.OS === 'ios' ? 10 : 3} 
@@ -33,17 +64,17 @@ export default function PremiumBackground() {
       
       {/* Dynamic Ambient Glow Orbs */}
       <View style={StyleSheet.absoluteFillObject}>
-        <GlowOrb color={gems.sapphire} opacity={theme.isDark ? 0.3 : 0.15} size={400} style={{ top: -150, left: -100 }} />
-        <GlowOrb color={gems.emerald} opacity={theme.isDark ? 0.25 : 0.1} size={350} style={{ bottom: -100, right: -100 }} />
-        <GlowOrb color={gems.topaz} opacity={theme.isDark ? 0.2 : 0.08} size={300} style={{ top: '35%', right: -50 }} />
+        <GlowOrb color={gemColor || gems.sapphire} opacity={theme.isDark ? 0.3 : 0.12} size={400} style={{ top: -150, left: -100 }} />
+        <GlowOrb color={gems.emerald} opacity={theme.isDark ? 0.25 : 0.08} size={350} style={{ bottom: -100, right: -100 }} />
+        <GlowOrb color={gems.topaz} opacity={theme.isDark ? 0.2 : 0.06} size={300} style={{ top: '35%', right: -50 }} />
       </View>
 
-      {/* Matte overlay to reduce shine and improve readability */}
+      {/* Matte overlay: high opacity white in light mode to make it light/matte, dark overlay in dark mode */}
       <View style={[
         StyleSheet.absoluteFillObject, 
         { 
           backgroundColor: theme.isDark ? '#000' : '#FFF', 
-          opacity: theme.isDark ? 0.3 : 0.02 
+          opacity: theme.isDark ? 0.3 : 0.35 // Made significantly lighter/softer for light mode (from 0.02 to 0.35)
         }
       ]} />
     </View>
@@ -54,6 +85,6 @@ const styles = StyleSheet.create({
   orb: {
     position: 'absolute',
     transform: [{ scale: 1.2 }],
-    filter: Platform.OS === 'ios' ? 'blur(60px)' : undefined, // blur prop doesn't work on View usually
+    filter: Platform.OS === 'ios' ? 'blur(60px)' : undefined,
   }
 });

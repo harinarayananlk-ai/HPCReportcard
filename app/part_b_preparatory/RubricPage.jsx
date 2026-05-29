@@ -13,6 +13,7 @@ import SoundButton from '../../components/SoundButton';
 import { Image } from 'expo-image';
 import InfoModal from './InfoModal';
 import { gems } from '../../colour_themes';
+import GemButton from '../../components/GemButton';
 
 // ── Theme-aware Animated Icons ──────────────────────────────────────────
 
@@ -384,13 +385,22 @@ export default function RubricPage() {
                     </View>
                 </Animated.View>
 
-                <TouchableOpacity 
-                    style={[styles.finishBtn, isLoading && { opacity: 0.5 }]} 
+                <GemButton
+                    gemType="silver"
                     onPress={handleNext}
                     disabled={isLoading}
+                    width={180}
+                    style={styles.finishBtn}
                 >
-                    {isLoading ? <ActivityIndicator color={theme.buttonText} /> : <Text style={styles.finishBtnText}>Proceed to Teacher's Feedback →</Text>}
-                </TouchableOpacity>
+                    {isLoading ? (
+                        <ActivityIndicator color={theme.buttonText} />
+                    ) : (
+                        <View style={{ alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+                            <Text style={[styles.finishBtnText, { textAlign: 'center' }]}>Proceed to{"\n"}Teacher's{"\n"}Feedback</Text>
+                            <Ionicons name="arrow-forward" size={16} color="#FFF" />
+                        </View>
+                    )}
+                </GemButton>
                 <View style={{ height: 40 }} />
             </ScrollView>
             </SafeAreaView>
@@ -481,13 +491,8 @@ const getStyles = (theme) => StyleSheet.create({
 
     // ── Bottom Button ───────────────────────────────────────────────────
     finishBtn: { 
-        marginTop: 30, paddingVertical: 18, borderRadius: 16, alignItems: 'center', 
-        backgroundColor: theme.primary,
-        shadowColor: theme.primary,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
-        elevation: 6,
+        marginTop: 30,
+        alignSelf: 'center',
     },
-    finishBtnText: { color: theme.buttonText, fontWeight: '800', fontSize: 16, letterSpacing: 1 }
+    finishBtnText: { color: theme.buttonText, fontWeight: '800', fontSize: 12, letterSpacing: 1, textAlign: 'center' }
 });

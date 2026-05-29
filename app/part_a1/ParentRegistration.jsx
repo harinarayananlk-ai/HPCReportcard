@@ -183,12 +183,21 @@ export default function ParentRegistrationPage() {
         
         {/* Header */}
         <View style={styles.header}>
-          <SoundButton onPress={() => router.back()} style={styles.backBtn}>
+          <SoundButton 
+            onPress={() => router.back()} 
+            style={[
+              styles.backBtn, 
+              { 
+                backgroundColor: theme.isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)",
+                borderColor: theme.isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"
+              }
+            ]}
+          >
             <Ionicons name="chevron-back" size={24} color={theme.text} />
           </SoundButton>
           <View style={styles.headerTitleContainer}>
-            <Text style={styles.title}>PART A1</Text>
-            <Text style={styles.subtitle}>Personal Profile</Text>
+            <Text style={[styles.title, { color: theme.text }]}>PART A1</Text>
+            <Text style={[styles.subtitle, { color: theme.secondaryText }]}>Personal Profile</Text>
           </View>
           <View style={{ width: 44 }} />
         </View>
@@ -278,11 +287,14 @@ export default function ParentRegistrationPage() {
 
           <GemButton 
             onPress={handleNext} 
-            colors={[gems.sapphire, gems.moonstone]}
+            gemType="sapphire"
+            width={180}
             style={styles.nextBtn}
           >
-            <Text style={styles.nextBtnText}>CONTINUE TO ATTENDANCE</Text>
-            <Ionicons name="arrow-forward" size={20} color="#FFF" />
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+              <Text style={styles.nextBtnText}>CONTINUE</Text>
+              <Ionicons name="arrow-forward" size={16} color="#FFF" />
+            </View>
           </GemButton>
           
         </ScrollView>
@@ -361,7 +373,11 @@ const styles = StyleSheet.create({
   dobDisplay: { flex: 1, backgroundColor: 'rgba(46, 88, 148, 0.05)', borderRadius: 12, paddingHorizontal: 15, paddingVertical: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   dobText: { fontSize: 14, color: '#222' },
 
-  nextBtn: { flexDirection: 'row', height: 60, borderRadius: 18, justifyContent: 'center', alignItems: 'center', gap: 12, marginTop: 10 },
+  nextBtn: {
+    marginTop: 25,
+    marginBottom: 20,
+    alignSelf: 'center',
+  },
   nextBtnText: { color: '#FFF', fontSize: 14, fontWeight: '700', letterSpacing: 2, fontFamily: 'Jost_600SemiBold' },
 
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'center', alignItems: 'center', padding: 20 },

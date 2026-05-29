@@ -62,6 +62,39 @@ export default function CompletePage() {
   const [loading, setLoading] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  const annualStats = useMemo(() => {
+    let totalWorking = 0;
+    let totalAbsent = 0;
+    
+    for (let idx = 0; idx < 12; idx++) {
+      const monthInfo = MONTHS[idx];
+      if (!monthInfo) continue;
+      
+      // Calculate working days
+      let workingDays = 0;
+      const startOffset = (idx * 2) % 7;
+      for (let d = 1; d <= monthInfo.days; d++) {
+        const col = (startOffset + d - 1) % 7;
+        if (col !== 6) workingDays++;
+      }
+      totalWorking += workingDays;
+      
+      // Calculate absent days
+      const absent = (absentDaysByMonth[idx] || []).length;
+      totalAbsent += absent;
+    }
+    
+    const totalPresent = Math.max(0, totalWorking - totalAbsent);
+    const percentage = totalWorking > 0 ? Math.round((totalPresent / totalWorking) * 100) : 0;
+    
+    return {
+      working: totalWorking,
+      absent: totalAbsent,
+      present: totalPresent,
+      percentage: percentage
+    };
+  }, [MONTHS, absentDaysByMonth]);
+
   useEffect(() => {
     if (targetUserId) {
       fetchAttendance();
@@ -260,12 +293,34 @@ export default function CompletePage() {
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" />
         <View style={styles.header}>
-          <SoundButton onPress={() => router.back()} style={styles.backBtn}><Ionicons name="chevron-back" size={24} color={theme.text} /></SoundButton>
+          <SoundButton 
+            onPress={() => router.back()} 
+            style={[
+              styles.backBtn, 
+              { 
+                backgroundColor: theme.isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)",
+                borderColor: theme.isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"
+              }
+            ]}
+          >
+            <Ionicons name="chevron-back" size={24} color={theme.text} />
+          </SoundButton>
           <View style={styles.headerTitleContainer}>
-            <Text style={styles.title}>ATTENDANCE</Text>
-            <Text style={styles.subtitle}>Monthly Calendar</Text>
+            <Text style={[styles.title, { color: theme.text }]}>ATTENDANCE</Text>
+            <Text style={[styles.subtitle, { color: theme.secondaryText }]}>Monthly Calendar</Text>
           </View>
-          <SoundButton onPress={saveAttendance} style={[styles.saveHeaderBtn, { borderColor: gems.sapphire }]}><Ionicons name="checkmark-done" size={22} color={gems.sapphire} /></SoundButton>
+          <SoundButton 
+            onPress={saveAttendance} 
+            style={[
+              styles.saveHeaderBtn, 
+              { 
+                borderColor: theme.isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)",
+                backgroundColor: theme.isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"
+              }
+            ]}
+          >
+            <Ionicons name="checkmark-done" size={22} color={gems.sapphire} />
+          </SoundButton>
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
@@ -288,6 +343,29 @@ export default function CompletePage() {
                     </TouchableOpacity>
                 ))}
             </ScrollView>
+          </View>
+
+          {/* Overall Annual Attendance Summary Bar */}
+          <View style={[styles.annualSummaryCard, { backgroundColor: theme.card, borderColor: gems.sapphire }]}>
+            <Text style={[styles.annualTitle, { color: theme.text }]}>ANNUAL SUMMARY</Text>
+            <View style={styles.annualStatsRow}>
+              <View style={styles.annualStatBox}>
+                <Text style={[styles.annualStatVal, { color: gems.sapphire }]}>{annualStats.percentage}%</Text>
+                <Text style={styles.annualStatLbl}>PERCENTAGE</Text>
+              </View>
+              <View style={[styles.annualStatBox, { borderLeftWidth: 1, borderRightWidth: 1, borderColor: theme.border }]}>
+                <Text style={styles.annualStatVal}>{annualStats.working}</Text>
+                <Text style={styles.annualStatLbl}>WORKING DAYS</Text>
+              </View>
+              <View style={[styles.annualStatBox, { borderRightWidth: 1, borderColor: theme.border }]}>
+                <Text style={[styles.annualStatVal, { color: '#ef4444' }]}>{annualStats.absent}</Text>
+                <Text style={styles.annualStatLbl}>ABSENT DAYS</Text>
+              </View>
+              <View style={styles.annualStatBox}>
+                <Text style={[styles.annualStatVal, { color: '#22c55e' }]}>{annualStats.present}</Text>
+                <Text style={styles.annualStatLbl}>PRESENT DAYS</Text>
+              </View>
+            </View>
           </View>
 
           <View style={[styles.card, { borderColor: gems.sapphire }]}>
@@ -407,4 +485,41 @@ const styles = StyleSheet.create({
 
   finishBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 30, gap: 10 },
   finishBtnText: { color: 'rgba(255,255,255,0.6)', fontSize: 11, fontWeight: '600', letterSpacing: 1.5 },
+  annualSummaryCard: {
+    backgroundColor: "rgba(245, 245, 245, 0.9)",
+    borderRadius: 18,
+    padding: 16,
+    marginBottom: 20,
+    borderWidth: 1.5,
+  },
+  annualTitle: {
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 1.5,
+    textAlign: 'center',
+    marginBottom: 12,
+    fontFamily: 'Jost_600SemiBold',
+  },
+  annualStatsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  annualStatBox: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  annualStatVal: {
+    fontSize: 16,
+    fontWeight: '700',
+    fontFamily: 'Jost_600SemiBold',
+    marginBottom: 2,
+  },
+  annualStatLbl: {
+    fontSize: 8,
+    color: '#666',
+    letterSpacing: 0.5,
+    textAlign: 'center',
+    fontFamily: 'Jost_300Light',
+  },
 });

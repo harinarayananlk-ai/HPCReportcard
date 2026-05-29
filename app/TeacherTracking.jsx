@@ -14,6 +14,7 @@ import { useRouter } from "expo-router";
 import Constants from "expo-constants";
 import SoundButton from "../components/SoundButton";
 import GemButton from "../components/GemButton";
+import PremiumBackground from "../components/PremiumBackground";
 import { useTheme, useAuth, API_URL } from "../context/GlobalContext";
 import { gems } from "../colour_themes";
 
@@ -125,6 +126,7 @@ export default function TeacherTracking() {
 
   return (
     <View style={styles.container}>
+      <PremiumBackground gemColor={accentColor} />
       <StatusBar barStyle={theme.isDark ? "light-content" : "dark-content"} />
       
       {/* Header */}
@@ -218,6 +220,7 @@ export default function TeacherTracking() {
                             <GemButton 
                               style={{marginTop: 16}}
                               gemType="aquamarine"
+                              width={150} // Made smaller (approx 1/4 width of regular layout)
                               onPress={async () => {
                                   setActiveStudentId(student.user_id);
                                   // Fetch full profile before navigating
@@ -231,32 +234,30 @@ export default function TeacherTracking() {
                                   router.push("/part_a1/StudentRegistration");
                               }}
                             >
-                              <Text style={{color: theme.buttonText, fontWeight: '700', fontSize: 11, letterSpacing: 1}}>VIEW/EDIT CARD</Text>
+                              <Text style={{color: theme.buttonText, fontWeight: '700', fontSize: 11, letterSpacing: 1, textAlign: 'center'}}>VIEW/EDIT CARD</Text>
                             </GemButton>
 
-                            <GemButton 
-                              style={{marginTop: 12}}
-                              gemType="jade"
+                            <SoundButton 
+                              style={styles.plainButton}
                               onPress={() => {
                                   setActiveStudentId(student.user_id);
                                   setActiveStudentProfile({ registration_number: student.registration_number });
                                   router.push("/part_b_preparatory/SelectionPage");
                               }}
                             >
-                              <Text style={{color: theme.buttonText, fontWeight: '700', fontSize: 11, letterSpacing: 1}}>ASSESS PREPARATORY (PART B)</Text>
-                            </GemButton>
+                              <Text style={styles.plainButtonText}>PART B</Text>
+                            </SoundButton>
 
-                            <GemButton 
-                              style={{marginTop: 12}}
-                              gemType="topaz"
+                            <SoundButton 
+                              style={styles.plainButton}
                               onPress={() => {
                                   setActiveStudentId(student.user_id);
                                   setActiveStudentProfile({ registration_number: student.registration_number });
                                   router.push("/part_c_preparatory/YearEndSummary");
                               }}
                             >
-                              <Text style={{color: theme.buttonText, fontWeight: '700', fontSize: 11, letterSpacing: 1}}>YEAR-END SUMMARY (PART C)</Text>
-                            </GemButton>
+                              <Text style={styles.plainButtonText}>PART C</Text>
+                            </SoundButton>
                           </View>
                         )}
                       </View>
@@ -278,7 +279,7 @@ export default function TeacherTracking() {
 const getStyles = (theme, accentColor) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.background,
+    backgroundColor: 'transparent',
   },
   header: {
     flexDirection: "row",
@@ -407,12 +408,12 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     fontFamily: 'Jost_300Light',
   },
   studentDetailCard: {
-    marginTop: 2,
+    marginTop: 4,
     padding: 16,
     borderRadius: 12,
     borderWidth: 1.5,
-    borderColor: gems.topaz,
-    backgroundColor: "rgba(245, 245, 245, 0.85)",
+    borderColor: theme.border,
+    backgroundColor: theme.isDark ? "rgba(30, 30, 30, 0.55)" : "rgba(255, 255, 255, 0.45)", // Frosted glass translucency
   },
   detailRow: {
     flexDirection: 'row',
@@ -428,6 +429,25 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
   detailValue: {
     fontSize: 12,
     fontWeight: '700',
+    fontFamily: 'Jost_600SemiBold',
+  },
+  plainButton: {
+    backgroundColor: accentColor + '15', // Sleek tinted background
+    borderColor: accentColor + '40',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingVertical: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+    width: 150, // Matches the size of the View/Edit Card button
+    alignSelf: 'center',
+  },
+  plainButtonText: {
+    color: accentColor,
+    fontWeight: '700',
+    fontSize: 11,
+    letterSpacing: 1.5,
     fontFamily: 'Jost_600SemiBold',
   },
 });

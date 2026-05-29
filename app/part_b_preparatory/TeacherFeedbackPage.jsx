@@ -7,8 +7,10 @@ import PremiumBackground from '../../components/PremiumBackground';
 import SoundButton from '../../components/SoundButton';
 import Animated, { FadeInDown, useSharedValue, useAnimatedStyle, withTiming, withSequence, withRepeat, runOnJS } from 'react-native-reanimated';
 import { Waves, Mountain, Cloud, Eye, Feather, Wand2, CloudUpload } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import InfoModal from './InfoModal';
+import GemButton from '../../components/GemButton';
 import { gems } from '../../colour_themes';
 
 // ── Theme-aware Animated Icons ──────────────────────────────────────────
@@ -306,13 +308,22 @@ export default function TeacherFeedbackPage() {
                     />
                 </Animated.View>
 
-                <TouchableOpacity 
-                    style={[styles.finishBtn, isSyncing && { opacity: 0.5 }]} 
+                <GemButton
+                    gemType="silver"
                     onPress={handleNext}
                     disabled={isSyncing}
+                    width={180}
+                    style={styles.finishBtn}
                 >
-                    {isSyncing ? <ActivityIndicator color={theme.buttonText} /> : <Text style={styles.finishBtnText}>Proceed to Self/Peer Assessment →</Text>}
-                </TouchableOpacity>
+                    {isSyncing ? (
+                        <ActivityIndicator color={theme.buttonText} />
+                    ) : (
+                        <View style={{ alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+                            <Text style={[styles.finishBtnText, { textAlign: 'center' }]}>Proceed to{"\n"}Self/Peer{"\n"}Assessment</Text>
+                            <Ionicons name="arrow-forward" size={16} color="#FFF" />
+                        </View>
+                    )}
+                </GemButton>
 
                 <View style={{ height: 60 }} />
             </ScrollView>
@@ -414,13 +425,8 @@ const getStyles = (theme) => StyleSheet.create({
 
     // ── Button ──────────────────────────────────────────────────────────
     finishBtn: { 
-        paddingVertical: 18, borderRadius: 16, alignItems: 'center', 
-        backgroundColor: theme.primary,
-        shadowColor: theme.primary,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
-        elevation: 6,
+        marginTop: 10,
+        alignSelf: 'center',
     },
-    finishBtnText: { color: theme.buttonText, fontWeight: '800', fontSize: 16, letterSpacing: 1 }
+    finishBtnText: { color: theme.buttonText, fontWeight: '800', fontSize: 11, letterSpacing: 1, textAlign: 'center' }
 });

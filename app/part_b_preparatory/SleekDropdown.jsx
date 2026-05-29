@@ -1,17 +1,26 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, FlatList, StyleSheet } from 'react-native';
 import { ChevronDown, Check } from 'lucide-react-native';
+import { useTheme } from '../../context/GlobalContext';
 
-const FOREST = {
-    overlay:  'rgba(10, 30, 15, 0.72)',
-    card:     'rgba(15, 45, 20, 0.95)',
-    border:   'rgba(100, 220, 120, 0.3)',
-    accent:   '#7CFC00',
-    text:     '#E8F5E2',
-    muted:    '#A8C8A0',
+const getDropdownTheme = (baseColor, theme) => {
+    // Default to the silver gem color #8697bc
+    const primaryColor = baseColor || '#8697bc';
+    const isDark = theme?.isDark;
+    
+    return {
+        overlay: isDark ? 'rgba(0, 0, 0, 0.75)' : 'rgba(0, 0, 0, 0.5)',
+        card: isDark ? '#2A2A2A' : '#FFFFFF',
+        border: primaryColor + '40', // 25% opacity
+        accent: primaryColor,
+        text: isDark ? '#CCCCCC' : '#333333',
+        muted: isDark ? '#888888' : '#777777',
+    };
 };
 
-export default function SleekDropdown({ label, options, selectedValue, onSelect, multiple = false }) {
+export default function SleekDropdown({ label, options, selectedValue, onSelect, multiple = false, color }) {
+    const { theme } = useTheme();
+    const dropdownTheme = getDropdownTheme(color, theme);
     const [modalVisible, setModalVisible] = useState(false);
 
     const toggleSelection = (item) => {
@@ -44,21 +53,21 @@ export default function SleekDropdown({ label, options, selectedValue, onSelect,
 
     return (
         <View style={styles.container}>
-            {label ? <Text style={[styles.label, { color: FOREST.muted }]}>{label}</Text> : null}
+            {label ? <Text style={[styles.label, { color: dropdownTheme.muted }]}>{label}</Text> : null}
             <TouchableOpacity
-                style={[styles.dropdownHeader, { borderColor: FOREST.border, backgroundColor: FOREST.card }]}
+                style={[styles.dropdownHeader, { borderColor: dropdownTheme.border, backgroundColor: dropdownTheme.card }]}
                 onPress={() => setModalVisible(true)}
                 activeOpacity={0.8}
             >
-                <Text style={[styles.headerText, { color: getDisplayText() !== 'Select option' ? FOREST.text : FOREST.muted }]}>
+                <Text style={[styles.headerText, { color: getDisplayText() !== 'Select option' ? dropdownTheme.text : dropdownTheme.muted }]}>
                     {getDisplayText()}
                 </Text>
-                <ChevronDown size={20} color={FOREST.text} />
+                <ChevronDown size={20} color={dropdownTheme.text} />
             </TouchableOpacity>
-
+ 
             <Modal visible={modalVisible} transparent animationType="fade">
                 <TouchableOpacity style={styles.modalOverlay} onPress={() => setModalVisible(false)} activeOpacity={1}>
-                    <View style={[styles.modalContent, { backgroundColor: FOREST.card, borderColor: FOREST.border }]}>
+                    <View style={[styles.modalContent, { backgroundColor: dropdownTheme.card, borderColor: dropdownTheme.border }]}>
                         <FlatList
                             data={options}
                             keyExtractor={(item, index) => (item ? item.toString() : `o-${index}`)}
@@ -66,19 +75,18 @@ export default function SleekDropdown({ label, options, selectedValue, onSelect,
                                 if (!item) return null;
                                 return (
                                     <TouchableOpacity
-                                        style={[styles.item, { borderBottomColor: FOREST.border, backgroundColor: isSelected(item) ? FOREST.border : 'transparent' }]}
+                                        style={[styles.item, { borderBottomColor: dropdownTheme.border, backgroundColor: isSelected(item) ? dropdownTheme.border : 'transparent' }]}
                                         onPress={() => toggleSelection(item)}
                                     >
-                                        <Text style={[styles.itemText, { color: FOREST.text, fontFamily: isSelected(item) ? 'Outfit-Bold' : 'Outfit-Regular' }]}>{item}</Text>
-                                        {isSelected(item) && <Check size={18} color={FOREST.accent} />}
+                                        <Text style={[styles.itemText, { color: dropdownTheme.text, fontFamily: isSelected(item) ? 'Outfit-Bold' : 'Outfit-Regular' }]}>{item}</Text>
                                     </TouchableOpacity>
                                 );
                             }}
                         />
                         {/* Done button for multi-select */}
                         {multiple && (
-                            <TouchableOpacity style={[styles.doneButton, { borderTopColor: FOREST.border }]} onPress={() => setModalVisible(false)}>
-                                <Text style={[styles.doneText, { color: FOREST.accent }]}>DONE</Text>
+                            <TouchableOpacity style={[styles.doneButton, { borderTopColor: dropdownTheme.border }]} onPress={() => setModalVisible(false)}>
+                                <Text style={[styles.doneText, { color: dropdownTheme.accent }]}>DONE</Text>
                             </TouchableOpacity>
                         )}
                     </View>

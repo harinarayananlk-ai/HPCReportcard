@@ -221,12 +221,21 @@ export default function TeacherRegistrationPage() {
         
         {/* Header */}
         <View style={styles.header}>
-          <SoundButton onPress={() => router.back()} style={styles.backBtn}>
+          <SoundButton 
+            onPress={() => router.back()} 
+            style={[
+              styles.backBtn, 
+              { 
+                backgroundColor: theme.isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)",
+                borderColor: theme.isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"
+              }
+            ]}
+          >
             <Ionicons name="chevron-back" size={24} color={theme.text} />
           </SoundButton>
           <View style={styles.headerTitleContainer}>
-            <Text style={styles.title}>PART A1</Text>
-            <Text style={styles.subtitle}>Institutional Records</Text>
+            <Text style={[styles.title, { color: theme.text }]}>PART A1</Text>
+            <Text style={[styles.subtitle, { color: theme.secondaryText }]}>Institutional Records</Text>
           </View>
           <View style={{ width: 44 }} />
         </View>
@@ -332,11 +341,14 @@ export default function TeacherRegistrationPage() {
 
           <GemButton 
             onPress={handleNext} 
-            colors={[gems.sapphire, gems.moonstone]}
+            gemType="sapphire"
+            width={180}
             style={styles.nextBtn}
           >
-            <Text style={styles.nextBtnText}>CONTINUE TO PROFILE</Text>
-            <Ionicons name="arrow-forward" size={20} color="#FFF" />
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+              <Text style={styles.nextBtnText}>CONTINUE</Text>
+              <Ionicons name="arrow-forward" size={16} color="#FFF" />
+            </View>
           </GemButton>
           
         </ScrollView>
@@ -399,18 +411,9 @@ const styles = StyleSheet.create({
   picker: { height: 50, color: '#222' },
 
   nextBtn: {
-    flexDirection: 'row',
-    height: 60,
-    borderRadius: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 12,
-    marginTop: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
+    marginTop: 25,
+    marginBottom: 10,
+    alignSelf: 'center',
   },
   nextBtnText: { color: '#FFF', fontSize: 14, fontWeight: '700', letterSpacing: 2, fontFamily: 'Jost_600SemiBold' },
 });
