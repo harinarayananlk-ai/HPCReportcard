@@ -114,20 +114,20 @@ export default function StudentHomepage() {
     const cls = (profile?.class_name || '').toLowerCase().trim();
     console.log("[StudentHome] Routing for class:", cls);
     if (cls.includes('bal vatika') || cls === 'kg' || cls === 'kindergarten' || cls === 'grade 1' || cls === 'grade 2') {
-        return '/part_a2_foundational/AboutMe';
+        return '/part_a2_s1/AboutMe';
     }
     if (cls === 'grade 3' || cls === 'grade 4' || cls === 'grade 5') {
-        return '/part_a2_preparatory/AboutMe';
+        return '/part_a2_s2/AboutMe';
     }
-    return '/part_a2/LayoutBuilder';
+    return '/part_a2_s34/LayoutBuilder';
   };
 
   const allActions = [
-    { id: "1", title: "My Treasure Card", icon: "create-outline", route: getA2Route(), color: gems.sapphire, desc: "Personalize your journey" },
+    { id: "1", title: "Me and My Surroundings", icon: "create-outline", route: getA2Route(), color: gems.sapphire, desc: "Personalize your journey" },
     { id: "2", title: "Achievement Vault", icon: "bar-chart-outline", route: "/part_b/viewer", color: gems.emerald, desc: "View your progress" },
     { id: "3", title: "Profile Studio", icon: "person-outline", route: "/part_a1/ParentRegistration", color: gems.ruby, desc: "Update your details" },
-    { id: "4", title: "Domain Master", icon: "book-outline", route: "/part_b_preparatory/SelectionPage", color: gems.topaz, desc: "Record Activities" },
-    { id: "5", title: "Year End Party", icon: "ribbon-outline", route: "/part_c_preparatory/YearEndSummary", color: gems.amethyst, desc: "Summary & Celebration" }
+    { id: "4", title: "Domain Master", icon: "book-outline", route: "/part_b_s1/SelectionPage", color: gems.topaz, desc: "Record Activities" },
+    { id: "5", title: "Year End Party", icon: "ribbon-outline", route: "/part_c_s1/YearEndSummary", color: gems.amethyst, desc: "Summary & Celebration" }
   ];
 
   const quickActions = isTeacher ? allActions : allActions.filter(a => a.id === "4");

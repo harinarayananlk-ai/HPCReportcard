@@ -24,6 +24,19 @@ import useAutoSave from "../../hooks/useAutoSave";
 
 const { width, height } = Dimensions.get("window");
 
+const parseDate = (val) => {
+  if (!val) return new Date();
+  const parsed = new Date(val);
+  return isNaN(parsed.getTime()) ? new Date() : parsed;
+};
+
+const formatISO = (dateVal) => {
+  if (!dateVal || isNaN(dateVal.getTime())) {
+    return new Date().toISOString().split('T')[0];
+  }
+  return dateVal.toISOString().split('T')[0];
+};
+
 export default function ParentRegistrationPage() {
   const { theme } = useTheme();
   const { user, profile, setProfile: setAuthProfile, schoolInfo, activeStudentId, activeStudentProfile, setActiveStudentProfile } = useAuth();
@@ -34,7 +47,7 @@ export default function ParentRegistrationPage() {
 
   // Profile Fields
   const [fullName, setFullName] = useState(targetProfile?.full_name || "");
-  const [dob, setDob] = useState(targetProfile?.dob ? new Date(targetProfile.dob) : new Date());
+  const [dob, setDob] = useState(() => parseDate(targetProfile?.dob));
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showYearPicker, setShowYearPicker] = useState(false);
 
@@ -56,7 +69,7 @@ export default function ParentRegistrationPage() {
   useEffect(() => {
     if (targetProfile) {
       setFullName(targetProfile.full_name || "");
-      if (targetProfile.dob) setDob(new Date(targetProfile.dob));
+      if (targetProfile.dob) setDob(parseDate(targetProfile.dob));
       const fd = targetProfile.family_details;
       if (fd) {
         setAddress1(fd.address1 || "");
@@ -96,7 +109,7 @@ export default function ParentRegistrationPage() {
   // AutoSave on page exit
   const getPayload = useCallback(() => ({
     userId: targetUserId,
-    fullName, dob: dob.toISOString().split('T')[0],
+    fullName, dob: formatISO(dob),
     familyDetails: {
       address1, address2, phone, motherName, motherEducation, motherOccupation,
       fatherName, fatherEducation, fatherOccupation, siblingsCount, siblingsAge,
@@ -134,7 +147,7 @@ export default function ParentRegistrationPage() {
            userId: targetUserId,
            registrationNumber: targetProfile?.registration_number,
            fullName,
-           dob: dob.toISOString().split('T')[0],
+           dob: formatISO(dob),
            familyDetails
          };
 
@@ -148,7 +161,7 @@ export default function ParentRegistrationPage() {
            const updated = {
              ...targetProfile,
              full_name: fullName,
-             dob: dob.toISOString().split('T')[0],
+             dob: formatISO(dob),
              family_details: familyDetails
            };
            if (isTeacher && activeStudentId) setActiveStudentProfile(updated);

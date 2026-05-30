@@ -229,7 +229,7 @@ export default function RubricPage() {
                 setIsSyncing(false);
             }
         }
-        router.push('/part_b_preparatory/TeacherFeedbackPage');
+        router.push('/part_b_s1/TeacherFeedbackPage');
     };
 
     const handleBackup = async () => {
@@ -396,7 +396,7 @@ export default function RubricPage() {
                         <ActivityIndicator color={theme.buttonText} />
                     ) : (
                         <View style={{ alignItems: 'center', justifyContent: 'center', gap: 4 }}>
-                            <Text style={[styles.finishBtnText, { textAlign: 'center' }]}>Proceed to{"\n"}Teacher's{"\n"}Feedback</Text>
+                            <Text style={[styles.finishBtnText, { textAlign: 'center' }]}>{"Proceed to\nTeacher's\nFeedback"}</Text>
                             <Ionicons name="arrow-forward" size={16} color="#FFF" />
                         </View>
                     )}

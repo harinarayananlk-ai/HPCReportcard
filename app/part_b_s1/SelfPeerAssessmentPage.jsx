@@ -129,7 +129,7 @@ export default function SelfPeerAssessmentPage() {
                 setIsSyncing(false);
             }
         }
-        router.push('/part_b_preparatory/ParentObservationPage');
+        router.push('/part_b_s1/ParentObservationPage');
     };
 
     return (

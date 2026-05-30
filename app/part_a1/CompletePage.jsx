@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   View,
   Text,
@@ -19,6 +19,7 @@ import SoundButton from "../../components/SoundButton";
 import GemButton from "../../components/GemButton";
 import PremiumBackground from "../../components/PremiumBackground";
 import { gems } from "../../colour_themes";
+import useAutoSave from "../../hooks/useAutoSave";
 
 const { width } = Dimensions.get('window');
 
@@ -191,6 +192,31 @@ export default function CompletePage() {
     }
   };
 
+  const getPayload = useCallback(() => {
+    // Build summary for legacy compatibility
+    const attendanceSummary = MONTHS.map((m, idx) => {
+      const stats = getMonthStats(idx);
+      return { 
+        month: m.name, 
+        working: stats.working.toString(), 
+        attended: stats.attended.toString() 
+      };
+    });
+
+    return {
+      userId: targetUserId,
+      registrationNumber: targetProfile?.registration_number,
+      familyDetails: { 
+        ...targetProfile?.family_details, 
+        attendance: attendanceSummary, 
+        attendanceCal: absentDaysByMonth,
+        lowAttendanceReason 
+      }
+    };
+  }, [targetUserId, targetProfile, MONTHS, absentDaysByMonth, lowAttendanceReason]);
+
+  const { triggerSave } = useAutoSave(targetUserId, getPayload, [absentDaysByMonth, lowAttendanceReason]);
+
   const toggleAbsent = (monthIdx, day) => {
     if (!isTeacher) return;
     setAbsentDaysByMonth(prev => {
@@ -309,18 +335,7 @@ export default function CompletePage() {
             <Text style={[styles.title, { color: theme.text }]}>ATTENDANCE</Text>
             <Text style={[styles.subtitle, { color: theme.secondaryText }]}>Monthly Calendar</Text>
           </View>
-          <SoundButton 
-            onPress={saveAttendance} 
-            style={[
-              styles.saveHeaderBtn, 
-              { 
-                borderColor: theme.isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)",
-                backgroundColor: theme.isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"
-              }
-            ]}
-          >
-            <Ionicons name="checkmark-done" size={22} color={gems.sapphire} />
-          </SoundButton>
+          <View style={{ width: 44 }} />
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
@@ -403,33 +418,27 @@ export default function CompletePage() {
             />
           </View>
 
-          {isTeacher && (
-            <GemButton 
-              onPress={saveAttendance} 
-              disabled={loading} 
-              colors={[gems.sapphire, gems.moonstone]}
-              style={{ marginTop: 10, borderRadius: 16 }}
+          <View style={styles.buttonCol}>
+            <GemButton
+              onPress={async () => {
+                if (isTeacher) {
+                  await triggerSave();
+                }
+                const cls = (targetProfile?.class_name || '').toLowerCase().trim();
+                let route = '/part_a2_s34/LayoutBuilder'; // fallback
+                if (cls.includes('bal vatika') || cls === 'kg' || cls === 'kindergarten' || cls === 'grade 1' || cls === 'grade 2') {
+                  route = '/part_a2_s1/AboutMe';
+                } else if (cls === 'grade 3' || cls === 'grade 4' || cls === 'grade 5') {
+                  route = '/part_a2_s2/AboutMe';
+                }
+                console.log("[CompletePage] Routing student", targetProfile?.full_name, "with class:", cls, "to:", route);
+                router.push(route);
+              }}
+              gemType="sapphire"
             >
-              {loading ? <ActivityIndicator color="#FFF" /> : <Text style={styles.saveBtnText}>SAVE RECORDS</Text>}
+              <Text style={styles.btnText}>{"PROCEED TO\nPART A2\n➔"}</Text>
             </GemButton>
-          )}
-
-          <SoundButton onPress={() => {
-            // Stage-aware routing based on class
-            const cls = (targetProfile?.class_name || '').toLowerCase().trim();
-            let route = '/part_a2/LayoutBuilder'; // fallback
-            if (cls.includes('bal vatika') || cls === 'kg' || cls === 'kindergarten' || cls === 'grade 1' || cls === 'grade 2') {
-              route = '/part_a2_foundational/AboutMe';
-            } else if (cls === 'grade 3' || cls === 'grade 4' || cls === 'grade 5') {
-              route = '/part_a2_preparatory/AboutMe';
-            }
-            console.log("[CompletePage] Routing student", targetProfile?.full_name, "with class:", cls, "to:", route);
-            // Middle (6-8) and Secondary (9-12) fall through to LayoutBuilder for now
-            router.push(route);
-          }} style={styles.finishBtn}>
-            <Text style={styles.finishBtnText}>PROCEED TO PART A2</Text>
-            <Ionicons name="arrow-forward" size={18} color="rgba(255,255,255,0.6)" />
-          </SoundButton>
+          </View>
 
         </ScrollView>
       </SafeAreaView>
@@ -483,8 +492,21 @@ const styles = StyleSheet.create({
 
   saveBtnText: { color: '#FFF', fontSize: 14, fontWeight: '700', letterSpacing: 2, fontFamily: 'Jost_600SemiBold', paddingVertical: 18 },
 
-  finishBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 30, gap: 10 },
-  finishBtnText: { color: 'rgba(255,255,255,0.6)', fontSize: 11, fontWeight: '600', letterSpacing: 1.5 },
+  buttonCol: {
+    flexDirection: 'column',
+    gap: 12,
+    marginTop: 20,
+    alignItems: 'center',
+    width: '100%',
+  },
+  btnText: {
+    color: '#FFF',
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 1.5,
+    fontFamily: 'Jost_600SemiBold',
+    textAlign: 'center',
+  },
   annualSummaryCard: {
     backgroundColor: "rgba(245, 245, 245, 0.9)",
     borderRadius: 18,

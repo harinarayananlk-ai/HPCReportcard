@@ -177,7 +177,7 @@ export default function TeacherFeedbackPage() {
                 setIsSyncing(false);
             }
         }
-        router.push('/part_b_preparatory/SelfPeerAssessmentPage');
+        router.push('/part_b_s1/SelfPeerAssessmentPage');
     };
 
     const updateCell = (row, col, text) => {
@@ -196,7 +196,7 @@ export default function TeacherFeedbackPage() {
                     <Text style={{color: theme.text, fontSize: 24, fontWeight: '800'}}>←</Text>
                 </SoundButton>
                 <View style={{ flex: 1 }}>
-                    <Text style={styles.title}>Part B3: Teacher's Feedback</Text>
+                    <Text style={styles.title}>{"Part B3: Teacher's Feedback"}</Text>
                 </View>
             </View>
 
@@ -294,7 +294,7 @@ export default function TeacherFeedbackPage() {
 
                 {/* Feedback Input */}
                 <Animated.View entering={FadeInDown.delay(200)} style={styles.feedbackSection}>
-                    <Text style={styles.sectionLabel}>TEACHER'S CONSOLIDATED REMARKS</Text>
+                    <Text style={styles.sectionLabel}>{"TEACHER'S CONSOLIDATED REMARKS"}</Text>
                     <TextInput
                         style={styles.textArea}
                         multiline

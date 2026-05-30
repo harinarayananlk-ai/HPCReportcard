@@ -5,6 +5,7 @@ import { GlobalContextProvider } from "../context/GlobalContext";
 import LogoLoadingScreen from "../components/LogoLoadingScreen";
 import CornerLogo from "../components/CornerLogo";
 import GearGroup from "../components/GearGroup";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useFonts, Jost_300Light, Jost_400Regular, Jost_600SemiBold } from '@expo-google-fonts/jost';
@@ -20,32 +21,34 @@ export default function RootLayout() {
   if (!fontsLoaded) return null;
 
   return (
-    <GlobalContextProvider>
-      <SafeAreaProvider>
-        <View style={styles.container}>
-        {/* Always render Stack so routes initialize correctly */}
-        <View style={[styles.stackWrapper, { display: appReady ? "flex" : "none" }]}>
-          <Stack 
-            screenOptions={{ 
-              headerShown: false,
-              animation: 'fade_from_bottom',
-            }} 
-          />
-          {appReady && (
-            <>
-              <CornerLogo />
-              <GearGroup />
-            </>
-          )}
-        </View>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <GlobalContextProvider>
+        <SafeAreaProvider>
+          <View style={styles.container}>
+          {/* Always render Stack so routes initialize correctly */}
+          <View style={[styles.stackWrapper, { display: appReady ? "flex" : "none" }]}>
+            <Stack 
+              screenOptions={{ 
+                headerShown: false,
+                animation: 'fade_from_bottom',
+              }} 
+            />
+            {appReady && (
+              <>
+                <CornerLogo />
+                <GearGroup />
+              </>
+            )}
+          </View>
 
-        {/* Overlay the loading screen */}
-        {!appReady && (
-          <LogoLoadingScreen onComplete={() => setAppReady(true)} />
-        )}
-        </View>
-      </SafeAreaProvider>
-    </GlobalContextProvider>
+          {/* Overlay the loading screen */}
+          {!appReady && (
+            <LogoLoadingScreen onComplete={() => setAppReady(true)} />
+          )}
+          </View>
+        </SafeAreaProvider>
+      </GlobalContextProvider>
+    </GestureHandlerRootView>
   );
 }
 

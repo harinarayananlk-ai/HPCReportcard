@@ -104,7 +104,7 @@ export default function ParentObservationPage() {
                 setIsSyncing(false);
             }
         }
-        router.push('/part_c_preparatory/YearEndSummary');
+        router.push('/part_c_s1/YearEndSummary');
     };
 
     return (
@@ -126,7 +126,7 @@ export default function ParentObservationPage() {
             <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
                 
                 <Animated.Text entering={FadeInDown.delay(100)} style={styles.note}>
-                    NOTE: This form is to be completed by the parent/caregiver/guardian. Please select one or more appropriate options below based on your observations at home. Additionally, kindly provide a suitable remark regarding your child's behavior at home.
+                    {"NOTE: This form is to be completed by the parent/caregiver/guardian. Please select one or more appropriate options below based on your observations at home. Additionally, kindly provide a suitable remark regarding your child's behavior at home."}
                 </Animated.Text>
 
                 <Animated.View entering={FadeInDown.delay(200)} style={styles.sectionContainer}>

@@ -218,9 +218,9 @@ export default function TeacherTracking() {
                             </View>
 
                             <GemButton 
-                              style={{marginTop: 16}}
+                              style={{marginTop: 16, marginBottom: 8, alignSelf: 'center'}}
                               gemType="aquamarine"
-                              width={150} // Made smaller (approx 1/4 width of regular layout)
+                              width={180}
                               onPress={async () => {
                                   setActiveStudentId(student.user_id);
                                   // Fetch full profile before navigating
@@ -234,30 +234,8 @@ export default function TeacherTracking() {
                                   router.push("/part_a1/StudentRegistration");
                               }}
                             >
-                              <Text style={{color: theme.buttonText, fontWeight: '700', fontSize: 11, letterSpacing: 1, textAlign: 'center'}}>VIEW/EDIT CARD</Text>
+                              <Text style={{color: theme.buttonText, fontWeight: '700', fontSize: 11, letterSpacing: 1.5, textAlign: 'center'}}>GO TO HPC CARD</Text>
                             </GemButton>
-
-                            <SoundButton 
-                              style={styles.plainButton}
-                              onPress={() => {
-                                  setActiveStudentId(student.user_id);
-                                  setActiveStudentProfile({ registration_number: student.registration_number });
-                                  router.push("/part_b_preparatory/SelectionPage");
-                              }}
-                            >
-                              <Text style={styles.plainButtonText}>PART B</Text>
-                            </SoundButton>
-
-                            <SoundButton 
-                              style={styles.plainButton}
-                              onPress={() => {
-                                  setActiveStudentId(student.user_id);
-                                  setActiveStudentProfile({ registration_number: student.registration_number });
-                                  router.push("/part_c_preparatory/YearEndSummary");
-                              }}
-                            >
-                              <Text style={styles.plainButtonText}>PART C</Text>
-                            </SoundButton>
                           </View>
                         )}
                       </View>

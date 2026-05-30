@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
     View, StyleSheet, TextInput, Text, ScrollView,
-    StatusBar, TouchableOpacity, Dimensions, Platform
+    StatusBar, TouchableOpacity, Dimensions, Platform, Alert
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTheme, useAuth, API_URL } from '../../context/GlobalContext';
@@ -158,7 +158,7 @@ export default function SelectionPage() {
                 setIsSyncing(false);
             }
         }
-        router.push('/part_b_preparatory/RubricPage');
+        router.push('/part_b_s1/RubricPage');
     };
 
     const handleBackup = async () => {

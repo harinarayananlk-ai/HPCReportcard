@@ -84,12 +84,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   content: {
-    width: '100%',
+    width: '80%',
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingHorizontal: 10,
     zIndex: 10,
   }
 });
