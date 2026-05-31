@@ -7,6 +7,7 @@ import { useRouter } from "expo-router";
 import { useTheme, useAuth, API_URL } from "../../context/GlobalContext";
 import { Ionicons } from "@expo/vector-icons";
 import SoundButton from "../../components/SoundButton";
+import MenuDropdown from "../../components/MenuDropdown";
 
 export default function ViewCardScreen() {
   const router = useRouter();
@@ -45,9 +46,7 @@ export default function ViewCardScreen() {
         <StatusBar barStyle={theme.isDark ? "light-content" : "dark-content"} />
         
         <View style={styles.header}>
-          <SoundButton onPress={() => router.back()} style={styles.backButton}>
-            <Ionicons name="chevron-back" size={20} color={theme.text} />
-          </SoundButton>
+          <MenuDropdown />
           
           <Text style={[styles.headerTitle, { color: theme.text }]}>REALTIME_PREVIEW</Text>
 

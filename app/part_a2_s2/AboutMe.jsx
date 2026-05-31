@@ -19,6 +19,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme, useAuth, API_URL } from '../../context/GlobalContext';
 import PremiumBackground from '../../components/PremiumBackground';
 import SoundButton from '../../components/SoundButton';
+import MenuDropdown from '../../components/MenuDropdown';
 import GemButton from '../../components/GemButton';
 import AccordionStepper from '../../components/AccordionStepper';
 import AutoResizingInput from '../../components/AutoResizingInput';
@@ -366,9 +367,7 @@ export default function AboutMe() {
 
         {/* Header */}
         <View style={styles.header}>
-          <SoundButton onPress={() => router.back()} style={styles.backBtn}>
-            <Ionicons name="chevron-back" size={22} color={theme.text} />
-          </SoundButton>
+          <MenuDropdown />
           <View style={{ flex: 1, alignItems: 'center' }}>
             <Text style={[styles.title, { color: theme.text }]}>ME AND MY SURROUNDINGS</Text>
             <Text style={[styles.subtitle, { color: theme.secondaryText }]}>✨ Preparatory Stage (S2) ✨</Text>

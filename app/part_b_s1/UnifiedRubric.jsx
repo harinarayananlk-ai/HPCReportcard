@@ -16,6 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { ActivityIndicator } from 'react-native';
 import SoundButton from '../../components/SoundButton';
 import GemButton from '../../components/GemButton';
+import MenuDropdown from '../../components/MenuDropdown';
 import { gems } from '../../colour_themes';
 import { Image } from 'react-native';
 import PremiumBackground from '../../components/PremiumBackground';
@@ -332,9 +333,7 @@ export default function UnifiedRubric() {
 
             <SafeAreaView style={{ flex: 1 }}>
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-                        <Ionicons name="arrow-back" size={24} color={theme.text} />
-                    </TouchableOpacity>
+                    <MenuDropdown />
                     <View style={{ flex: 1, alignItems: 'center' }}>
                         <Text style={styles.headerTitle}>Part B: Holistic Progress</Text>
                         <TouchableOpacity onPress={handleBackup} disabled={isSyncing} style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>

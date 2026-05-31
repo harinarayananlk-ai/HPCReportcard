@@ -17,6 +17,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme, useAuth, API_URL } from '../../context/GlobalContext';
 import PremiumBackground from '../../components/PremiumBackground';
 import SoundButton from '../../components/SoundButton';
+import MenuDropdown from '../../components/MenuDropdown';
 import GemButton from '../../components/GemButton';
 import AnimatedTabBar from '../../components/AnimatedTabBar';
 import ActionChip from '../../components/ActionChip';
@@ -319,18 +320,7 @@ export default function ParentFeedback() {
 
         {/* Header */}
         <View style={styles.header}>
-          <SoundButton
-            onPress={() => {
-              if (activeTab === 1) {
-                setActiveTab(0);
-              } else {
-                router.back();
-              }
-            }}
-            style={styles.backBtn}
-          >
-            <Ionicons name="chevron-back" size={22} color={theme.text} />
-          </SoundButton>
+          <MenuDropdown />
           <View style={{ flex: 1, alignItems: 'center' }}>
             <Text style={[styles.title, { color: theme.text }]}>PARENT FEEDBACK</Text>
             <Text style={[styles.subtitle, { color: theme.secondaryText }]}>✨ Part A4 Support ✨</Text>

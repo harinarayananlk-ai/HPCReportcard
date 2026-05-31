@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import { useTheme, useAuth, API_URL } from '../../context/GlobalContext';
 import PremiumBackground from '../../components/PremiumBackground';
 import SoundButton from '../../components/SoundButton';
+import MenuDropdown from '../../components/MenuDropdown';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import GemButton from '../../components/GemButton';
@@ -16,6 +17,10 @@ export default function SelfPeerAssessmentPage() {
     const { theme } = useTheme();
     const router = useRouter();
     const styles = getStyles(theme);
+
+    useEffect(() => {
+        router.replace('/part_b_s1/SelectionPage');
+    }, []);
 
     const targetUserId = activeStudentId || user?.id;
     const targetProfile = activeStudentProfile || profile;
@@ -140,10 +145,8 @@ export default function SelfPeerAssessmentPage() {
             <StatusBar translucent barStyle={theme.isDark ? "light-content" : "dark-content"} backgroundColor="transparent" />
 
             <View style={styles.header}>
-                <SoundButton onPress={() => router.back()} style={styles.backBtn}>
-                    <Text style={{color: theme.text, fontSize: 24, fontWeight: '800'}}>←</Text>
-                </SoundButton>
-                <View style={{ flex: 1 }}>
+                <MenuDropdown />
+                <View style={{ flex: 1, marginLeft: 16 }}>
                     <Text style={styles.title}>Part B4: Self & Peer Assessment</Text>
                 </View>
             </View>

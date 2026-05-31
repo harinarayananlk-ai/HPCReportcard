@@ -40,7 +40,7 @@ export default function CornerLogo() {
 const styles = StyleSheet.create({
   container: {
     position: "absolute",
-    top: Platform.OS === 'ios' ? 50 : 30,
+    top: Platform.OS === 'ios' ? 56 : 36,
     right: 20,
     zIndex: 1000,
     opacity: 1.0, // Returned to full strength

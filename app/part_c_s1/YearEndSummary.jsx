@@ -5,10 +5,12 @@ import { useRouter } from 'expo-router';
 import { useTheme, useAuth, API_URL } from '../../context/GlobalContext';
 import PremiumBackground from '../../components/PremiumBackground';
 import SoundButton from '../../components/SoundButton';
+import MenuDropdown from '../../components/MenuDropdown';
 import Animated, { FadeInDown, useSharedValue, useAnimatedStyle, withTiming, withSpring, interpolate, runOnJS } from 'react-native-reanimated';
 import { Waves, Mountain, Cloud, Eye, Feather, Wand2 } from 'lucide-react-native';
 import { Image } from 'expo-image';
 import { gems } from '../../colour_themes';
+import { Ionicons } from '@expo/vector-icons';
 
 const IMAGE_SOURCES = {
     none: require('../../assets/images/visily-image-removebg-preview.png'),
@@ -303,10 +305,8 @@ export default function YearEndSummary() {
             <StatusBar translucent barStyle={theme.isDark ? "light-content" : "dark-content"} backgroundColor="transparent" />
 
             <View style={styles.header}>
-                <SoundButton onPress={() => router.back()} style={styles.backBtn}>
-                    <Text style={{color: theme.text, fontSize: 24, fontWeight: '800'}}>←</Text>
-                </SoundButton>
-                <View style={{ flex: 1 }}>
+                <MenuDropdown />
+                <View style={{ flex: 1, marginLeft: 16 }}>
                     <Text style={styles.title}>Part C: Year-End Summary</Text>
                     <Text style={styles.subtitle}>Tap each domain card to assess</Text>
                 </View>

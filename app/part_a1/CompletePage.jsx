@@ -16,6 +16,7 @@ import { useTheme, useAuth, API_URL } from "../../context/GlobalContext";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import SoundButton from "../../components/SoundButton";
+import MenuDropdown from "../../components/MenuDropdown";
 import GemButton from "../../components/GemButton";
 import PremiumBackground from "../../components/PremiumBackground";
 import { gems } from "../../colour_themes";
@@ -319,18 +320,7 @@ export default function CompletePage() {
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle="light-content" />
         <View style={styles.header}>
-          <SoundButton 
-            onPress={() => router.back()} 
-            style={[
-              styles.backBtn, 
-              { 
-                backgroundColor: theme.isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)",
-                borderColor: theme.isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"
-              }
-            ]}
-          >
-            <Ionicons name="chevron-back" size={24} color={theme.text} />
-          </SoundButton>
+          <MenuDropdown />
           <View style={styles.headerTitleContainer}>
             <Text style={[styles.title, { color: theme.text }]}>ATTENDANCE</Text>
             <Text style={[styles.subtitle, { color: theme.secondaryText }]}>Monthly Calendar</Text>

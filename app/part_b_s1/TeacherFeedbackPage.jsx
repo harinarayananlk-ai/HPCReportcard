@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import { useTheme, useAuth, API_URL } from '../../context/GlobalContext';
 import PremiumBackground from '../../components/PremiumBackground';
 import SoundButton from '../../components/SoundButton';
+import MenuDropdown from '../../components/MenuDropdown';
 import Animated, { FadeInDown, useSharedValue, useAnimatedStyle, withTiming, withSequence, withRepeat, runOnJS } from 'react-native-reanimated';
 import { Waves, Mountain, Cloud, Eye, Feather, Wand2, CloudUpload } from 'lucide-react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -88,6 +89,10 @@ export default function TeacherFeedbackPage() {
     const { theme } = useTheme();
     const router = useRouter();
     const styles = getStyles(theme);
+
+    useEffect(() => {
+        router.replace('/part_b_s1/SelectionPage');
+    }, []);
 
     const targetUserId = activeStudentId || user?.id;
     const targetProfile = activeStudentProfile || profile;
@@ -192,10 +197,8 @@ export default function TeacherFeedbackPage() {
             <StatusBar translucent barStyle={theme.isDark ? "light-content" : "dark-content"} backgroundColor="transparent" />
 
             <View style={styles.header}>
-                <SoundButton onPress={() => router.back()} style={styles.backBtn}>
-                    <Text style={{color: theme.text, fontSize: 24, fontWeight: '800'}}>←</Text>
-                </SoundButton>
-                <View style={{ flex: 1 }}>
+                <MenuDropdown />
+                <View style={{ flex: 1, marginLeft: 16 }}>
                     <Text style={styles.title}>{"Part B3: Teacher's Feedback"}</Text>
                 </View>
             </View>

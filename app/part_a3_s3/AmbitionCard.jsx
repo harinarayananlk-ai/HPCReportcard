@@ -17,6 +17,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme, useAuth, API_URL } from '../../context/GlobalContext';
 import PremiumBackground from '../../components/PremiumBackground';
 import SoundButton from '../../components/SoundButton';
+import MenuDropdown from '../../components/MenuDropdown';
 import GemButton from '../../components/GemButton';
 import TimelineNode from '../../components/TimelineNode';
 import AutoResizingInput from '../../components/AutoResizingInput';
@@ -204,9 +205,7 @@ export default function AmbitionCard() {
 
         {/* Header */}
         <View style={styles.header}>
-          <SoundButton onPress={() => router.back()} style={styles.backBtn}>
-            <Ionicons name="chevron-back" size={22} color={theme.text} />
-          </SoundButton>
+          <MenuDropdown />
           <View style={{ flex: 1, alignItems: 'center' }}>
             <Text style={[styles.title, { color: theme.text }]}>MY AMBITION CARD</Text>
             <Text style={[styles.subtitle, { color: theme.secondaryText }]}>✨ Part A3 Timeline ✨</Text>

@@ -31,6 +31,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { useTheme, useAuth, API_URL } from '../../context/GlobalContext';
 import PremiumBackground from '../../components/PremiumBackground';
 import SoundButton from '../../components/SoundButton';
+import MenuDropdown from '../../components/MenuDropdown';
 import GemButton from '../../components/GemButton';
 import FavoritesBottomSheet from '../../components/FavoritesBottomSheet';
 import { gems } from '../../colour_themes';
@@ -585,9 +586,7 @@ export default function AboutMe() {
 
         {/* Header */}
         <View style={styles.header}>
-          <SoundButton onPress={() => router.back()} style={styles.backBtn}>
-            <Ionicons name="chevron-back" size={22} color={theme.text} />
-          </SoundButton>
+          <MenuDropdown />
           <View style={{ flex: 1, alignItems: 'center' }}>
             <Text style={[styles.title, { color: theme.text }]}>ME AND MY SURROUNDINGS</Text>
             <Text style={[styles.subtitle, { color: theme.secondaryText }]}>✨ Foundational Stage ✨</Text>

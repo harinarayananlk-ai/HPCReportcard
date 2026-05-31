@@ -23,6 +23,7 @@ import { BlurView } from "expo-blur";
 import { useTheme, useAuth, API_URL } from "../../context/GlobalContext";
 import PremiumBackground from "../../components/PremiumBackground";
 import SoundButton from "../../components/SoundButton";
+import MenuDropdown from "../../components/MenuDropdown";
 import GemButton from "../../components/GemButton";
 import AutoResizingInput from "../../components/AutoResizingInput";
 import { gems } from "../../colour_themes";
@@ -249,9 +250,7 @@ export default function LayoutBuilder() {
         >
           {/* Header */}
           <View style={styles.header}>
-            <SoundButton onPress={() => router.back()} style={styles.backBtn}>
-              <Ionicons name="chevron-back" size={22} color={theme.text} />
-            </SoundButton>
+            <MenuDropdown />
             <View style={{ flex: 1, alignItems: "center" }}>
               <Text style={[styles.headerTitle, { color: theme.text }]}>ME AND MY SURROUNDINGS</Text>
               <Text style={[styles.headerSubtitle, { color: theme.secondaryText }]}>✨ Middle & Secondary ✨</Text>

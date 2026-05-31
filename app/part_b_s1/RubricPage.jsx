@@ -14,6 +14,7 @@ import { Image } from 'expo-image';
 import InfoModal from './InfoModal';
 import { gems } from '../../colour_themes';
 import GemButton from '../../components/GemButton';
+import MenuDropdown from '../../components/MenuDropdown';
 
 // ── Theme-aware Animated Icons ──────────────────────────────────────────
 
@@ -97,6 +98,10 @@ export default function RubricPage() {
     const { theme } = useTheme();
     const router = useRouter();
     const styles = getStyles(theme);
+
+    useEffect(() => {
+        router.replace('/part_b_s1/SelectionPage');
+    }, []);
 
     const targetUserId = activeStudentId || user?.id;
     const targetProfile = activeStudentProfile || profile;
@@ -267,10 +272,8 @@ export default function RubricPage() {
             <StatusBar translucent barStyle={theme.isDark ? "light-content" : "dark-content"} backgroundColor="transparent" />
 
             <View style={styles.header}>
-                <SoundButton onPress={() => router.back()} style={styles.backBtn}>
-                    <Text style={{color: theme.text, fontSize: 24, fontWeight: '800'}}>←</Text>
-                </SoundButton>
-                <View style={{ flex: 1 }}>
+                <MenuDropdown />
+                <View style={{ flex: 1, marginLeft: 16 }}>
                     <Text style={styles.title}>Part B2: Rubric</Text>
                     <TouchableOpacity onPress={handleBackup} disabled={isSyncing} style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
                         <Text style={{ fontSize: 10, color: theme.secondaryText, fontWeight: '700', letterSpacing: 1 }}>CLOUD ARCHIVE</Text>
