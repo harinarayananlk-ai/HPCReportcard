@@ -143,7 +143,7 @@ export default function ParentFeedback() {
     const data = { resources, surveyAnswers, focusAreas, otherSupportText, supportText };
     await handleSave(data);
     Alert.alert('Completed', 'Parent feedback recorded successfully!', [
-      { text: 'OK', onPress: () => router.push('/part_b_s1/SelectionPage') }
+      { text: 'OK', onPress: () => router.push('/part_b_s3/SelectionPage') }
     ]);
   };
 

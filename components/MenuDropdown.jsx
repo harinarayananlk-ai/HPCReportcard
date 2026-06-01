@@ -10,13 +10,14 @@ import Animated, {
   withDelay,
   interpolate,
 } from "react-native-reanimated";
-import { useTheme } from "../context/GlobalContext";
+import { useTheme, useAuth } from "../context/GlobalContext";
 import SoundButton from "./SoundButton";
 import { gems } from "../colour_themes";
 
 export default function MenuDropdown() {
   const router = useRouter();
   const { theme } = useTheme();
+  const { profile, activeStudentProfile } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Trigger button coin-flip rotation (0 to 180 degrees)
@@ -237,7 +238,16 @@ export default function MenuDropdown() {
         style={[styles.domino, cardStyle_B]}
       >
         <TouchableOpacity
-          onPress={() => handleNavigate("/part_b_s1/SelectionPage")}
+          onPress={() => {
+            const targetProfile = activeStudentProfile || profile;
+            const cls = (targetProfile?.class_name || '').toLowerCase().trim();
+            const partBRoute = (cls === 'grade 3' || cls === 'grade 4' || cls === 'grade 5')
+              ? "/part_b_s2/SelectionPage"
+              : (cls === 'grade 6' || cls === 'grade 7' || cls === 'grade 8')
+                ? "/part_b_s3/SelectionPage"
+                : "/part_b_s1/SelectionPage";
+            handleNavigate(partBRoute);
+          }}
           style={[
             styles.cardBody,
             { backgroundColor: solidBg, borderColor: gems.emerald },

@@ -122,11 +122,23 @@ export default function StudentHomepage() {
     return '/part_a2_s34/LayoutBuilder';
   };
 
+  // Stage-aware Part B route
+  const getPartBRoute = () => {
+    const cls = (profile?.class_name || '').toLowerCase().trim();
+    if (cls === 'grade 3' || cls === 'grade 4' || cls === 'grade 5') {
+        return '/part_b_s2/SelectionPage';
+    }
+    if (cls === 'grade 6' || cls === 'grade 7' || cls === 'grade 8') {
+        return '/part_b_s3/SelectionPage';
+    }
+    return '/part_b_s1/SelectionPage';
+  };
+
   const allActions = [
     { id: "1", title: "Me and My Surroundings", icon: "create-outline", route: getA2Route(), color: gems.sapphire, desc: "Personalize your journey" },
     { id: "2", title: "Achievement Vault", icon: "bar-chart-outline", route: "/part_b/viewer", color: gems.emerald, desc: "View your progress" },
     { id: "3", title: "Profile Studio", icon: "person-outline", route: "/part_a1/ParentRegistration", color: gems.ruby, desc: "Update your details" },
-    { id: "4", title: "Domain Master", icon: "book-outline", route: "/part_b_s1/SelectionPage", color: gems.topaz, desc: "Record Activities" },
+    { id: "4", title: "Domain Master", icon: "book-outline", route: getPartBRoute(), color: gems.topaz, desc: "Record Activities" },
     { id: "5", title: "Year End Party", icon: "ribbon-outline", route: "/part_c_s1/YearEndSummary", color: gems.amethyst, desc: "Summary & Celebration" }
   ];
 

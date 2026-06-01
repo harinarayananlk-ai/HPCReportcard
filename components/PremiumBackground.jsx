@@ -57,7 +57,7 @@ export default function PremiumBackground({ bgIndex, gemColor }) {
     <View style={StyleSheet.absoluteFillObject} pointerEvents="none">
       <Image
         source={selectedBg}
-        style={StyleSheet.absoluteFillObject}
+        style={styles.backgroundImage}
         resizeMode="cover"
         blurRadius={Platform.OS === 'ios' ? 10 : 3} 
       />
@@ -82,6 +82,10 @@ export default function PremiumBackground({ bgIndex, gemColor }) {
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    ...StyleSheet.absoluteFillObject,
+    transform: [{ scale: 1.5 }],
+  },
   orb: {
     position: 'absolute',
     transform: [{ scale: 1.2 }],

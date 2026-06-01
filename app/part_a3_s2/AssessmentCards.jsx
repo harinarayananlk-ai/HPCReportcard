@@ -285,7 +285,7 @@ export default function AssessmentCards() {
   };
 
   const handleFinish = () => {
-    router.push('/part_b_s1/SelectionPage');
+    router.push('/part_b_s2/SelectionPage');
   };
 
   // Render sub-screens based on activeStep
