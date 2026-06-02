@@ -23,6 +23,7 @@ import AnimatedTabBar from '../../components/AnimatedTabBar';
 import ActionChip from '../../components/ActionChip';
 import AutoResizingInput from '../../components/AutoResizingInput';
 import { gems } from '../../colour_themes';
+import GemCutCard from '../../components/GemCutCard';
 
 const UNDERSTANDING_RESOURCES = [
   { id: 'books', label: 'Books / Magazine' },
@@ -172,7 +173,7 @@ export default function ParentFeedback() {
       // Tab 1: Understanding
       return (
         <View style={styles.tabContentContainer}>
-          <Text style={[styles.sectionTitle, { color: '#000000' }]}>Home Resources</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Home Resources</Text>
           <Text style={[styles.sectionDesc, { color: theme.secondaryText }]}>
             Select the learning and developmental resources available to your child at home:
           </Text>
@@ -193,7 +194,7 @@ export default function ParentFeedback() {
 
           <View style={styles.spacer} />
 
-          <Text style={[styles.sectionTitle, { color: '#000000' }]}>Parent Survey</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Parent Survey</Text>
           <Text style={[styles.sectionDesc, { color: theme.secondaryText }]}>
             Select the most appropriate option for your child:
           </Text>
@@ -201,8 +202,8 @@ export default function ParentFeedback() {
           {PARENT_QUESTIONS.map((q, idx) => {
             const selected = surveyAnswers[q.id];
             return (
-              <View key={q.id} style={[styles.questionCard, { borderColor: gems.sapphire, backgroundColor: 'rgba(255,255,255,0.06)' }]}>
-                <Text style={[styles.questionText, { color: '#000000' }]}>
+              <GemCutCard key={q.id} style={styles.questionCard} contentStyle={{ padding: 16, gap: 12 }}>
+                <Text style={[styles.questionText, { color: theme.text }]}>
                   {idx + 1}. {q.text}
                 </Text>
                 <View style={styles.optionsRow}>
@@ -228,7 +229,7 @@ export default function ParentFeedback() {
                     );
                   })}
                 </View>
-              </View>
+              </GemCutCard>
             );
           })}
 
@@ -247,7 +248,7 @@ export default function ParentFeedback() {
       const isOtherChecked = focusAreas.includes('other');
       return (
         <View style={styles.tabContentContainer}>
-          <Text style={[styles.sectionTitle, { color: '#000000' }]}>Focus Areas</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Focus Areas</Text>
           <Text style={[styles.sectionDesc, { color: theme.secondaryText }]}>
             {"Select the key focus areas where your child needs support with:"}
           </Text>
@@ -268,11 +269,11 @@ export default function ParentFeedback() {
 
           {isOtherChecked && (
             <View style={{ marginTop: 16 }}>
-              <Text style={[styles.label, { color: '#000000' }]}>Other support areas Specify:</Text>
+              <Text style={[styles.label, { color: theme.text }]}>Other support areas Specify:</Text>
               <TextInput
-                style={styles.otherInput}
+                style={[styles.otherInput, { color: theme.text, borderBottomColor: gems.sapphire }]}
                 placeholder="Specify other focus areas..."
-                placeholderTextColor="rgba(0,0,0,0.35)"
+                placeholderTextColor={theme.secondaryText + '60'}
                 value={otherSupportText}
                 onChangeText={setOtherSupportText}
               />
@@ -281,7 +282,7 @@ export default function ParentFeedback() {
 
           <View style={styles.spacer} />
 
-          <Text style={[styles.sectionTitle, { color: '#000000' }]}>Home Support Details</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Home Support Details</Text>
           <Text style={[styles.sectionDesc, { color: theme.secondaryText }]}>
             {"Briefly describe how you support your child's learning and co-curricular development at home:"}
           </Text>
@@ -291,7 +292,7 @@ export default function ParentFeedback() {
             value={supportText}
             onChangeText={setSupportText}
             minHeight={120}
-            style={styles.blueUnderline}
+            style={[styles.blueUnderline, { color: theme.text }]}
           />
 
           <View style={styles.buttonCol}>
@@ -410,11 +411,7 @@ const styles = StyleSheet.create({
     height: 24,
   },
   questionCard: {
-    borderRadius: 16,
-    borderWidth: 1.5,
-    padding: 16,
     marginBottom: 16,
-    gap: 12,
   },
   questionText: {
     fontSize: 13,

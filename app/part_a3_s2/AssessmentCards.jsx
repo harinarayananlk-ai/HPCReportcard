@@ -23,6 +23,7 @@ import FlashcardDeck from '../../components/FlashcardDeck';
 import ActionChip from '../../components/ActionChip';
 import { gems } from '../../colour_themes';
 import useAutoSave from '../../hooks/useAutoSave';
+import GemCutCard from '../../components/GemCutCard';
 
 // Question definitions
 const SELF_QUESTIONS = [
@@ -308,7 +309,7 @@ export default function AssessmentCards() {
 
       case 1:
         return (
-          <View style={styles.formContainer}>
+          <GemCutCard style={styles.formContainer} contentStyle={{ padding: 20 }}>
             <Text style={[styles.sectionTitle, { color: theme.text }]}>Friend Assessment (1/2)</Text>
             <Text style={[styles.sectionDesc, { color: theme.secondaryText }]}>
               {"Let's assess your first classmate friend."}
@@ -341,7 +342,7 @@ export default function AssessmentCards() {
                 <Text style={styles.btnText}>START ASSESSMENT</Text>
               </GemButton>
             </View>
-          </View>
+          </GemCutCard>
         );
 
       case 2:
@@ -361,7 +362,7 @@ export default function AssessmentCards() {
 
       case 3:
         return (
-          <View style={styles.formContainer}>
+          <GemCutCard style={styles.formContainer} contentStyle={{ padding: 20 }}>
             <Text style={[styles.sectionTitle, { color: theme.text }]}>Friend Assessment (2/2)</Text>
             <Text style={[styles.sectionDesc, { color: theme.secondaryText }]}>
               {"Let's assess your second classmate friend."}
@@ -383,7 +384,7 @@ export default function AssessmentCards() {
                 <Text style={styles.btnText}>START ASSESSMENT</Text>
               </GemButton>
             </View>
-          </View>
+          </GemCutCard>
         );
 
       case 4:
@@ -403,7 +404,7 @@ export default function AssessmentCards() {
 
       case 5:
         return (
-          <View style={styles.formContainer}>
+          <GemCutCard style={styles.formContainer} contentStyle={{ padding: 20 }}>
             <Text style={[styles.sectionTitle, { color: theme.text }]}>Parent Observation</Text>
             <Text style={[styles.sectionDesc, { color: theme.secondaryText }]}>
               Resources available to your child at home:
@@ -428,7 +429,7 @@ export default function AssessmentCards() {
                 <Text style={styles.btnText}>START PARENT SURVEY</Text>
               </GemButton>
             </View>
-          </View>
+          </GemCutCard>
         );
 
       case 6:
@@ -468,7 +469,7 @@ export default function AssessmentCards() {
         const showSpecify = parentSupportAreas.includes('other');
 
         return (
-          <View style={styles.formContainer}>
+          <GemCutCard style={styles.formContainer} contentStyle={{ padding: 20 }}>
             <Text style={[styles.sectionTitle, { color: theme.text }]}>Parent Observation 2</Text>
             <Text style={[styles.sectionDesc, { color: theme.secondaryText }]}>
               My child needs support with...
@@ -509,12 +510,12 @@ export default function AssessmentCards() {
                 <Text style={styles.btnText}>COMPLETE & FINISH</Text>
               </GemButton>
             </View>
-          </View>
+          </GemCutCard>
         );
 
       case 8:
         return (
-          <View style={styles.formContainer}>
+          <GemCutCard style={styles.formContainer} contentStyle={{ padding: 20 }}>
             <View style={styles.successIconBox}>
               <Ionicons name="checkmark-circle" size={80} color={gems.emerald} />
             </View>
@@ -525,7 +526,7 @@ export default function AssessmentCards() {
             <GemButton gemType="sapphire" onPress={handleFinish}>
               <Text style={styles.btnText}>CONTINUE TO PART B</Text>
             </GemButton>
-          </View>
+          </GemCutCard>
         );
 
       default:
@@ -602,11 +603,6 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     width: '100%',
-    padding: 20,
-    borderRadius: 24,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   sectionTitle: {
     fontSize: 18,

@@ -21,6 +21,7 @@ import GemButton from "../../components/GemButton";
 import PremiumBackground from "../../components/PremiumBackground";
 import { gems } from "../../colour_themes";
 import useAutoSave from "../../hooks/useAutoSave";
+import GemCutCard from "../../components/GemCutCard";
 
 const { width } = Dimensions.get('window');
 
@@ -351,7 +352,7 @@ export default function CompletePage() {
           </View>
 
           {/* Overall Annual Attendance Summary Bar */}
-          <View style={[styles.annualSummaryCard, { backgroundColor: theme.card, borderColor: gems.sapphire }]}>
+          <GemCutCard borderColor={gems.sapphire} style={styles.annualSummaryCard}>
             <Text style={[styles.annualTitle, { color: theme.text }]}>ANNUAL SUMMARY</Text>
             <View style={styles.annualStatsRow}>
               <View style={styles.annualStatBox}>
@@ -371,9 +372,9 @@ export default function CompletePage() {
                 <Text style={styles.annualStatLbl}>PRESENT DAYS</Text>
               </View>
             </View>
-          </View>
+          </GemCutCard>
 
-          <View style={[styles.card, { borderColor: gems.sapphire }]}>
+          <GemCutCard borderColor={gems.sapphire} style={styles.card}>
             <View style={styles.inlaidHeader}>
               <View style={[styles.inlaidIconBox, { borderColor: gems.sapphire }]}>
                 <Ionicons name="calendar-outline" size={18} color={gems.sapphire} />
@@ -385,9 +386,9 @@ export default function CompletePage() {
             {renderCalendar(activeMonthIdx)}
             
             <Text style={styles.helperText}>* Tap on a day to mark as absent. Sundays are disabled.</Text>
-          </View>
+          </GemCutCard>
 
-          <View style={[styles.card, { borderColor: theme.border }]}>
+          <GemCutCard borderColor={theme.border} style={styles.card}>
             <View style={styles.inlaidHeader}>
               <View style={[styles.inlaidIconBox, { borderColor: theme.border }]}>
                 <Ionicons name="alert-circle-outline" size={18} color={gems.sapphire} />
@@ -406,7 +407,7 @@ export default function CompletePage() {
               multiline
               editable={isTeacher}
             />
-          </View>
+          </GemCutCard>
 
           <View style={styles.buttonCol}>
             <GemButton
@@ -450,7 +451,7 @@ const styles = StyleSheet.create({
   monthPillText: { fontSize: 12, fontWeight: '700', fontFamily: 'Jost_600SemiBold', letterSpacing: 1 },
 
   scrollContent: { padding: 20, paddingBottom: 60, paddingTop: 0 },
-  card: { backgroundColor: "rgba(245, 245, 245, 0.85)", borderRadius: 24, padding: 20, marginBottom: 20, borderWidth: 1.5 },
+  card: { marginBottom: 20 },
   inlaidHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 15 },
   inlaidIconBox: { width: 36, height: 36, borderRadius: 10, borderWidth: 1, justifyContent: 'center', alignItems: 'center', marginRight: 12 },
   sectionTitle: { fontSize: 13, fontWeight: '700', letterSpacing: 1, fontFamily: 'Jost_600SemiBold' },
@@ -498,11 +499,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   annualSummaryCard: {
-    backgroundColor: "rgba(245, 245, 245, 0.9)",
-    borderRadius: 18,
-    padding: 16,
     marginBottom: 20,
-    borderWidth: 1.5,
   },
   annualTitle: {
     fontSize: 10,

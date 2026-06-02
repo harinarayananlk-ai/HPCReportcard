@@ -20,6 +20,7 @@ import MenuDropdown from '../../components/MenuDropdown';
 import { gems } from '../../colour_themes';
 import { Image } from 'react-native';
 import PremiumBackground from '../../components/PremiumBackground';
+import GemCutCard from '../../components/GemCutCard';
 
 const { width: W, height: H } = Dimensions.get('window');
 
@@ -350,7 +351,8 @@ export default function UnifiedRubric() {
                     showsVerticalScrollIndicator={false}
                 >
                     {/* SECTION 1: DOMAIN & GOALS */}
-                    <Animated.View entering={FadeInDown.delay(100)} style={styles.card}>
+                    <Animated.View entering={FadeInDown.delay(100)} style={styles.animatedCardContainer}>
+                      <GemCutCard borderColor={accentColor}>
                         <Text style={styles.sectionLabel}>🌿 SELECTION PARAMETERS</Text>
                         
                         <View style={styles.fieldBlock}>
@@ -399,10 +401,12 @@ export default function UnifiedRubric() {
                                 onChangeText={setActivities}
                             />
                         </View>
+                      </GemCutCard>
                     </Animated.View>
 
                     {/* SECTION 2: RUBRIC GRID */}
-                    <Animated.View entering={FadeInDown.delay(200)} style={[styles.card, { marginTop: 20 }]}>
+                    <Animated.View entering={FadeInDown.delay(200)} style={[styles.animatedCardContainer, { marginTop: 20 }]}>
+                      <GemCutCard borderColor={accentColor}>
                         <Text style={styles.sectionLabel}>📊 ASSESSMENT RUBRIC</Text>
                         <Text style={styles.note}>Provide reasons for performance levels against abilities.</Text>
                         
@@ -455,10 +459,12 @@ export default function UnifiedRubric() {
                                 <View style={[styles.cellBase, { width: '24%', borderRightWidth: 0 }]}><TableInput value={matrix["2-2"]} onChange={(t) => updateCell(2, 2, t)} theme={theme} styles={styles} /></View>
                             </View>
                         </View>
+                      </GemCutCard>
                     </Animated.View>
 
                     {/* SECTION 3: FEEDBACK */}
-                    <Animated.View entering={FadeInDown.delay(300)} style={[styles.card, { marginTop: 20 }]}>
+                    <Animated.View entering={FadeInDown.delay(300)} style={[styles.animatedCardContainer, { marginTop: 20 }]}>
+                      <GemCutCard borderColor={accentColor}>
                         <Text style={styles.sectionLabel}>✍️ QUALITATIVE FEEDBACK</Text>
                         
                         <View style={styles.fieldBlock}>
@@ -484,6 +490,7 @@ export default function UnifiedRubric() {
                                 onChangeText={setSelfAssessment}
                             />
                         </View>
+                      </GemCutCard>
                     </Animated.View>
 
                     <GemButton 
@@ -509,7 +516,7 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     backBtn: { width: 44, height: 44, justifyContent: 'center' },
     headerTitle: { color: theme.text, fontSize: 18, fontWeight: '300', letterSpacing: 2, textTransform: 'uppercase', fontFamily: "Jost_300Light" },
     headerSub: { color: accentColor, fontSize: 10, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 1, fontFamily: "Jost_600SemiBold" },
-    card: { backgroundColor: theme.surface + 'E6', borderRadius: 24, padding: 20, borderWidth: 1, borderColor: theme.border },
+    animatedCardContainer: { overflow: 'visible' },
     sectionLabel: { color: accentColor, fontSize: 11, fontWeight: '600', letterSpacing: 1, marginBottom: 15, fontFamily: "Jost_600SemiBold" },
     fieldBlock: { marginBottom: 20 },
     fieldLabel: { color: theme.secondaryText, fontSize: 10, fontWeight: '300', marginBottom: 10, letterSpacing: 0.5, fontFamily: "Jost_300Light" },

@@ -40,6 +40,17 @@ const initDb = () => {
     db.run(`ALTER TABLE students ADD COLUMN full_name TEXT`, (err) => {});
     db.run(`ALTER TABLE students ADD COLUMN assessments TEXT`, (err) => {});
     db.run(`ALTER TABLE students ADD COLUMN points INTEGER DEFAULT 0`, (err) => {});
+    // Migration: Add schema_v2 columns if missing
+    db.run(`ALTER TABLE students ADD COLUMN a2_data TEXT`, (err) => {});
+    db.run(`ALTER TABLE students ADD COLUMN gender TEXT`, (err) => {});
+    db.run(`ALTER TABLE students ADD COLUMN blood_group TEXT`, (err) => {});
+    db.run(`ALTER TABLE students ADD COLUMN height TEXT`, (err) => {});
+    db.run(`ALTER TABLE students ADD COLUMN weight TEXT`, (err) => {});
+    db.run(`ALTER TABLE students ADD COLUMN address TEXT`, (err) => {});
+    db.run(`ALTER TABLE students ADD COLUMN phone TEXT`, (err) => {});
+    db.run(`ALTER TABLE students ADD COLUMN mother_tongue TEXT`, (err) => {});
+    db.run(`ALTER TABLE students ADD COLUMN medium_of_instruction TEXT`, (err) => {});
+    db.run(`ALTER TABLE students ADD COLUMN rural_urban TEXT`, (err) => {});
 
     console.log("Database schema synced.");
 

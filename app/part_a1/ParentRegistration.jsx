@@ -22,6 +22,7 @@ import GemButton from "../../components/GemButton";
 import PremiumBackground from "../../components/PremiumBackground";
 import { gems } from "../../colour_themes";
 import useAutoSave from "../../hooks/useAutoSave";
+import GemCutCard from "../../components/GemCutCard";
 
 const { width, height } = Dimensions.get("window");
 
@@ -215,7 +216,7 @@ export default function ParentRegistrationPage() {
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           
           {/* Section: Basic Info */}
-          <View style={[styles.card, { borderColor: gems.sapphire }]}>
+          <GemCutCard borderColor={gems.sapphire} style={styles.card}>
             <View style={styles.inlaidHeader}>
               <View style={[styles.inlaidIconBox, { borderColor: gems.sapphire }]}>
                 <Ionicons name="person-outline" size={18} color={gems.sapphire} />
@@ -256,10 +257,10 @@ export default function ParentRegistrationPage() {
                 }}
               />
             )}
-          </View>
+          </GemCutCard>
 
           {/* Section: Family */}
-          <View style={[styles.card, { borderColor: gems.sapphire }]}>
+          <GemCutCard borderColor={gems.sapphire} style={styles.card}>
              <View style={styles.inlaidHeader}>
               <View style={[styles.inlaidIconBox, { borderColor: gems.sapphire }]}>
                 <Ionicons name="people-outline" size={18} color={gems.sapphire} />
@@ -286,7 +287,7 @@ export default function ParentRegistrationPage() {
             {renderField("Address - Line 2", address2, "Locality, City", setAddress2)}
             {renderField("Rural/Urban", ruralUrban, "Rural or Urban", setRuralUrban)}
             {renderField("Phone Number", phone, "10-digit mobile", setPhone)}
-          </View>
+          </GemCutCard>
 
           <GemButton 
             onPress={handleNext} 
@@ -353,8 +354,7 @@ const styles = StyleSheet.create({
 
   scrollContent: { padding: 20, paddingBottom: 40 },
   card: {
-    backgroundColor: "rgba(245, 245, 245, 0.85)", 
-    borderRadius: 24, padding: 20, marginBottom: 20, borderWidth: 1.5,
+    marginBottom: 20,
   },
   inlaidHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 15 },
   inlaidIconBox: { width: 36, height: 36, borderRadius: 10, borderWidth: 1, justifyContent: 'center', alignItems: 'center', marginRight: 12 },

@@ -24,6 +24,7 @@ import { useEffect, useState, useRef } from "react";
 import { Image } from "react-native";
 import { gems } from "../colour_themes";
 import PremiumBackground from "../components/PremiumBackground";
+import GemCutCard from "../components/GemCutCard";
 
 // ── Sparkle Decoration ────────────────────────────────────────────────
 const Sparkle = ({ style, size = 15, color = '#FFF', delay = 0 }) => (
@@ -37,11 +38,28 @@ const Sparkle = ({ style, size = 15, color = '#FFF', delay = 0 }) => (
 
 const { width } = Dimensions.get("window");
 
+const SEEDED_PASSWORDS = {
+  s_ladoo: 'navy-2824-ladoo',
+  s_bittoo: 'dusk-4150-bittoo',
+  s_imli_6a: 'pearl-8573-imli',
+  s_urad_9a: 'ruby-5339-urad',
+  s_paplu: 'pass123',
+  s_golgappa: 'pass123',
+  s_bunty: 'pass123',
+  s_bablu: 'pass123',
+  s_pinky: 'pass123',
+  s_chintu: 'pass123',
+  s_guddu: 'pass123',
+  s_munna: 'pass123',
+  s_pappu: 'pass123',
+};
+
 export default function StudentHomepage() {
   const router = useRouter();
   const { theme } = useTheme();
-  const { user, profile, setProfile, activeStudentId } = useAuth();
+  const { user, profile, setProfile, activeStudentId, userPassword } = useAuth();
   const [reports, setReports] = useState([]);
+  const [showPassword, setShowPassword] = useState(false);
   const styles = getStyles(theme);
   const accentColor = gems.moonstone;
 
@@ -76,73 +94,8 @@ export default function StudentHomepage() {
     }
   };
 
-  const handleAction = (route) => {
-    router.push(route);
-  };
-
-  const getDynamicStats = () => {
-    let attendance = "0%";
-    let avgGrade = profile?.class_name || "---";
-    let points = profile?.points || "0";
-
-    if (profile?.family_details) {
-      try {
-        const fd = typeof profile.family_details === "string" ? JSON.parse(profile.family_details) : profile.family_details;
-        if (fd.attendance) {
-          const totalWorking = fd.attendance.reduce((s, r) => s + (parseFloat(r.working) || 0), 0);
-          const totalAttended = fd.attendance.reduce((s, r) => s + (parseFloat(r.attended) || 0), 0);
-          if (totalWorking > 0) {
-            attendance = `${((totalAttended / totalWorking) * 100).toFixed(0)}%`;
-          }
-        }
-      } catch (e) {}
-    }
-
-    return [
-      { label: "Attendance", value: attendance, icon: "calendar-outline", color: "#6366f1" },
-      { label: "Class", value: avgGrade, icon: "school-outline", color: accentColor },
-      { label: "Score", value: points, icon: "star-outline", color: "#fb923c" },
-    ];
-  };
-
-  const headerStats = getDynamicStats();
-
+  const displayPassword = userPassword || SEEDED_PASSWORDS[profile?.username || user?.username] || 'pass123';
   const isTeacher = user?.role === 'teacher' || user?.role === 'superadmin';
-
-  // Stage-aware A2 route
-  const getA2Route = () => {
-    const cls = (profile?.class_name || '').toLowerCase().trim();
-    console.log("[StudentHome] Routing for class:", cls);
-    if (cls.includes('bal vatika') || cls === 'kg' || cls === 'kindergarten' || cls === 'grade 1' || cls === 'grade 2') {
-        return '/part_a2_s1/AboutMe';
-    }
-    if (cls === 'grade 3' || cls === 'grade 4' || cls === 'grade 5') {
-        return '/part_a2_s2/AboutMe';
-    }
-    return '/part_a2_s34/LayoutBuilder';
-  };
-
-  // Stage-aware Part B route
-  const getPartBRoute = () => {
-    const cls = (profile?.class_name || '').toLowerCase().trim();
-    if (cls === 'grade 3' || cls === 'grade 4' || cls === 'grade 5') {
-        return '/part_b_s2/SelectionPage';
-    }
-    if (cls === 'grade 6' || cls === 'grade 7' || cls === 'grade 8') {
-        return '/part_b_s3/SelectionPage';
-    }
-    return '/part_b_s1/SelectionPage';
-  };
-
-  const allActions = [
-    { id: "1", title: "Me and My Surroundings", icon: "create-outline", route: getA2Route(), color: gems.sapphire, desc: "Personalize your journey" },
-    { id: "2", title: "Achievement Vault", icon: "bar-chart-outline", route: "/part_b/viewer", color: gems.emerald, desc: "View your progress" },
-    { id: "3", title: "Profile Studio", icon: "person-outline", route: "/part_a1/ParentRegistration", color: gems.ruby, desc: "Update your details" },
-    { id: "4", title: "Domain Master", icon: "book-outline", route: getPartBRoute(), color: gems.topaz, desc: "Record Activities" },
-    { id: "5", title: "Year End Party", icon: "ribbon-outline", route: "/part_c_s1/YearEndSummary", color: gems.amethyst, desc: "Summary & Celebration" }
-  ];
-
-  const quickActions = isTeacher ? allActions : allActions.filter(a => a.id === "4");
 
 
   return (
@@ -174,17 +127,47 @@ export default function StudentHomepage() {
           </View>
           <Sparkle style={{ top: 20, right: 80 }} color={gems.topaz} />
 
-          <View style={styles.statsRow}>
-            {headerStats.map((stat, i) => (
-              <View key={i} style={[styles.statCard, { backgroundColor: theme.isDark ? "rgba(60, 60, 70, 0.4)" : "rgba(255,255,255,0.6)", borderColor: stat.color + '30' }]}>
-                <View style={[styles.statIconBg, { backgroundColor: stat.color + "15" }]}>
-                  <Ionicons name={stat.icon} size={16} color={stat.color} />
-                </View>
-                <Text style={[styles.statValue, { color: theme.text }]}>{stat.value}</Text>
-                <Text style={styles.statLabel}>{stat.label}</Text>
+          {/* Premium Basic Details Card */}
+          <GemCutCard 
+            borderColor={accentColor + '60'} 
+            style={styles.detailsCard}
+            contentStyle={{ padding: 16 }}
+          >
+            <Text style={styles.detailsTitle}>💡 PROFILE CARD</Text>
+            <View style={styles.detailsGrid}>
+              <View style={styles.detailItem}>
+                <Text style={styles.detailLabel}>USERNAME</Text>
+                <Text style={[styles.detailVal, { color: theme.text }]} selectable>{profile?.username || user?.username || "N/A"}</Text>
               </View>
-            ))}
-          </View>
+              <View style={styles.detailItem}>
+                <Text style={styles.detailLabel}>PASSWORD</Text>
+                <View style={styles.passwordRow}>
+                  <Text style={[styles.detailVal, { color: theme.text }]} selectable>
+                    {showPassword ? displayPassword : "••••••••"}
+                  </Text>
+                  <SoundButton onPress={() => setShowPassword(!showPassword)} style={styles.eyeBtn}>
+                    <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={16} color={accentColor} />
+                  </SoundButton>
+                </View>
+              </View>
+              <View style={styles.detailItem}>
+                <Text style={styles.detailLabel}>CLASS / GRADE</Text>
+                <Text style={[styles.detailVal, { color: theme.text }]}>{profile?.class_name || "Unassigned"}</Text>
+              </View>
+              <View style={styles.detailItem}>
+                <Text style={styles.detailLabel}>TEACHER</Text>
+                <Text style={[styles.detailVal, { color: theme.text }]}>{profile?.teacher_name || "Unassigned"}</Text>
+              </View>
+              <View style={styles.detailItem}>
+                <Text style={styles.detailLabel}>REGISTRATION NO.</Text>
+                <Text style={[styles.detailVal, { color: theme.text }]} selectable>{profile?.registration_number || "---"}</Text>
+              </View>
+              <View style={styles.detailItem}>
+                <Text style={styles.detailLabel}>SCHOOL</Text>
+                <Text style={[styles.detailVal, { color: theme.text }]}>{profile?.school || "---"}</Text>
+              </View>
+            </View>
+          </GemCutCard>
         </Animated.View>
 
         {/* Content Section */}
@@ -192,26 +175,23 @@ export default function StudentHomepage() {
           <Animated.Text entering={FadeInRight.delay(200)} style={styles.sectionTitle}>Quick Actions</Animated.Text>
           
           <View style={styles.actionList}>
-            {quickActions.map((action, index) => (
-              <Animated.View 
-                key={action.id} 
-                entering={FadeInDown.delay(300 + index * 100).duration(800).springify()}
-              >
+            <Animated.View entering={FadeInDown.delay(300).duration(800).springify()}>
+              <GemCutCard borderColor={gems.sapphire + '60'} contentStyle={{ padding: 0 }}>
                 <SoundButton 
-                  style={[styles.actionCard, { borderColor: theme.border }]}
-                  onPress={() => handleAction(action.route)}
+                  style={styles.actionCard}
+                  onPress={() => router.push("/part_a1/StudentRegistration")}
                 >
-                  <View style={[styles.actionIconContainer, { backgroundColor: action.color + "15" }]}>
-                    <Ionicons name={action.icon} size={24} color={action.color} />
+                  <View style={[styles.actionIconContainer, { backgroundColor: gems.sapphire + "15" }]}>
+                    <Ionicons name="card-outline" size={24} color={gems.sapphire} />
                   </View>
                   <View style={styles.actionTextContent}>
-                    <Text style={styles.actionTitle}>{action.title}</Text>
-                    <Text style={styles.actionDesc}>{action.desc}</Text>
+                    <Text style={[styles.actionTitle, { color: theme.text }]}>Go to HPC Card</Text>
+                    <Text style={styles.actionDesc}>View your Holistic Progress Card. (Self, Parent & Peer edits allowed)</Text>
                   </View>
                   <Ionicons name="chevron-forward" size={20} color={theme.secondaryText} />
                 </SoundButton>
-              </Animated.View>
-            ))}
+              </GemCutCard>
+            </Animated.View>
           </View>
 
           {/* Report History */}
@@ -223,24 +203,50 @@ export default function StudentHomepage() {
                   key={report.id} 
                   entering={FadeInDown.delay(700 + index * 100)}
                 >
-                  <SoundButton style={styles.historyCard}>
+                  <GemCutCard
+                    borderColor={theme.border}
+                    contentStyle={{ padding: 0 }}
+                  >
+                    <SoundButton 
+                      style={styles.historyCard}
+                      onPress={() => router.push("/part_b/viewer")}
+                    >
+                       <View style={styles.historyIconBox}>
+                          <Ionicons name="document-text-outline" size={20} color={accentColor} />
+                       </View>
+                       <View style={styles.historyInfo}>
+                         <Text style={styles.historyYear}>{report.year} SESSION</Text>
+                         <Text style={styles.historyTerm}>{report.term || "Annual Evaluation"}</Text>
+                       </View>
+                       <View style={styles.viewBadge}>
+                          <Text style={[styles.historyBadgeText, { color: accentColor }]}>VIEW</Text>
+                       </View>
+                    </SoundButton>
+                  </GemCutCard>
+                </Animated.View>
+              ))
+            ) : (
+              <Animated.View entering={FadeInDown.delay(700)}>
+                <GemCutCard
+                  borderColor={accentColor + '40'}
+                  contentStyle={{ padding: 0 }}
+                >
+                  <SoundButton 
+                    style={styles.historyCard}
+                    onPress={() => router.push("/part_b/viewer")}
+                  >
                      <View style={styles.historyIconBox}>
-                        <Ionicons name="document-text-outline" size={20} color={accentColor} />
+                        <Ionicons name="eye-outline" size={20} color={accentColor} />
                      </View>
                      <View style={styles.historyInfo}>
-                       <Text style={styles.historyYear}>{report.year} SESSION</Text>
-                       <Text style={styles.historyTerm}>{report.term || "Annual Evaluation"}</Text>
+                       <Text style={styles.historyYear}>CURRENT SESSION</Text>
+                       <Text style={styles.historyTerm}>Go to Current Report Preview</Text>
                      </View>
                      <View style={styles.viewBadge}>
                         <Text style={[styles.historyBadgeText, { color: accentColor }]}>VIEW</Text>
                      </View>
                   </SoundButton>
-                </Animated.View>
-              ))
-            ) : (
-              <Animated.View entering={FadeInDown.delay(700)} style={styles.emptyCard}>
-                <Ionicons name="cloud-offline-outline" size={32} color={theme.secondaryText + "40"} />
-                <Text style={styles.emptyText}>No reports found</Text>
+                </GemCutCard>
               </Animated.View>
             )}
           </View>
@@ -275,14 +281,19 @@ export default function StudentHomepage() {
                         <Animated.View 
                           key={idx} 
                           entering={FadeInDown.delay(900 + idx * 50)}
-                          style={[styles.monthCard, { backgroundColor: theme.surface, borderColor: theme.border }]}
                         >
-                          <Text style={styles.monthLabel}>{MONTH_NAMES[idx] || "???"}</Text>
-                          <Text style={styles.monthValue}>{attended}/{working}</Text>
-                          <View style={styles.progressContainer}>
-                            <View style={[styles.progressBar, { width: `${pct}%`, backgroundColor: accentColor }]} />
-                          </View>
-                          <Text style={styles.monthPct}>{pct}%</Text>
+                          <GemCutCard
+                            borderColor={theme.border}
+                            style={{ marginRight: 10 }}
+                            contentStyle={{ padding: 12, alignItems: 'center', width: 80 }}
+                          >
+                            <Text style={styles.monthLabel}>{MONTH_NAMES[idx] || "???"}</Text>
+                            <Text style={styles.monthValue}>{attended}/{working}</Text>
+                            <View style={styles.progressContainer}>
+                              <View style={[styles.progressBar, { width: `${pct}%`, backgroundColor: accentColor }]} />
+                            </View>
+                            <Text style={styles.monthPct}>{pct}%</Text>
+                          </GemCutCard>
                         </Animated.View>
                       );
                     })}
@@ -348,41 +359,47 @@ const getStyles = (theme) => StyleSheet.create({
     fontWeight: "600",
     fontFamily: "Jost_600SemiBold",
   },
-  statsRow: {
-    flexDirection: "row",
-    gap: 12,
+  detailsCard: {
+    marginTop: 12,
   },
-  statCard: {
-    flex: 1,
-    backgroundColor: "rgba(245, 245, 245, 0.85)",
-    borderRadius: 20,
-    padding: 16,
-    borderWidth: 1.5,
-    borderColor: gems.topaz,
-    alignItems: "flex-start",
-  },
-  statIconBg: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 12,
-  },
-  statValue: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: theme.text,
+  detailsTitle: {
+    fontSize: 10,
+    fontWeight: "900",
+    color: gems.moonstone,
+    letterSpacing: 2,
+    marginBottom: 16,
     fontFamily: "Jost_600SemiBold",
   },
-  statLabel: {
-    fontSize: 10,
+  detailsGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    rowGap: 16,
+    columnGap: 24,
+  },
+  detailItem: {
+    width: "45%", // Sleek two column grid layout
+  },
+  detailLabel: {
+    fontSize: 9,
+    fontWeight: "600",
     color: theme.secondaryText,
-    marginTop: 2,
-    fontWeight: "300",
+    letterSpacing: 1,
+    marginBottom: 4,
+    fontFamily: "Jost_600SemiBold",
     textTransform: "uppercase",
-    letterSpacing: 0.5,
-    fontFamily: "Jost_300Light",
+  },
+  detailVal: {
+    fontSize: 13,
+    fontWeight: "400",
+    fontFamily: "Jost_400Regular",
+  },
+  passwordRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  eyeBtn: {
+    padding: 2,
   },
   content: {
     padding: 24,
@@ -402,11 +419,9 @@ const getStyles = (theme) => StyleSheet.create({
   actionCard: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(245, 245, 245, 0.85)",
-    borderRadius: 20,
+    backgroundColor: "transparent",
     padding: 16,
-    borderWidth: 1.5,
-    borderColor: gems.topaz,
+    borderWidth: 0,
   },
   actionIconContainer: {
     width: 48,
@@ -437,12 +452,9 @@ const getStyles = (theme) => StyleSheet.create({
   historyCard: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: theme.surface,
+    backgroundColor: "transparent",
     padding: 16,
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: theme.border,
-    marginBottom: 12,
+    borderWidth: 0,
   },
   historyIconBox: {
     width: 40,
@@ -498,11 +510,6 @@ const getStyles = (theme) => StyleSheet.create({
     fontFamily: "Jost_300Light",
   },
   monthCard: {
-    width: 80,
-    padding: 12,
-    borderRadius: 16,
-    borderWidth: 1,
-    marginRight: 10,
     alignItems: "center",
   },
   monthLabel: {

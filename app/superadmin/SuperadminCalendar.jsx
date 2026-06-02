@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import { useTheme, useAuth, API_URL } from '../../context/GlobalContext';
 import PremiumBackground from '../../components/PremiumBackground';
 import SoundButton from '../../components/SoundButton';
+import GemCutCard from '../../components/GemCutCard';
 
 // Fixed ID for global school settings
 const GLOBAL_SETTINGS_ID = 'global_school_settings';
@@ -13,6 +14,7 @@ export default function SuperadminCalendar() {
   const { theme } = useTheme();
   const { user } = useAuth();
   const router = useRouter();
+  const styles = getStyles(theme);
 
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -132,7 +134,7 @@ export default function SuperadminCalendar() {
         </View>
         {loading && <ActivityIndicator size="large" color={theme.primary} />}
         <ScrollView contentContainerStyle={styles.scroll}>
-          <View style={styles.section}>
+          <GemCutCard style={styles.section} contentStyle={{ padding: 16 }}>
             <Text style={styles.label}>Start Month (School Year begins)</Text>
             <View style={styles.pillContainer}>
               {MONTHS.map((m, i) => (
@@ -145,11 +147,11 @@ export default function SuperadminCalendar() {
                 </TouchableOpacity>
               ))}
             </View>
-          </View>
-          <View style={styles.section}>
+          </GemCutCard>
+          <GemCutCard style={styles.section} contentStyle={{ padding: 16 }}>
             <Text style={styles.label}>Working / Leave Days (Toggle each day)</Text>
             {MONTHS.map((m, i) => renderMonth(m, i))}
-          </View>
+          </GemCutCard>
           <SoundButton onPress={saveSettings} style={styles.saveBtn} disabled={loading}>
             <Text style={styles.saveBtnText}>Save Calendar</Text>
           </SoundButton>
@@ -159,20 +161,20 @@ export default function SuperadminCalendar() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   safe: { flex: 1 },
   header: { flexDirection: 'row', alignItems: 'center', padding: 20 },
   backBtn: { padding: 10, marginRight: 10 },
-  backText: { color: '#FFF', fontSize: 22 },
-  title: { fontSize: 20, color: '#FFF', fontWeight: '800' },
+  backText: { color: theme.text, fontSize: 22 },
+  title: { fontSize: 20, color: theme.text, fontWeight: '800' },
   scroll: { padding: 20 },
   section: { marginBottom: 30 },
-  label: { fontSize: 14, color: '#FFF', marginBottom: 8 },
+  label: { fontSize: 14, color: theme.text, marginBottom: 8 },
   pillContainer: { flexDirection: 'row', flexWrap: 'wrap' },
   monthPill: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 12, backgroundColor: 'rgba(255,255,255,0.1)', marginRight: 8, marginBottom: 8 },
-  monthPillText: { color: '#FFF' },
+  monthPillText: { color: theme.text },
   monthContainer: { marginBottom: 20 },
-  monthTitle: { fontSize: 16, color: '#FFF', marginBottom: 6 },
+  monthTitle: { fontSize: 16, color: theme.text, marginBottom: 6 },
   daysGrid: { flexDirection: 'row', flexWrap: 'wrap' },
   dayCell: { width: 30, height: 30, justifyContent: 'center', alignItems: 'center', margin: 2, borderRadius: 4 },
   working: { backgroundColor: '#34d399' },

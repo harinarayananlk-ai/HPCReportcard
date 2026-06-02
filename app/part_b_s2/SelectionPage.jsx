@@ -22,6 +22,7 @@ import GemButton from '../../components/GemButton';
 import MenuDropdown from '../../components/MenuDropdown';
 import { gems } from '../../colour_themes';
 import { domains, curricularGoals, competencies } from '../../constants/SelectionData_s2';
+import GemCutCard from '../../components/GemCutCard';
 
 const { width: W, height: H } = Dimensions.get('window');
 
@@ -971,72 +972,68 @@ export default function SelectionPage() {
                                     <Animated.View 
                                         key={cg.id} 
                                         entering={FadeInDown.duration(250)} 
-                                        style={[
-                                            styles.glassCard,
-                                            {
-                                                backgroundColor: theme.isDark ? 'rgba(255,255,255,0.03)' : 'rgba(255, 255, 255, 0.95)',
-                                                borderColor: theme.isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.08)',
-                                            }
-                                        ]}
+                                        style={styles.glassCard}
                                     >
-                                        <View style={styles.cgGoalHeader}>
-                                            <TouchableOpacity
-                                                onPress={() => toggleGoalSelection(cg.text)}
-                                                style={[
-                                                    styles.cgCheckbox,
-                                                    { borderColor: theme.isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.2)' },
-                                                    isSelected && styles.cgCheckboxActive
-                                                ]}
-                                            >
-                                                {isSelected && <Ionicons name="checkmark" size={12} color="#FFF" />}
-                                            </TouchableOpacity>
+                                        <GemCutCard contentStyle={{ padding: 16 }}>
+                                            <View style={styles.cgGoalHeader}>
+                                                <TouchableOpacity
+                                                    onPress={() => toggleGoalSelection(cg.text)}
+                                                    style={[
+                                                        styles.cgCheckbox,
+                                                        { borderColor: theme.isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.2)' },
+                                                        isSelected && styles.cgCheckboxActive
+                                                    ]}
+                                                >
+                                                    {isSelected && <Ionicons name="checkmark" size={12} color="#FFF" />}
+                                                </TouchableOpacity>
 
-                                            <TouchableOpacity
-                                                onPress={() => setExpandedGoalId(isExpanded ? null : cg.id)}
-                                                style={styles.cgContentClickable}
-                                                activeOpacity={0.8}
-                                            >
-                                                <View style={{ flex: 1 }}>
-                                                    <Text style={styles.cgCode}>{cg.id}</Text>
-                                                    <Text style={[styles.cgText, { color: theme.text }]}>{cg.text}</Text>
-                                                </View>
-                                                <Ionicons
-                                                    name={isExpanded ? "chevron-up" : "chevron-down"}
-                                                    size={20}
-                                                    color={isSelected ? (theme.isDark ? "#00D4FF" : "#2E5894") : theme.secondaryText}
-                                                    style={{ marginLeft: 8 }}
-                                                />
-                                            </TouchableOpacity>
-                                        </View>
+                                                <TouchableOpacity
+                                                    onPress={() => setExpandedGoalId(isExpanded ? null : cg.id)}
+                                                    style={styles.cgContentClickable}
+                                                    activeOpacity={0.8}
+                                                >
+                                                    <View style={{ flex: 1 }}>
+                                                        <Text style={styles.cgCode}>{cg.id}</Text>
+                                                        <Text style={[styles.cgText, { color: theme.text }]}>{cg.text}</Text>
+                                                    </View>
+                                                    <Ionicons
+                                                        name={isExpanded ? "chevron-up" : "chevron-down"}
+                                                        size={20}
+                                                        color={isSelected ? (theme.isDark ? "#00D4FF" : "#2E5894") : theme.secondaryText}
+                                                        style={{ marginLeft: 8 }}
+                                                    />
+                                                </TouchableOpacity>
+                                            </View>
 
-                                        {/* Competencies */}
-                                        {isExpanded && (
-                                            <Animated.View entering={FadeInDown.duration(200)} style={[styles.competencyRevealContainer, { borderTopColor: theme.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)' }]}>
-                                                <Text style={[styles.competencyLabel, { color: theme.secondaryText }]}>Selectable Competencies:</Text>
-                                                <View style={styles.competenciesGrid}>
-                                                    {compList.map((comp) => {
-                                                        const isCompSelected = activeData.competencies.includes(comp.text);
-                                                        return (
-                                                            <TouchableOpacity
-                                                                key={comp.id}
-                                                                onPress={() => toggleCompetencySelection(comp.text, cg.text)}
-                                                                style={[
-                                                                    styles.competencyChip,
-                                                                    {
-                                                                        backgroundColor: theme.isDark ? 'rgba(255, 255, 255, 0.03)' : '#F0F4F8',
-                                                                        borderColor: theme.isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.06)',
-                                                                    },
-                                                                    isCompSelected && styles.competencyChipActive
-                                                                ]}
-                                                            >
-                                                                <Text style={[styles.competencyChipId, isCompSelected && { color: theme.isDark ? '#00D4FF' : '#2E5894' }]}>{comp.id}</Text>
-                                                                <Text style={[styles.competencyChipText, { color: theme.text }]}>{comp.text}</Text>
-                                                            </TouchableOpacity>
-                                                        );
-                                                    })}
-                                                </View>
-                                            </Animated.View>
-                                        )}
+                                            {/* Competencies */}
+                                            {isExpanded && (
+                                                <Animated.View entering={FadeInDown.duration(200)} style={[styles.competencyRevealContainer, { borderTopColor: theme.isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)' }]}>
+                                                    <Text style={[styles.competencyLabel, { color: theme.secondaryText }]}>Selectable Competencies:</Text>
+                                                    <View style={styles.competenciesGrid}>
+                                                        {compList.map((comp) => {
+                                                            const isCompSelected = activeData.competencies.includes(comp.text);
+                                                            return (
+                                                                <TouchableOpacity
+                                                                    key={comp.id}
+                                                                    onPress={() => toggleCompetencySelection(comp.text, cg.text)}
+                                                                    style={[
+                                                                        styles.competencyChip,
+                                                                        {
+                                                                            backgroundColor: theme.isDark ? 'rgba(255, 255, 255, 0.03)' : '#F0F4F8',
+                                                                            borderColor: theme.isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.06)',
+                                                                        },
+                                                                        isCompSelected && styles.competencyChipActive
+                                                                    ]}
+                                                                >
+                                                                    <Text style={[styles.competencyChipId, isCompSelected && { color: theme.isDark ? '#00D4FF' : '#2E5894' }]}>{comp.id}</Text>
+                                                                    <Text style={[styles.competencyChipText, { color: theme.text }]}>{comp.text}</Text>
+                                                                </TouchableOpacity>
+                                                            );
+                                                        })}
+                                                    </View>
+                                                </Animated.View>
+                                            )}
+                                        </GemCutCard>
                                     </Animated.View>
                                 );
                             })}
@@ -1047,7 +1044,7 @@ export default function SelectionPage() {
                                 tooltipText="Describe specific classroom learning tasks, toys, sports, games or experiments carried out in this developmental domain."
                                 theme={theme}
                             />
-                            <View style={[styles.glassCard, { backgroundColor: theme.isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.95)', borderColor: theme.isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.08)' }]}>
+                            <GemCutCard style={styles.glassCard} contentStyle={{ padding: 16 }}>
                                 <TextInput
                                     style={[styles.textAreaInput, { color: theme.text }]}
                                     multiline
@@ -1058,7 +1055,7 @@ export default function SelectionPage() {
                                     editable={!isStudent}
                                     textAlignVertical="top"
                                 />
-                            </View>
+                            </GemCutCard>
 
                             {/* SECTION 3: Rubric Matrices */}
                             <InfoTrigger
@@ -1224,7 +1221,7 @@ export default function SelectionPage() {
                                 tooltipText="Record active challenges faced by the learner and how you supported them to overcome these challenges."
                                 theme={theme}
                             />
-                            <View style={[styles.glassCard, { backgroundColor: theme.isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.95)', borderColor: theme.isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.08)' }]}>
+                            <GemCutCard style={styles.glassCard} contentStyle={{ padding: 16 }}>
                                 <Text style={[styles.questionHeaderLabel, { color: theme.text, marginTop: 0 }]}>What challenges did the learner face?</Text>
                                 <TextInput
                                     style={[styles.textAreaInput, { color: theme.text, minHeight: 70, borderBottomWidth: 1, borderBottomColor: theme.isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)' }]}
@@ -1248,7 +1245,7 @@ export default function SelectionPage() {
                                     editable={!isStudent}
                                     textAlignVertical="top"
                                 />
-                            </View>
+                            </GemCutCard>
 
                             {/* SECTION 4: Teacher Consolidated Remarks */}
                             <InfoTrigger
@@ -1256,14 +1253,7 @@ export default function SelectionPage() {
                                 tooltipText="Provide details of specific qualitative feedback on the child's learning patterns, behaviors, and efforts."
                                 theme={theme}
                             />
-                            <View style={[
-                                styles.feedbackContainerCard, 
-                                {
-                                    backgroundColor: theme.isDark ? 'rgba(255, 255, 255, 0.02)' : 'rgba(255, 255, 255, 0.95)',
-                                    borderColor: theme.isDark ? 'rgba(0, 212, 255, 0.1)' : 'rgba(0, 150, 136, 0.15)',
-                                    borderBottomColor: theme.isDark ? '#00D4FF' : '#009688',
-                                }
-                            ]}>
+                            <GemCutCard style={styles.feedbackContainerCard} contentStyle={{ padding: 16 }}>
                                 <TextInput
                                     style={[styles.feedbackTextAreaInput, { color: theme.text }]}
                                     multiline
@@ -1273,7 +1263,7 @@ export default function SelectionPage() {
                                     onChangeText={(val) => updateActiveField("teacherFeedback", val)}
                                     editable={!isStudent}
                                 />
-                            </View>
+                            </GemCutCard>
 
                             {/* SECTION 5: Self-Assessment */}
                             <InfoTrigger
@@ -1281,7 +1271,7 @@ export default function SelectionPage() {
                                 tooltipText="Allows students to reflect on their learning processes, collaboration, and instructions."
                                 theme={theme}
                             />
-                            <View style={[styles.glassCard, { backgroundColor: theme.isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(255, 255, 255, 0.95)', borderColor: theme.isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.08)' }]}>
+                            <GemCutCard style={styles.glassCard} contentStyle={{ padding: 16 }}>
                                 <Text style={[styles.subCardHeader, { color: theme.isDark ? '#00D4FF' : '#2E5894' }]}>🧒 Self Assessment</Text>
                                 
                                 {SELF_ASSESS_QUESTIONS.map((q) => {
@@ -1306,7 +1296,7 @@ export default function SelectionPage() {
                                         </View>
                                     );
                                 })}
-                            </View>
+                            </GemCutCard>
 
                             {/* Bottom Proceed Buttons */}
                             <View style={styles.bottomNavButtonsWrapper}>
@@ -1501,15 +1491,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Jost_400Regular'
     },
     glassCard: {
-        borderRadius: 20,
-        borderWidth: 1,
-        padding: 16,
-        marginBottom: 16,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.05,
-        shadowRadius: 8,
-        elevation: 2
+        marginBottom: 16
     },
     cgGoalHeader: {
         flexDirection: 'row',
@@ -1589,10 +1571,6 @@ const styles = StyleSheet.create({
         fontFamily: 'Jost_400Regular'
     },
     feedbackContainerCard: {
-        borderRadius: 20,
-        borderWidth: 1,
-        borderBottomWidth: 3,
-        padding: 16,
         marginBottom: 16
     },
     feedbackTextAreaInput: {

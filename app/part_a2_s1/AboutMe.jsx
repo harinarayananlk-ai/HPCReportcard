@@ -36,6 +36,7 @@ import GemButton from '../../components/GemButton';
 import FavoritesBottomSheet from '../../components/FavoritesBottomSheet';
 import { gems } from '../../colour_themes';
 import useAutoSave from '../../hooks/useAutoSave';
+import GemCutCard from '../../components/GemCutCard';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const PAGE_WIDTH = SCREEN_WIDTH - 20;
@@ -623,7 +624,9 @@ export default function AboutMe() {
                 { width: PAGE_WIDTH, height: '95%', touchAction: 'pan-y' }
               ]}
             >
-              {renderSlideContent()}
+              <GemCutCard style={{ flex: 1 }} contentStyle={{ padding: 20 }}>
+                {renderSlideContent()}
+              </GemCutCard>
             </Animated.View>
           </View>
         </GestureDetector>
@@ -701,17 +704,8 @@ const styles = StyleSheet.create({
   card: {
     width: PAGE_WIDTH,
     height: '95%',
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
-    borderColor: 'rgba(255, 255, 255, 0.25)',
-    borderWidth: 0.5,
-    borderRadius: 24,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.15,
-    shadowRadius: 16,
-    elevation: 8,
-    overflow: 'hidden',
+    backgroundColor: 'transparent',
+    overflow: 'visible',
   },
   slideScroll: {
     flex: 1,

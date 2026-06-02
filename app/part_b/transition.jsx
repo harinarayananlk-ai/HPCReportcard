@@ -4,14 +4,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import SoundButton from "../../components/SoundButton";
-import AmbientIcon from "../../components/AmbientIcon";
 import { useTheme, useAuth, API_URL } from "../../context/GlobalContext";
 import PremiumBackground from "../../components/PremiumBackground";
+import GemCutCard from "../../components/GemCutCard";
 
-import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
 import * as FileSystem from 'expo-file-system/legacy';
-import { Asset } from 'expo-asset';
 import { Platform } from 'react-native';
 
 export default function TransitionScreen() {
@@ -19,27 +17,19 @@ export default function TransitionScreen() {
   const { theme } = useTheme();
   const { user, profile } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [selectedDesign, setSelectedDesign] = useState('original');
-
-   const DESIGNS = [
-    { id: 'cloned', name: 'Original Grid (15 Page)', status: 'Premium', icon: 'copy' },
-    { id: 'premium', name: 'Minimalist Luxe', status: 'Ready', icon: 'star' },
-    { id: 'comprehensive', name: 'Mastery Report', status: 'Ready', icon: 'document-text' },
-  ];
 
   const handleExportAndFinish = async () => {
-    if (!user) return router.push("/StudentHomepage");
-    if (selectedDesign === 'original') {
-      return Alert.alert("Maintenance", "The legacy original design is currently under maintenance. Please use the 'Original Cloned' or 'Premium' options.");
+    const targetId = user?.id || profile?.user_id;
+    if (!targetId) {
+      return Alert.alert("Error", "Student identifier not found.");
     }
 
     try {
       setLoading(true);
       
       const exportData = {
-        userId: user.id || profile?.user_id,
+        userId: targetId,
         profileData: profile,
-        design: selectedDesign,
         timestamp: new Date().toISOString()
       };
 
@@ -74,9 +64,9 @@ export default function TransitionScreen() {
             'application/pdf'
           );
           await FileSystem.writeAsStringAsync(newUri, base64Data, { encoding: FileSystem.EncodingType.Base64 });
-          Alert.alert("Success", "Original 15-page Progress Card generated and saved successfully!", [
-  { text: "Finish", onPress: () => router.push(user?.role === "teacher" || user?.role === "superadmin" ? "/TeacherTracking" : "/StudentHomepage") }
-]);
+          Alert.alert("Success", "HPC Progress Card generated and saved successfully!", [
+            { text: "Finish", onPress: () => router.push(user?.role === "teacher" || user?.role === "superadmin" ? "/TeacherTracking" : "/StudentHomepage") }
+          ]);
         } else {
           await Sharing.shareAsync(uri);
         }
@@ -95,78 +85,60 @@ export default function TransitionScreen() {
     <View style={{ flex: 1 }}>
       <PremiumBackground />
       <SafeAreaView style={styles.container}>
-      <StatusBar barStyle={theme.isDark ? "light-content" : "dark-content"} />
-      
-      <View style={styles.header}>
-        <Text style={[styles.title, { color: theme.text }]}>Finalize & Export</Text>
-        <Text style={[styles.subtitle, { color: theme.secondaryText }]}>
-          Choose your design and generate your progress card
-        </Text>
-      </View>
+        <StatusBar barStyle={theme.isDark ? "light-content" : "dark-content"} />
+        
+        <View style={styles.header}>
+          <Text style={[styles.title, { color: theme.text }]}>Finalize & Export</Text>
+          <Text style={[styles.subtitle, { color: theme.secondaryText }]}>
+            Generate and download your official Holistic Progress Card
+          </Text>
+        </View>
 
-      <View style={styles.designChoice}>
-        <Text style={[styles.label, { color: theme.secondaryText }]}>SELECT DESIGN</Text>
-        <View style={styles.designRow}>
-          {DESIGNS.map((design) => (
-            <TouchableOpacity 
-              key={design.id}
-              disabled={design.status === 'Under Maintenance'}
-              style={[
-                styles.designBtn, 
-                { borderColor: theme.border },
-                selectedDesign === design.id && { borderColor: theme.primary, backgroundColor: theme.primary + '10' },
-                design.status === 'Under Maintenance' && { opacity: 0.5, backgroundColor: theme.isDark ? '#222' : '#f5f5f5' }
-              ]}
-              onPress={() => setSelectedDesign(design.id)}
-            >
-              <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-                <AmbientIcon 
-                  name={selectedDesign === design.id ? "radio-button-on" : "radio-button-off"} 
-                  size={20} 
-                  color={selectedDesign === design.id ? theme.primary : theme.secondaryText} 
-                  type={selectedDesign === design.id ? "circle" : "none"}
-                />
-                <View style={{ marginLeft: 15 }}>
-                  <Text style={[
-                    styles.designName, 
-                    { color: theme.text },
-                    selectedDesign === design.id && { color: theme.primary, fontWeight: '700' }
-                  ]}>
-                    {design.name}
-                  </Text>
-                  {design.status === 'Under Maintenance' && (
-                    <Text style={{ fontSize: 10, color: '#ef4444', fontWeight: 'bold' }}>UNDER MAINTENANCE</Text>
-                  )}
+        <View style={styles.cardContainer}>
+          <GemCutCard borderColor="rgba(184, 151, 46, 0.4)">
+            <View style={styles.infoCard}>
+              <View style={styles.iconCircle}>
+                <Ionicons name="document-text-outline" size={32} color={theme.primary} />
+              </View>
+              <Text style={[styles.cardTitle, { color: theme.text }]}>Holistic Progress Card (HPC)</Text>
+              <Text style={[styles.cardDesc, { color: theme.secondaryText }]}>
+                This official A4 multiline document compiles administrative details, personal portraits, term-wise developmental rubrics, self/peer reflections, and teacher remarks.
+              </Text>
+              <View style={styles.badges}>
+                <View style={[styles.badge, { backgroundColor: 'rgba(46, 88, 148, 0.08)' }]}>
+                  <Text style={[styles.badgeText, { color: '#2E5894' }]}>High Fidelity</Text>
+                </View>
+                <View style={[styles.badge, { backgroundColor: 'rgba(184, 151, 46, 0.08)' }]}>
+                  <Text style={[styles.badgeText, { color: '#8C733E' }]}>Official A4</Text>
                 </View>
               </View>
-              <AmbientIcon name={design.icon} size={22} color={theme.secondaryText} type={selectedDesign === design.id ? "hop" : "none"} />
-            </TouchableOpacity>
-          ))}
+            </View>
+          </GemCutCard>
         </View>
-      </View>
 
-      <View style={styles.footer}>
-        <SoundButton 
-          style={[styles.exportBtn, { backgroundColor: theme.primary }]}
-          onPress={handleExportAndFinish}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator color={theme.buttonText} />
-          ) : (
-            <>
-              <Text style={[styles.exportText, { color: theme.buttonText }]}>GENERATE CARD</Text>
-              <Ionicons name="arrow-forward" size={20} color={theme.buttonText} />
-            </>
-          )}
-        </SoundButton>
-        <TouchableOpacity 
-          style={styles.backBtn}
-          onPress={() => router.back()}
-        >
-          <Text style={{ color: theme.secondaryText }}>Go Back</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styles.footer}>
+          <SoundButton 
+            style={[styles.exportBtn, { backgroundColor: theme.primary }]}
+            onPress={handleExportAndFinish}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color={theme.buttonText} />
+            ) : (
+              <>
+                <Text style={[styles.exportText, { color: theme.buttonText }]}>GENERATE & DOWNLOAD</Text>
+                <Ionicons name="arrow-forward" size={20} color={theme.buttonText} />
+              </>
+            )}
+          </SoundButton>
+          
+          <TouchableOpacity 
+            style={styles.backBtn}
+            onPress={() => router.back()}
+          >
+            <Text style={{ color: theme.secondaryText }}>Go Back</Text>
+          </TouchableOpacity>
+        </View>
       </SafeAreaView>
     </View>
   );
@@ -185,7 +157,6 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "300",
     letterSpacing: 2,
-    color: "#000", // Will be overridden
     fontFamily: "Jost_300Light",
   },
   subtitle: {
@@ -196,32 +167,50 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     letterSpacing: 1,
   },
-  designChoice: {
+  cardContainer: {
     paddingHorizontal: 30,
-    marginTop: 20,
+    marginTop: 40,
   },
-  label: {
+  infoCard: {
+    padding: 24,
+    alignItems: "center",
+  },
+  iconCircle: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: 'rgba(46, 88, 148, 0.05)',
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    fontFamily: "Jost_600SemiBold",
+    marginBottom: 12,
+    textAlign: "center",
+  },
+  cardDesc: {
+    fontSize: 13,
+    lineHeight: 22,
+    fontFamily: "Jost_300Light",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  badges: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  badge: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+  },
+  badgeText: {
     fontSize: 10,
     fontWeight: "600",
-    letterSpacing: 2,
-    marginBottom: 20,
     fontFamily: "Jost_600SemiBold",
-  },
-  designRow: {
-    gap: 12,
-  },
-  designBtn: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 18,
-    borderRadius: 16,
-    borderWidth: 1,
-    backgroundColor: "rgba(255,255,255,0.05)",
-  },
-  designName: {
-    fontSize: 15,
-    fontWeight: "500",
-    fontFamily: "Jost_400Regular",
   },
   footer: {
     position: "absolute",
@@ -234,7 +223,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     height: 60,
     width: "100%",
-    borderRadius: 30, // Pill shape
+    borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
     gap: 12,

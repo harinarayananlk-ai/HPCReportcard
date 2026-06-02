@@ -17,6 +17,7 @@ import GemButton from "../components/GemButton";
 import PremiumBackground from "../components/PremiumBackground";
 import { useTheme, useAuth, API_URL } from "../context/GlobalContext";
 import { gems } from "../colour_themes";
+import GemCutCard from "../components/GemCutCard";
 
 export default function TeacherTracking() {
   const router = useRouter();
@@ -139,7 +140,7 @@ export default function TeacherTracking() {
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 60 }}>
         {/* Input Section */}
-        <View style={styles.inputSection}>
+        <GemCutCard borderColor={accentColor + '60'} style={{ margin: 20 }} contentStyle={{ padding: 20 }}>
           <Text style={styles.sectionTitle}>Add New Student</Text>
           <TextInput
             style={styles.input}
@@ -166,7 +167,7 @@ export default function TeacherTracking() {
               <Text style={styles.addBtnText}>ADD STUDENT</Text>
             )}
           </GemButton>
-        </View>
+        </GemCutCard>
 
         <View style={styles.divider} />
 
@@ -207,7 +208,11 @@ export default function TeacherTracking() {
                         </SoundButton>
 
                         {expandedStudents[student.user_id] && (
-                          <View style={[styles.studentDetailCard, { backgroundColor: theme.card, borderColor: theme.border }]}>
+                          <GemCutCard
+                            borderColor={theme.border}
+                            style={{ marginTop: 4 }}
+                            contentStyle={{ padding: 16 }}
+                          >
                             <View style={styles.detailRow}>
                               <Text style={styles.detailLabel}>USERNAME:</Text>
                               <Text style={[styles.detailValue, { color: accentColor }]} selectable>{student.username}</Text>
@@ -236,7 +241,7 @@ export default function TeacherTracking() {
                             >
                               <Text style={{color: theme.buttonText, fontWeight: '700', fontSize: 11, letterSpacing: 1.5, textAlign: 'center'}}>GO TO HPC CARD</Text>
                             </GemButton>
-                          </View>
+                          </GemCutCard>
                         )}
                       </View>
                     ))}

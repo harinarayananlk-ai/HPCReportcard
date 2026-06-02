@@ -29,23 +29,21 @@ import AutoResizingInput from "../../components/AutoResizingInput";
 import { gems } from "../../colour_themes";
 import useAutoSave from "../../hooks/useAutoSave";
 
+import GemCutCard from "../../components/GemCutCard";
+
 // Helper components
 const SectionCard = ({ title, icon, children, theme }) => (
-  <View style={[
-    styles.card,
-    {
-      backgroundColor: theme.isDark ? 'rgba(30, 30, 35, 0.5)' : 'rgba(255, 255, 255, 0.45)',
-      borderColor: theme.isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.06)',
-      borderWidth: 0,
-    }
-  ]}>
+  <GemCutCard
+    style={{ marginBottom: 16 }}
+    contentStyle={{ padding: 16 }}
+  >
     <View style={styles.cardHeader}>
       <Ionicons name={icon} size={18} color={gems.sapphire} />
-      <Text style={[styles.cardTitle, { color: '#000000' }]}>{title}</Text>
+      <Text style={[styles.cardTitle, { color: theme.text }]}>{title}</Text>
     </View>
     <View style={styles.divider} />
     {children}
-  </View>
+  </GemCutCard>
 );
 
 const CustomDropdown = ({ label, options, selectedValue, onSelect, theme }) => {

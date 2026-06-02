@@ -12,6 +12,7 @@ import SoundButton from "../components/SoundButton";
 import PremiumBackground from "../components/PremiumBackground";
 import { useTheme, useAuth } from "../context/GlobalContext";
 import { themes as availableThemes, gems } from "../colour_themes";
+import GemCutCard from "../components/GemCutCard";
 
 export default function Settings() {
   const router = useRouter();
@@ -53,50 +54,52 @@ export default function Settings() {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.sectionContainer}>
-            {settingsItems.map((item, i) => (
-              <View key={i}>
-                <SoundButton 
-                  style={[styles.settingRow, { borderBottomColor: theme.border + '30' }]} 
-                  activeOpacity={0.7}
-                  onPress={() => handlePress(item.id)}
-                >
-                  <View style={styles.rowLeft}>
-                    <Text style={styles.settingIcon}>{item.icon}</Text>
-                    <Text style={styles.settingLabel}>{item.label}</Text>
-                  </View>
-                  <View style={styles.rowRight}>
-                    {item.detail && <Text style={styles.detailText}>{item.detail.toUpperCase()}</Text>}
-                    <Text style={[styles.chevron, item.id === "theme" && showThemePicker && styles.chevronActive]}>›</Text>
-                  </View>
-                </SoundButton>
+          <GemCutCard borderColor={gems.sapphire + '60'} contentStyle={{ padding: 0 }}>
+            <View style={styles.sectionContainer}>
+              {settingsItems.map((item, i) => (
+                <View key={i}>
+                  <SoundButton 
+                    style={[styles.settingRow, { borderBottomColor: theme.border + '30' }]} 
+                    activeOpacity={0.7}
+                    onPress={() => handlePress(item.id)}
+                  >
+                    <View style={styles.rowLeft}>
+                      <Text style={styles.settingIcon}>{item.icon}</Text>
+                      <Text style={styles.settingLabel}>{item.label}</Text>
+                    </View>
+                    <View style={styles.rowRight}>
+                      {item.detail && <Text style={styles.detailText}>{item.detail.toUpperCase()}</Text>}
+                      <Text style={[styles.chevron, item.id === "theme" && showThemePicker && styles.chevronActive]}>›</Text>
+                    </View>
+                  </SoundButton>
 
-                {/* Theme Picker Sub-menu */}
-                {item.id === "theme" && showThemePicker && (
-                  <View style={[styles.pickerContainer, { backgroundColor: theme.surface + '40', borderColor: theme.border + '50' }]}>
-                    {Object.keys(availableThemes).map((key) => (
-                      <SoundButton 
-                        key={key} 
-                        style={[
-                          styles.pickerButton,
-                          theme.name === availableThemes[key].name && { backgroundColor: theme.surface + '80' }
-                        ]}
-                        onPress={() => setThemeName(key)}
-                      >
-                        <View style={[styles.colorSquare, { backgroundColor: availableThemes[key].background, borderColor: availableThemes[key].border }]} />
-                        <Text style={[
-                          styles.pickerButtonText,
-                          theme.name === availableThemes[key].name && { color: accentColor, fontFamily: "Jost_600SemiBold" }
-                        ]}>
-                          {availableThemes[key].name.toUpperCase()}
-                        </Text>
-                      </SoundButton>
-                    ))}
-                  </View>
-                )}
-              </View>
-            ))}
-          </View>
+                  {/* Theme Picker Sub-menu */}
+                  {item.id === "theme" && showThemePicker && (
+                    <View style={[styles.pickerContainer, { backgroundColor: theme.surface + '40', borderColor: theme.border + '50' }]}>
+                      {Object.keys(availableThemes).map((key) => (
+                        <SoundButton 
+                          key={key} 
+                          style={[
+                            styles.pickerButton,
+                            theme.name === availableThemes[key].name && { backgroundColor: theme.surface + '80' }
+                          ]}
+                          onPress={() => setThemeName(key)}
+                        >
+                          <View style={[styles.colorSquare, { backgroundColor: availableThemes[key].background, borderColor: availableThemes[key].border }]} />
+                          <Text style={[
+                            styles.pickerButtonText,
+                            theme.name === availableThemes[key].name && { color: accentColor, fontFamily: "Jost_600SemiBold" }
+                          ]}>
+                            {availableThemes[key].name.toUpperCase()}
+                          </Text>
+                        </SoundButton>
+                      ))}
+                    </View>
+                  )}
+                </View>
+              ))}
+            </View>
+          </GemCutCard>
 
           <SoundButton 
             style={styles.logoutButton}
@@ -146,10 +149,8 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     paddingTop: 10,
   },
   sectionContainer: {
-    borderRadius: 24,
-    backgroundColor: theme.surface + '40',
-    borderWidth: 1,
-    borderColor: theme.border + '30',
+    backgroundColor: 'transparent',
+    borderWidth: 0,
     overflow: 'hidden',
   },
   settingRow: {

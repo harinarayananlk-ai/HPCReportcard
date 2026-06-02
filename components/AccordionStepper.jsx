@@ -9,6 +9,7 @@ import Animated, {
 import { useTheme } from '../context/GlobalContext';
 import { gems } from '../colour_themes';
 import { Ionicons } from '@expo/vector-icons';
+import GemCutCard from './GemCutCard';
 import GemButton from './GemButton';
 
 export default function AccordionStepper({ steps, activeStep, onStepChange }) {
@@ -63,36 +64,31 @@ export default function AccordionStepper({ steps, activeStep, onStepChange }) {
 
             {/* Right Card Content */}
             <View style={styles.rightContent}>
-              <TouchableOpacity
-                onPress={() => onStepChange(index)}
-                activeOpacity={0.7}
-                style={[
-                  styles.stepHeader,
-                  {
-                    backgroundColor: theme.isDark ? 'rgba(30, 30, 35, 0.65)' : 'rgba(255, 255, 255, 0.65)',
-                    borderColor: isActive ? gems.sapphire : (theme.isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.08)'),
-                  },
-                ]}
+              <GemCutCard
+                borderColor={isActive ? gems.sapphire : theme.border}
+                contentStyle={{ padding: 0 }}
               >
-                <Text style={[styles.stepTitle, { color: theme.text }]}>
-                  {step.title}
-                </Text>
-                <Ionicons
-                  name={isActive ? 'chevron-up' : 'chevron-down'}
-                  size={16}
-                  color={theme.secondaryText}
-                />
-              </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => onStepChange(index)}
+                  activeOpacity={0.7}
+                  style={styles.stepHeader}
+                >
+                  <Text style={[styles.stepTitle, { color: theme.text }]}>
+                    {step.title}
+                  </Text>
+                  <Ionicons
+                    name={isActive ? 'chevron-up' : 'chevron-down'}
+                    size={16}
+                    color={theme.secondaryText}
+                  />
+                </TouchableOpacity>
+              </GemCutCard>
 
               {isActive && (
-                <Animated.View
-                  style={[
-                    styles.stepBody,
-                    {
-                      backgroundColor: theme.isDark ? 'rgba(20, 20, 25, 0.5)' : 'rgba(255, 255, 255, 0.45)',
-                      borderColor: theme.isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.06)',
-                    },
-                  ]}
+                <GemCutCard
+                  borderColor={theme.border}
+                  style={{ marginTop: 8 }}
+                  contentStyle={{ padding: 16 }}
                 >
                   {step.content()}
                   
@@ -106,7 +102,7 @@ export default function AccordionStepper({ steps, activeStep, onStepChange }) {
                       <Text style={styles.nextBtnText}>NEXT</Text>
                     </GemButton>
                   )}
-                </Animated.View>
+                </GemCutCard>
               )}
             </View>
           </View>

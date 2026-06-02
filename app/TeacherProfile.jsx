@@ -15,6 +15,7 @@ import SoundButton from "../components/SoundButton";
 import PremiumBackground from "../components/PremiumBackground";
 import { useTheme, useAuth } from "../context/GlobalContext";
 import { gems } from "../colour_themes";
+import GemCutCard from "../components/GemCutCard";
 
 export default function TeacherProfile() {
   const router = useRouter();
@@ -76,12 +77,16 @@ export default function TeacherProfile() {
               <Text style={styles.avatarSubtitle}>RECONFIGURE VISUAL UPLINK</Text>
             </View>
 
-            <View style={styles.form}>
-              {renderField("Full Name", name, "NAME_STRING", setName)}
-              {renderField("UDISE Code", udiseCode, "11_DIGIT_ID", setUdiseCode, "numeric")}
-              {renderField("Place of Employment", schoolName, "LOC_NODE", setSchoolName)}
-              {renderField("Teacher Code", teacherCode, "ACCESS_KEY", setTeacherCode, "numeric")}
-            </View>
+            <GemCutCard borderColor={gems.jade + '60'} contentStyle={{ padding: 24 }}>
+              <View style={styles.form}>
+                {renderField("Full Name", name, "NAME_STRING", setName)}
+                {renderField("UDISE Code", udiseCode, "11_DIGIT_ID", setUdiseCode, "numeric")}
+                {renderField("Place of Employment", schoolName, "LOC_NODE", setSchoolName)}
+                {renderField("Teacher Code", teacherCode, "ACCESS_KEY", setTeacherCode, "numeric")}
+              </View>
+            </GemCutCard>
+
+            <View style={{ height: 30 }} />
 
             <SoundButton style={styles.saveButton} onPress={handleSave} activeOpacity={0.8}>
               <Text style={styles.saveButtonText}>COMMIT CHANGES</Text>

@@ -22,6 +22,7 @@ export const AuthContext = createContext({
   activeStudentId: null,         // Used by teachers to target a specific student
   activeStudentProfile: null,    // Used by teachers to hold target student's profile
   soundEnabled: true,
+  userPassword: "",
   setUser: () => {},
   setProfile: () => {},
   setSchoolInfo: () => {},
@@ -29,6 +30,7 @@ export const AuthContext = createContext({
   setActiveStudentId: () => {},
   setActiveStudentProfile: () => {},
   setSoundEnabled: () => {},
+  setUserPassword: () => {},
 });
 
 export const useTheme = () => useContext(ThemeContext);
@@ -43,6 +45,7 @@ export const GlobalContextProvider = ({ children }) => {
   const [activeStudentId, setActiveStudentId] = useState(null);
   const [activeStudentProfile, setActiveStudentProfile] = useState(null);
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const [userPassword, setUserPassword] = useState("");
   const currentTheme = themes[themeName] || themes.light;
 
   return (
@@ -54,7 +57,8 @@ export const GlobalContextProvider = ({ children }) => {
           teacherInfo, setTeacherInfo,
           activeStudentId, setActiveStudentId,
           activeStudentProfile, setActiveStudentProfile,
-          soundEnabled, setSoundEnabled 
+          soundEnabled, setSoundEnabled,
+          userPassword, setUserPassword
       }}>
         {children}
       </AuthContext.Provider>

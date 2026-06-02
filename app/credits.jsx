@@ -6,6 +6,8 @@ import { useTheme } from '../context/GlobalContext';
 import PremiumBackground from '../components/PremiumBackground';
 import SoundButton from '../components/SoundButton';
 
+import GemCutCard from '../components/GemCutCard';
+
 const { width } = Dimensions.get('window');
 
 const CREDIT_ITEMS = [
@@ -36,14 +38,14 @@ export default function CreditsPage() {
           <Text style={[styles.subtitle, { color: theme.secondaryText }]}>DEVELOPMENT_CREDITS</Text>
         </View>
 
-        <View style={styles.listContainer}>
+        <GemCutCard style={styles.listContainer} contentStyle={{ paddingVertical: 36, paddingHorizontal: 20 }}>
           {CREDIT_ITEMS.map((item, index) => (
-            <View key={index} style={styles.creditItem}>
+            <View key={index} style={[styles.creditItem, index === CREDIT_ITEMS.length - 1 && { marginBottom: 0 }]}>
               <Text style={[styles.roleText, { color: theme.secondaryText }]}>{item.role.toUpperCase()}</Text>
               <Text style={[styles.nameText, { color: theme.text }]}>{item.name}</Text>
             </View>
           ))}
-        </View>
+        </GemCutCard>
 
         <View style={styles.footer}>
           <Text style={[styles.footerText, { color: theme.secondaryText }]}>© 2026 ACADEMIA PORTAL // UPLINK_ENCRYPTED</Text>

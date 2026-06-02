@@ -5,6 +5,7 @@ import Animated, { FadeInUp, FadeOut } from 'react-native-reanimated';
 import { useTheme } from '../context/GlobalContext';
 import { gems } from '../colour_themes';
 import { Ionicons } from '@expo/vector-icons';
+import GemCutCard from './GemCutCard';
 
 export default function TimelineNode({
   title,
@@ -41,49 +42,47 @@ export default function TimelineNode({
       {/* Right Content Area */}
       <View style={styles.rightContent}>
         {/* Header (Touchable) */}
-        <TouchableOpacity
-          onPress={onToggle}
-          activeOpacity={0.7}
-          style={[
-            styles.header,
-            {
-              backgroundColor: theme.isDark ? 'rgba(30, 30, 35, 0.65)' : 'rgba(255, 255, 255, 0.65)',
-              borderColor: isExpanded ? gems.topaz : (theme.isDark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.08)'),
-            },
-          ]}
+        <GemCutCard
+          borderColor={isExpanded ? gems.topaz : theme.border}
+          contentStyle={{ padding: 0 }}
         >
-          <View style={styles.headerTitleRow}>
-            {icon && (
-              <Ionicons
-                name={icon}
-                size={18}
-                color={isComplete ? gems.emerald : gems.topaz}
-                style={styles.headerIcon}
-              />
-            )}
-            <Text style={[styles.titleText, { color: theme.text }]}>{title}</Text>
-          </View>
-          <Ionicons
-            name={isExpanded ? 'chevron-up' : 'chevron-down'}
-            size={16}
-            color={theme.secondaryText}
-          />
-        </TouchableOpacity>
+          <TouchableOpacity
+            onPress={onToggle}
+            activeOpacity={0.7}
+            style={styles.header}
+          >
+            <View style={styles.headerTitleRow}>
+              {icon && (
+                <Ionicons
+                  name={icon}
+                  size={18}
+                  color={isComplete ? gems.emerald : gems.topaz}
+                  style={styles.headerIcon}
+                />
+              )}
+              <Text style={[styles.titleText, { color: theme.text }]}>{title}</Text>
+            </View>
+            <Ionicons
+              name={isExpanded ? 'chevron-up' : 'chevron-down'}
+              size={16}
+              color={theme.secondaryText}
+            />
+          </TouchableOpacity>
+        </GemCutCard>
 
         {/* Expandable Body */}
         {isExpanded && (
           <Animated.View
             entering={FadeInUp.duration(200)}
             exiting={FadeOut.duration(150)}
-            style={[
-              styles.body,
-              {
-                backgroundColor: theme.isDark ? 'rgba(20, 20, 25, 0.5)' : 'rgba(255, 255, 255, 0.45)',
-                borderColor: theme.isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.06)',
-              },
-            ]}
+            style={{ marginTop: 6 }}
           >
-            {children}
+            <GemCutCard
+              borderColor={theme.border}
+              contentStyle={{ padding: 16 }}
+            >
+              {children}
+            </GemCutCard>
           </Animated.View>
         )}
       </View>
@@ -134,8 +133,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 14,
-    borderRadius: 12,
-    borderWidth: 1.5,
   },
   headerTitleRow: {
     flexDirection: 'row',
@@ -149,11 +146,5 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     letterSpacing: 0.5,
     fontFamily: 'Jost_600SemiBold',
-  },
-  body: {
-    marginTop: 6,
-    padding: 16,
-    borderRadius: 12,
-    borderWidth: 1.2,
   },
 });

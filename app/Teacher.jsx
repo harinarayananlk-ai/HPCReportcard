@@ -12,6 +12,7 @@ import SoundButton from "../components/SoundButton";
 import PremiumBackground from "../components/PremiumBackground";
 import { useTheme, useAuth } from "../context/GlobalContext";
 import { gems } from "../colour_themes";
+import GemCutCard from "../components/GemCutCard";
 
 const { width } = Dimensions.get("window");
 
@@ -64,15 +65,21 @@ export default function TeacherHome() {
         {/* ── ACTION GRID ── */}
         <View style={styles.grid}>
           {actionBoxes.map((box, i) => (
-            <SoundButton 
-              key={i} 
-              style={[styles.boxCard, box.primary && styles.primaryBoxCard]}
-              onPress={() => router.push(box.path)}
-              activeOpacity={0.7}
+            <GemCutCard
+              key={i}
+              borderColor={box.primary ? accentColor : theme.border}
+              style={{ width: (width - 60) / 2, marginBottom: 12 }}
+              contentStyle={{ padding: 0, minHeight: 130, justifyContent: 'center' }}
             >
-              <Text style={[styles.boxIcon, box.primary && styles.primaryBoxIcon]}>{box.icon}</Text>
-              <Text style={[styles.boxTitle, box.primary && styles.primaryBoxTitle]}>{box.title}</Text>
-            </SoundButton>
+              <SoundButton 
+                style={styles.boxCard}
+                onPress={() => router.push(box.path)}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.boxIcon, box.primary && styles.primaryBoxIcon]}>{box.icon}</Text>
+                <Text style={[styles.boxTitle, box.primary && styles.primaryBoxTitle]}>{box.title}</Text>
+              </SoundButton>
+            </GemCutCard>
           ))}
         </View>
 
@@ -180,24 +187,11 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     justifyContent: "space-between",
   },
   boxCard: {
-    backgroundColor: theme.surface,
-    width: (width - 60) / 2,
+    backgroundColor: "transparent",
     padding: 24,
-    borderRadius: 16,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: theme.border,
-    minHeight: 130,
+    borderWidth: 0,
     justifyContent: "center",
-  },
-  primaryBoxCard: {
-    backgroundColor: theme.background,
-    borderColor: accentColor,
-    shadowColor: accentColor,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 4,
+    alignItems: "center",
   },
   boxIcon: {
     fontSize: 24,

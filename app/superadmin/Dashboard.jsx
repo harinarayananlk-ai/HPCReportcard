@@ -7,6 +7,7 @@ import SoundButton from '../../components/SoundButton';
 import { Ionicons } from '@expo/vector-icons';
 import { Alert } from 'react-native';
 import PremiumBackground from '../../components/PremiumBackground';
+import GemCutCard from '../../components/GemCutCard';
 
 const { width } = Dimensions.get('window');
 
@@ -62,13 +63,13 @@ export default function SuperadminDashboard() {
           {/* Stats Grid */}
           <View style={styles.statsGrid}>
             {stats.map((stat, i) => (
-              <View key={i} style={[styles.statCard, { backgroundColor: theme.surface + '60' }]}>
+              <GemCutCard key={i} style={styles.statCard} contentStyle={{ padding: 16 }}>
                 <View style={[styles.iconBox, { backgroundColor: stat.color + '15' }]}>
                   <Ionicons name={stat.icon} size={20} color={stat.color} />
                 </View>
                 <Text style={styles.statValue}>{stat.value}</Text>
                 <Text style={styles.statLabel}>{stat.label}</Text>
-              </View>
+              </GemCutCard>
             ))}
           </View>
 
@@ -76,28 +77,33 @@ export default function SuperadminDashboard() {
           <Text style={styles.sectionTitle}>System Management</Text>
           <View style={styles.actionsList}>
             {quickActions.map((action, i) => (
-              <SoundButton 
-                key={i} 
-                style={[styles.actionCard, { backgroundColor: theme.surface + '40' }]}
-                onPress={() => {
-                  if (action.route) {
-                    router.push(action.route);
-                  } else {
-                    Alert.alert("System Locked", "This partition is under maintenance for UI optimization. Use 'Identity & Hall' for immediate overrides.");
-                  }
-                }}
+              <GemCutCard
+                key={i}
+                style={styles.actionCard}
+                contentStyle={{ padding: 0 }}
               >
-                <View style={styles.actionLeft}>
-                  <View style={[styles.actionIcon, { backgroundColor: theme.accent + '10' }]}>
-                    <Ionicons name={action.icon} size={22} color={theme.text} />
+                <SoundButton 
+                  style={styles.actionInner}
+                  onPress={() => {
+                    if (action.route) {
+                      router.push(action.route);
+                    } else {
+                      Alert.alert("System Locked", "This partition is under maintenance for UI optimization. Use 'Identity & Hall' for immediate overrides.");
+                    }
+                  }}
+                >
+                  <View style={styles.actionLeft}>
+                    <View style={[styles.actionIcon, { backgroundColor: theme.accent + '10' }]}>
+                      <Ionicons name={action.icon} size={22} color={theme.text} />
+                    </View>
+                    <View>
+                      <Text style={styles.actionTitle}>{action.title}</Text>
+                      <Text style={styles.actionSubtitle}>{action.subtitle}</Text>
+                    </View>
                   </View>
-                  <View>
-                    <Text style={styles.actionTitle}>{action.title}</Text>
-                    <Text style={styles.actionSubtitle}>{action.subtitle}</Text>
-                  </View>
-                </View>
-                <Ionicons name="chevron-forward" size={18} color={theme.secondaryText} />
-              </SoundButton>
+                  <Ionicons name="chevron-forward" size={18} color={theme.secondaryText} />
+                </SoundButton>
+              </GemCutCard>
             ))}
           </View>
 
@@ -159,10 +165,6 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    padding: 16,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: theme.border + '30',
     alignItems: 'center',
   },
   iconBox: {
@@ -200,13 +202,13 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     gap: 12,
   },
   actionCard: {
+  },
+  actionInner: {
     padding: 18,
-    borderRadius: 24,
-    borderWidth: 1,
-    borderColor: theme.border + '30',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    width: '100%',
   },
   actionLeft: {
     flexDirection: 'row',

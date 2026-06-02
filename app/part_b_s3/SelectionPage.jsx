@@ -23,6 +23,7 @@ import GemButton from '../../components/GemButton';
 import MenuDropdown from '../../components/MenuDropdown';
 import { gems } from '../../colour_themes';
 import { domains, curricularGoals, competencies } from '../../constants/SelectionData_s3';
+import GemCutCard from '../../components/GemCutCard';
 
 const { width: W } = Dimensions.get('window');
 
@@ -195,7 +196,10 @@ const createInitialDomainState = () => ({
     },
     strengths: [],
     anyOtherStrength: "",
-    barriers: []
+    barriers: [],
+    teacherObservations: "",
+    helpProgress: "",
+    furtherSteps: ""
 });
 
 // ── Auto-save status toast ──
@@ -1337,15 +1341,10 @@ export default function SelectionPage() {
                                 const compList = activeDomainCompetenciesMap[cg.id] || [];
 
                                 return (
-                                    <View 
+                                    <GemCutCard 
                                         key={cg.id} 
-                                        style={[
-                                            styles.glassCard,
-                                            {
-                                                backgroundColor: theme.isDark ? 'rgba(255,255,255,0.02)' : '#FFFFFF',
-                                                borderColor: theme.isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.08)',
-                                            }
-                                        ]}
+                                        style={styles.glassCard}
+                                        contentStyle={{ padding: 16 }}
                                     >
                                         <View style={styles.cgGoalHeader}>
                                             <TouchableOpacity
@@ -1404,7 +1403,7 @@ export default function SelectionPage() {
                                                 </View>
                                             </View>
                                         )}
-                                    </View>
+                                    </GemCutCard>
                                 );
                             })}
 
@@ -1414,7 +1413,7 @@ export default function SelectionPage() {
                                 tooltipText="Identify the primary pedagogical methods, duration, materials, and description sequence."
                                 theme={theme}
                             />
-                            <View style={[styles.glassCard, { backgroundColor: theme.isDark ? 'rgba(255,255,255,0.02)' : '#FFFFFF', borderColor: theme.isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.08)' }]}>
+                            <GemCutCard style={styles.glassCard} contentStyle={{ padding: 16 }}>
                                 <Text style={[styles.cardSubLabel, { color: theme.secondaryText }]}>Approach (Multi-Select):</Text>
                                 <View style={styles.approachChipsGrid}>
                                     {ACTIVITY_OPTIONS.map((opt) => {
@@ -1489,7 +1488,7 @@ export default function SelectionPage() {
                                     editable={!isStudent}
                                 />
 
-                                {/* Brackets sequence of events description */}
+                                {/* Description of Activity */}
                                 <Text style={[styles.cardSubLabel, { color: theme.secondaryText, marginTop: 16 }]}>Description of Activity (Sequence of Events):</Text>
                                 <TextInput
                                     style={[styles.underlinedTextInput, { color: theme.text }]}
@@ -1500,7 +1499,7 @@ export default function SelectionPage() {
                                     editable={!isStudent}
                                     multiline
                                 />
-                            </View>
+                            </GemCutCard>
 
                             {/* Rubric Builder 3x3 */}
                             <InfoTrigger
@@ -1585,7 +1584,7 @@ export default function SelectionPage() {
                                 tooltipText="Answer honestly how you felt regarding effort, applicability and concept motivation."
                                 theme={theme}
                             />
-                            <View style={[styles.glassCard, { backgroundColor: theme.isDark ? 'rgba(255,255,255,0.02)' : '#FFFFFF', borderColor: theme.isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.08)' }]}>
+                            <GemCutCard style={styles.glassCard} contentStyle={{ padding: 16 }}>
                                 {[
                                     { key: "q1", question: "I am proud of myself and my effort." },
                                     { key: "q2", question: "I will be able to apply what I learnt from this activity to real life situations." },
@@ -1612,7 +1611,7 @@ export default function SelectionPage() {
                                         </View>
                                     );
                                 })}
-                            </View>
+                            </GemCutCard>
 
                             {/* B. The Progress Grid (The 6-Option Selection Engine) */}
                             <InfoTrigger
@@ -1620,7 +1619,7 @@ export default function SelectionPage() {
                                 tooltipText="Tap to toggle items representing your experiences. You can select any number of statements."
                                 theme={theme}
                             />
-                            <View style={[styles.glassCard, { backgroundColor: theme.isDark ? 'rgba(255,255,255,0.02)' : '#FFFFFF', borderColor: theme.isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.08)' }]}>
+                            <GemCutCard style={styles.glassCard} contentStyle={{ padding: 16 }}>
                                 {/* Awareness */}
                                 <Text style={[styles.gridTitleLabel, { color: '#007FFF' }]}>◈ Awareness Grid</Text>
                                 {SELF_PROGRESS_GRID.awareness.map((stmt) => {
@@ -1668,7 +1667,7 @@ export default function SelectionPage() {
                                         </TouchableOpacity>
                                     );
                                 })}
-                            </View>
+                            </GemCutCard>
 
                             {/* C. My Learnings (Text Inputs) */}
                             <InfoTrigger
@@ -1676,7 +1675,7 @@ export default function SelectionPage() {
                                 tooltipText="Provide written inputs regarding your experience, learnings and assistance needed."
                                 theme={theme}
                             />
-                            <View style={[styles.glassCard, { backgroundColor: theme.isDark ? 'rgba(255,255,255,0.02)' : '#FFFFFF', borderColor: theme.isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.08)' }]}>
+                            <GemCutCard style={styles.glassCard} contentStyle={{ padding: 16 }}>
                                 {[
                                     { key: "learnt", prompt: "By doing this activity, I learnt..." },
                                     { key: "interesting", prompt: "The most interesting thing about this activity was..." },
@@ -1700,7 +1699,7 @@ export default function SelectionPage() {
                                         </View>
                                     );
                                 })}
-                            </View>
+                            </GemCutCard>
 
                             {/* ==================== COMPONENT 4: SECTION 3 (PEER FEEDBACK) ==================== */}
                             <Text style={styles.sectionDividerText}>SECTION 3: PEER FEEDBACK</Text>
@@ -1711,7 +1710,7 @@ export default function SelectionPage() {
                                 tooltipText="Provide evaluation of your peer's interest, motivation and collaboration during this activity."
                                 theme={theme}
                             />
-                            <View style={[styles.glassCard, { backgroundColor: theme.isDark ? 'rgba(255,255,255,0.02)' : '#FFFFFF', borderColor: theme.isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.08)' }]}>
+                            <GemCutCard style={styles.glassCard} contentStyle={{ padding: 16 }}>
                                 {[
                                     { key: "q1", question: "My peer was engaged and motivated during the activity." },
                                     { key: "q2", question: "My peer effectively shared thoughts and ideas during the activity." }
@@ -1737,7 +1736,7 @@ export default function SelectionPage() {
                                         </View>
                                     );
                                 })}
-                            </View>
+                            </GemCutCard>
 
                             {/* B. The Peer Progress Grid (Multi-Select) */}
                             <InfoTrigger
@@ -1745,7 +1744,7 @@ export default function SelectionPage() {
                                 tooltipText="Tap to select observations made of your peer during this task."
                                 theme={theme}
                             />
-                            <View style={[styles.glassCard, { backgroundColor: theme.isDark ? 'rgba(255,255,255,0.02)' : '#FFFFFF', borderColor: theme.isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.08)' }]}>
+                            <GemCutCard style={styles.glassCard} contentStyle={{ padding: 16 }}>
                                 {/* Awareness */}
                                 <Text style={[styles.gridTitleLabel, { color: '#007FFF' }]}>◈ Awareness</Text>
                                 {PEER_PROGRESS_GRID.awareness.map((stmt) => {
@@ -1793,7 +1792,7 @@ export default function SelectionPage() {
                                         </TouchableOpacity>
                                     );
                                 })}
-                            </View>
+                            </GemCutCard>
 
                             {/* C. Peer Learnings */}
                             <InfoTrigger
@@ -1801,7 +1800,7 @@ export default function SelectionPage() {
                                 tooltipText="Provide constructive comments on areas where your peer can improve."
                                 theme={theme}
                             />
-                            <View style={[styles.glassCard, { backgroundColor: theme.isDark ? 'rgba(255,255,255,0.02)' : '#FFFFFF', borderColor: theme.isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.08)' }]}>
+                            <GemCutCard style={styles.glassCard} contentStyle={{ padding: 16 }}>
                                 {[
                                     { key: "practice", prompt: "My peer needs to practice..." },
                                     { key: "help", prompt: "My peer needs help with..." }
@@ -1823,7 +1822,7 @@ export default function SelectionPage() {
                                         </View>
                                     );
                                 })}
-                            </View>
+                            </GemCutCard>
 
                             {/* ==================== COMPONENT 5: SECTION 4 (THE MATH ENGINE & TEACHER FEEDBACK) ==================== */}
                             <Text style={styles.sectionDividerText}>SECTION 4: ANALYSIS & REMARKS</Text>
@@ -1834,10 +1833,10 @@ export default function SelectionPage() {
                                 tooltipText="The math engine aggregates chip counts into levels (Stream, Mountain, Sky) across rings for Teacher, Student and Peer."
                                 theme={theme}
                             />
-                            <View style={[styles.glassCard, { backgroundColor: theme.isDark ? 'rgba(255,255,255,0.02)' : '#FFFFFF', borderColor: theme.isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.08)' }]}>
+                            <GemCutCard style={styles.glassCard} contentStyle={{ padding: 16 }}>
                                 <Text style={[styles.wheelCardTitle, { color: theme.text }]}>Radial Progress Breakdown</Text>
                                 <AssessmentWheel scores={calculatedScores} theme={theme} />
-                            </View>
+                            </GemCutCard>
 
                             {/* C. Strengths & Barriers */}
                             <InfoTrigger
@@ -1845,7 +1844,7 @@ export default function SelectionPage() {
                                 tooltipText="Select areas where the student showed strength or faced barriers to learning."
                                 theme={theme}
                             />
-                            <View style={[styles.glassCard, { backgroundColor: theme.isDark ? 'rgba(255,255,255,0.02)' : '#FFFFFF', borderColor: theme.isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.08)' }]}>
+                            <GemCutCard style={styles.glassCard} contentStyle={{ padding: 16 }}>
                                 <Text style={[styles.cardSubLabel, { color: theme.secondaryText }]}>Areas of Strength:</Text>
                                 <View style={styles.strengthsChipsGrid}>
                                     {STRENGTHS_OPTIONS.map((opt) => {
@@ -1902,7 +1901,62 @@ export default function SelectionPage() {
                                         );
                                     })}
                                 </View>
-                            </View>
+                            </GemCutCard>
+
+                            {/* D. Observations & Recommendations */}
+                            <InfoTrigger
+                                text="D. Observations & Recommendations"
+                                tooltipText="Provide detailed observations, suggestions, and indicate if additional support can help the student progress further."
+                                theme={theme}
+                            />
+                            <GemCutCard style={styles.glassCard} contentStyle={{ padding: 16 }}>
+                                <Text style={[styles.cardSubLabel, { color: theme.secondaryText }]}>Teacher's Observations and Recommendations:</Text>
+                                <TextInput
+                                    style={[styles.textAreaInput, { color: theme.text, minHeight: 80, borderBottomWidth: 1, borderBottomColor: theme.isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)' }]}
+                                    multiline
+                                    placeholder="Enter observations and recommendations..."
+                                    placeholderTextColor={theme.secondaryText + '80'}
+                                    value={activeData.teacherObservations || ""}
+                                    onChangeText={(val) => updateActiveField("teacherObservations", val)}
+                                    editable={!isStudent}
+                                    textAlignVertical="top"
+                                />
+
+                                <Text style={[styles.cardSubLabel, { color: theme.secondaryText, marginTop: 20 }]}>Can I help the student progress further?</Text>
+                                <View style={styles.emojiRow}>
+                                    {[
+                                        { label: "Yes", emoji: "😊", value: "Yes" },
+                                        { label: "No", emoji: "😟", value: "No" },
+                                        { label: "Not sure", emoji: "❓", value: "Not sure" }
+                                    ].map(opt => (
+                                        <GemstoneButton
+                                            key={opt.value}
+                                            label={opt.label}
+                                            emoji={opt.emoji}
+                                            selected={activeData.helpProgress === opt.value}
+                                            onPress={() => {
+                                                if (!isStudent) updateActiveField("helpProgress", opt.value);
+                                            }}
+                                        />
+                                    ))}
+                                </View>
+
+                                {activeData.helpProgress === "Yes" && (
+                                    <View style={{ marginTop: 15 }}>
+                                        <Text style={[styles.cardSubLabel, { color: theme.secondaryText }]}>If yes, further step(s):</Text>
+                                        <TextInput
+                                            style={[styles.textAreaInput, { color: theme.text, minHeight: 80 }]}
+                                            multiline
+                                            placeholder="Specify further action steps..."
+                                            placeholderTextColor={theme.secondaryText + '80'}
+                                            value={activeData.furtherSteps || ""}
+                                            onChangeText={(val) => updateActiveField("furtherSteps", val)}
+                                            editable={!isStudent}
+                                            textAlignVertical="top"
+                                        />
+                                    </View>
+                                )}
+                            </GemCutCard>
 
                             {/* Bottom Proceed Buttons */}
                             <View style={styles.bottomNavButtonsWrapper}>
@@ -2105,15 +2159,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Jost_400Regular'
     },
     glassCard: {
-        borderRadius: 20,
-        borderWidth: 1,
-        padding: 16,
-        marginBottom: 16,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.05,
-        shadowRadius: 8,
-        elevation: 2
+        marginBottom: 16
     },
     cgGoalHeader: {
         flexDirection: 'row',

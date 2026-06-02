@@ -10,6 +10,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useTheme } from '../context/GlobalContext';
 import { gems } from '../colour_themes';
+import GemCutCard from './GemCutCard';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -84,12 +85,16 @@ export default function FlashcardDeck({ questions, onAnswer, onComplete }) {
 
       {/* Center Card */}
       <Animated.View style={[styles.cardFrame, cardAnimatedStyle]}>
-        <View style={[styles.card, { backgroundColor: theme.card, borderColor: '#B8972E' }]}>
+        <GemCutCard
+          borderColor='#B8972E'
+          style={{ width: '100%' }}
+          contentStyle={{ padding: 24, minHeight: 200, justifyContent: 'center', alignItems: 'center' }}
+        >
           <Text style={[styles.categoryLabel, { color: '#B8972E' }]}>QUESTION</Text>
           <Text style={[styles.questionText, { color: theme.text }]}>
             {currentQuestion}
           </Text>
-        </View>
+        </GemCutCard>
       </Animated.View>
 
       {/* 2x2 Option Buttons Grid */}

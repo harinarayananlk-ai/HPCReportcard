@@ -29,6 +29,7 @@ import GemButton from "../components/GemButton";
 import PremiumBackground from "../components/PremiumBackground";
 import { useTheme, useAuth, API_URL } from "../context/GlobalContext";
 import { BlurView } from "expo-blur";
+import GemCutCard from "../components/GemCutCard";
 
 import { Image } from "react-native";
 import { useRef } from "react";
@@ -38,7 +39,7 @@ const { width, height } = Dimensions.get("window");
 
 export default function LoginScreen() {
   const { theme } = useTheme();
-  const { setUser, setProfile, setSchoolInfo, setTeacherInfo } = useAuth();
+  const { setUser, setProfile, setSchoolInfo, setTeacherInfo, setUserPassword } = useAuth();
   const [role, setRole] = useState("student");
   const router = useRouter();
   const [username, setUsername] = useState("");
@@ -79,6 +80,7 @@ export default function LoginScreen() {
         setProfile(data.profile || null);
         setSchoolInfo(data.schoolInfo || null);
         setTeacherInfo(data.teacherInfo || null);
+        setUserPassword(loginPayload.password);
         
         const targetRole = data.user.role || loginPayload.role;
 
@@ -130,11 +132,13 @@ export default function LoginScreen() {
 
       <Animated.View 
         entering={FadeInDown.delay(200).duration(1000).springify()}
-        style={styles.card}
+        style={styles.animatedCardContainer}
       >
-        {Platform.OS !== 'web' && (
-          <BlurView intensity={65} tint="light" style={StyleSheet.absoluteFill} />
-        )}
+        <GemCutCard 
+          borderColor={theme.primary + '80'}
+          chamfer={24}
+          inset={8}
+        >
         <Text style={styles.title}>
           {role === "teacher" ? "Teacher Portal" : role === "superadmin" ? "Admin Access" : "Student Login"}
         </Text>
@@ -226,6 +230,7 @@ export default function LoginScreen() {
           )}
         </GemButton>
 
+        </GemCutCard>
       </Animated.View>
       </View>
 
@@ -319,13 +324,8 @@ const getStyles = (theme) => StyleSheet.create({
     marginTop: 12,
     alignItems: "center",
   },
-  card: {
-    backgroundColor: theme.isDark ? "rgba(30, 30, 30, 0.5)" : "rgba(255, 255, 255, 0.45)", // Frosted glass translucent fill
-    borderRadius: 16,
-    padding: 32,
-    overflow: 'hidden', // Contain the BlurView bounds
-    borderWidth: 1,
-    borderColor: theme.primary + '80', // Gold/Accent border
+  animatedCardContainer: {
+    overflow: 'visible',
     ...Platform.select({
       ios: {
         shadowColor: theme.isDark ? "#000" : theme.secondaryText,

@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import SoundButton from '../../components/SoundButton';
 import PremiumBackground from '../../components/PremiumBackground';
 import { Ionicons } from '@expo/vector-icons';
+import GemCutCard from '../../components/GemCutCard';
 
 export default function ManageStudents() {
   const { theme } = useTheme();
@@ -113,53 +114,55 @@ export default function ManageStudents() {
   };
 
   const renderStudent = ({ item }) => (
-    <TouchableOpacity 
-      activeOpacity={0.8} 
-      onPress={() => handleStudentPress(item)}
-      style={[styles.studentCard, { backgroundColor: theme.surface + '60' }]}
-    >
-      <View style={styles.cardInfo}>
-        <Text style={styles.studentName}>{item.username}</Text>
-        <Text style={styles.studentMeta}>UID: {item.registration_number || 'NULL_PTR'}</Text>
-        
-        <View style={styles.badgeRow}>
-          <View style={[styles.gradeBadge, { backgroundColor: theme.accent + '10', borderColor: theme.accent + '30' }]}>
-            <Text style={[styles.badgeText, { color: theme.accent }]}>{item.class_name} {item.section}</Text>
-          </View>
-          <View style={[styles.gradeBadge, { backgroundColor: '#B8860B15', borderColor: '#B8860B30' }]}>
-            <Text style={[styles.badgeText, { color: '#B8860B' }]}>PASS: {item.plain_password || '---'}</Text>
+    <GemCutCard style={styles.studentCard} contentStyle={{ padding: 0 }}>
+      <TouchableOpacity 
+        activeOpacity={0.8} 
+        onPress={() => handleStudentPress(item)}
+        style={styles.studentInner}
+      >
+        <View style={styles.cardInfo}>
+          <Text style={styles.studentName}>{item.username}</Text>
+          <Text style={styles.studentMeta}>UID: {item.registration_number || 'NULL_PTR'}</Text>
+          
+          <View style={styles.badgeRow}>
+            <View style={[styles.gradeBadge, { backgroundColor: theme.accent + '10', borderColor: theme.accent + '30' }]}>
+              <Text style={[styles.badgeText, { color: theme.accent }]}>{item.class_name} {item.section}</Text>
+            </View>
+            <View style={[styles.gradeBadge, { backgroundColor: '#B8860B15', borderColor: '#B8860B30' }]}>
+              <Text style={[styles.badgeText, { color: '#B8860B' }]}>PASS: {item.plain_password || '---'}</Text>
+            </View>
           </View>
         </View>
-      </View>
-      <View style={styles.actionRow} pointerEvents="box-none">
-        <SoundButton 
-          style={[styles.shuffleBtn, { borderColor: '#ec489930', backgroundColor: '#ec489910' }]}
-          onPress={async () => {
-             setLoading(true);
-             try {
-                const res = await fetch(`${API_URL}/students/profile/${item.user_id}`);
-                const data = await res.json();
-                setProfile(data || { user_id: item.user_id, registration_number: item.registration_number });
-                router.push("/part_a1/ParentRegistration");
-             } catch(e) { Alert.alert("Error", "Tree Sync Failed."); }
-             finally { setLoading(false); }
-          }}
-        >
-          <Ionicons name="people-outline" size={18} color="#ec4899" />
-        </SoundButton>
-        <SoundButton 
-          style={[styles.shuffleBtn, { borderColor: theme.primary + '30', backgroundColor: theme.primary + '10', marginLeft: 8 }]}
-          onPress={() => {
-            setSelectedStudent(item);
-            setNewGrade(item.class_name);
-            setNewSection(item.section);
-            setModalVisible(true);
-          }}
-        >
-          <Ionicons name="shuffle" size={18} color={theme.primary} />
-        </SoundButton>
-      </View>
-    </TouchableOpacity>
+        <View style={styles.actionRow} pointerEvents="box-none">
+          <SoundButton 
+            style={[styles.shuffleBtn, { borderColor: '#ec489930', backgroundColor: '#ec489910' }]}
+            onPress={async () => {
+               setLoading(true);
+               try {
+                  const res = await fetch(`${API_URL}/students/profile/${item.user_id}`);
+                  const data = await res.json();
+                  setProfile(data || { user_id: item.user_id, registration_number: item.registration_number });
+                  router.push("/part_a1/ParentRegistration");
+               } catch(e) { Alert.alert("Error", "Tree Sync Failed."); }
+               finally { setLoading(false); }
+            }}
+          >
+            <Ionicons name="people-outline" size={18} color="#ec4899" />
+          </SoundButton>
+          <SoundButton 
+            style={[styles.shuffleBtn, { borderColor: theme.primary + '30', backgroundColor: theme.primary + '10', marginLeft: 8 }]}
+            onPress={() => {
+              setSelectedStudent(item);
+              setNewGrade(item.class_name);
+              setNewSection(item.section);
+              setModalVisible(true);
+            }}
+          >
+            <Ionicons name="shuffle" size={18} color={theme.primary} />
+          </SoundButton>
+        </View>
+      </TouchableOpacity>
+    </GemCutCard>
   );
 
   return (
@@ -218,7 +221,7 @@ export default function ManageStudents() {
       {/* Shuffle Modal */}
       <Modal visible={modalVisible} transparent animationType="fade">
         <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, { backgroundColor: theme.card }]}>
+          <GemCutCard style={styles.modalContent} contentStyle={{ padding: 32 }}>
             <Text style={styles.modalTitle}>NODE_MIGRATION</Text>
             <Text style={styles.modalSub}>{selectedStudent?.username}</Text>
             
@@ -252,7 +255,7 @@ export default function ManageStudents() {
                 <Text style={styles.saveText}>CONFIRM_MIGRATION</Text>
               </SoundButton>
             </View>
-          </View>
+          </GemCutCard>
         </View>
       </Modal>
     </View>
@@ -318,13 +321,13 @@ const getStyles = (theme) => StyleSheet.create({
     letterSpacing: 1,
   },
   studentCard: {
+    marginBottom: 16,
+  },
+  studentInner: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 20,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: theme.border + '30',
-    marginBottom: 16,
+    width: '100%',
   },
   cardInfo: {
     flex: 1,
@@ -385,10 +388,7 @@ const getStyles = (theme) => StyleSheet.create({
     padding: 30,
   },
   modalContent: {
-    borderRadius: 30,
-    padding: 32,
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    width: '100%',
   },
   modalTitle: {
     fontSize: 18,

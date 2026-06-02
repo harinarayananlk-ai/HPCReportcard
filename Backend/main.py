@@ -405,87 +405,93 @@ async def get_archived(user_id: int, db: sqlite3.Connection = Depends(get_db)):
 async def render_part_b(user_id: int, db: sqlite3.Connection = Depends(get_db)):
     cursor = db.cursor()
     cursor.execute("SELECT * FROM students WHERE user_id = ?", (user_id,))
-    stu = cursor.fetchone()
-    if not stu:
-        raise HTTPException(status_code=404, detail="Profile not found")
+    student = cursor.fetchone()
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found")
 
-    profile = dict(stu)
-    enroll = _get_enrollment_info(cursor, stu["id"])
-    profile.update(enroll)
-    assessments = json.loads(profile.get("assessments") or "{}")
-    cell_texts = {**(assessments.get("cellTexts") or {}), **(assessments.get("rubricTable") or {})}
-    domain = assessments.get("domain") or ''
-    assess_str = json.dumps(assessments)
+    sd = dict(student)
+    enroll = _get_enrollment_info(cursor, student["id"])
+    sd.update(enroll)
 
-    template_path = os.path.join(os.path.dirname(__file__), '../pdf_generation_archive/part_b.html')
-    if not os.path.exists(template_path):
-        template_path = os.path.join(os.path.dirname(__file__), 'templates/part_b.html')
-    if not os.path.exists(template_path):
-        raise HTTPException(status_code=500, detail="Template missing")
+    try:
+        family = json.loads(sd.get("family_details") or "{}")
+    except Exception:
+        family = {}
 
-    with open(template_path, 'r', encoding='utf-8') as f:
-        html = f.read()
+    try:
+        a2 = json.loads(sd.get("a2_data") or "{}")
+    except Exception:
+        a2 = {}
 
-    injection = f"""
-      <script>
-        window.INJECTED_PROFILE = {json.dumps(profile)};
-        window.INJECTED_DOMAIN = {json.dumps(domain)};
-        (function() {{
-            const profile = window.INJECTED_PROFILE;
-            const assess = {assess_str};
-            const cellTexts = {json.dumps(cell_texts)};
-            const domain = window.INJECTED_DOMAIN;
-            const headerHtml = `
-              <div style="padding:25px;margin-bottom:20px;border-radius:15px;color:white;display:flex;align-items:center;gap:20px;font-family:sans-serif;background:rgba(255,255,255,0.05);border-bottom:1px solid rgba(255,255,255,0.1);">
-                <div style="width:70px;height:70px;border-radius:35px;background:#6366f1;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;">
-                  ${{(profile.full_name||'S').charAt(0)}}
-                </div>
-                <div style="flex:1;">
-                  <h2 style="margin:0;font-size:24px;font-weight:800;">${{profile.full_name||'STUDENT'}}</h2>
-                  <div style="font-size:11px;opacity:0.7;margin-top:5px;">
-                    ID: ${{profile.registration_number||'N/A'}} | CLASS: ${{profile.class_name||'N/A'}} | SEC: ${{profile.section||'A'}}
-                  </div>
-                  <div style="margin-top:8px;font-size:13px;font-weight:700;color:#4ade80;">
-                    TEACHER: ${{profile.teacher_name||'UNASSIGNED'}}
-                  </div>
-                </div>
-              </div>`;
-            const inject = setInterval(() => {{
-              const body = document.querySelector('.app-content-scaler') || document.querySelector('#root');
-              if (body) {{
-                clearInterval(inject);
-                if (!document.getElementById('injected-header')) {{
-                    const div = document.createElement('div');
-                    div.id = 'injected-header';
-                    div.innerHTML = headerHtml;
-                    body.insertBefore(div, body.firstChild);
-                }}
-              }}
-            }}, 100);
-            const waitForReact = setInterval(() => {{
-              if (!window.React) return;
-              clearInterval(waitForReact);
-              const _useState = window.React.useState;
-              let patchedCells = false, patchedDomain = false;
-              window.React.useState = function(init) {{
-                if (!patchedCells && init && typeof init === 'object' && !Array.isArray(init) && Object.keys(init).length === 0) {{
-                  patchedCells = true;
-                  return _useState.call(this, {{ ...cellTexts, ...(assess.rubricTable || {{}}) }});
-                }}
-                if (!patchedDomain && typeof init === 'string' && init === '' && domain) {{
-                  patchedDomain = true;
-                  return _useState.call(this, domain);
-                }}
-                return _useState.apply(this, arguments);
-              }};
-            }}, 10);
-        }})();
-      </script>
-    """
-    import re
-    html = re.sub(r'<body[^>]*>', r'\g<0>' + injection, html, flags=re.IGNORECASE)
+    try:
+        preferences = json.loads(sd.get("preferences") or "{}")
+    except Exception:
+        preferences = {}
+
+    try:
+        assessments = json.loads(sd.get("assessments") or "{}")
+    except Exception:
+        assessments = {}
+
+    node_data = {
+        "school": {
+            "name": sd.get("school_name") or "NA",
+            "address1": sd.get("school_address1") or "NA",
+            "address2": sd.get("school_address2") or "NA",
+            "pincode": sd.get("school_pincode") or "NA",
+            "udiseCode": sd.get("udise_code") or "NA",
+            "principal": sd.get("principal_name") or "NA",
+            "board": sd.get("board") or "NA"
+        },
+        "profile": {
+            "name": sd.get("full_name") or "NA",
+            "dob": sd.get("dob") or "NA",
+            "roll": enroll.get("roll_number") or "NA",
+            "reg": enroll.get("registration_number") or "NA",
+            "class": enroll.get("class_name") or "NA",
+            "sec": enroll.get("section") or "NA",
+            "teacherName": enroll.get("teacher_name") or "NA",
+            "teacherCode": enroll.get("teacher_code") or "NA",
+            "gender": sd.get("gender") or "NA",
+            "bloodGroup": sd.get("blood_group") or "NA",
+            "height": sd.get("height") or "NA",
+            "weight": sd.get("weight") or "NA",
+            "address": sd.get("address") or "NA",
+            "phone": sd.get("phone") or "NA",
+            "motherTongue": sd.get("mother_tongue") or "NA",
+            "mediumOfInstruction": sd.get("medium_of_instruction") or "NA",
+            "ruralUrban": sd.get("rural_urban") or "NA"
+        },
+        "family": family,
+        "a2": a2,
+        "preferences": preferences,
+        "assessments": assessments
+    }
+
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as tf:
+        json.dump(node_data, tf)
+        temp_json_path = tf.name
+
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.html', delete=False) as tf_html:
+        temp_html_path = tf_html.name
+
+    script_path = os.path.join(os.path.dirname(__file__), "..", "generate_unified_pdf.js")
+    process = subprocess.run(["node", script_path, temp_json_path, temp_html_path, "--html"], capture_output=True, text=True)
+    
+    os.unlink(temp_json_path)
+
+    if process.returncode != 0:
+        if os.path.exists(temp_html_path):
+            os.unlink(temp_html_path)
+        raise HTTPException(status_code=500, detail=f"HTML render failed: {process.stderr}")
+
+    with open(temp_html_path, 'r', encoding='utf-8') as f:
+        html_content = f.read()
+
+    os.unlink(temp_html_path)
+
     from fastapi.responses import HTMLResponse
-    return HTMLResponse(content=html)
+    return HTMLResponse(content=html_content)
 
 @app.post("/api/export/pdf")
 async def export_pdf(data: dict, db: sqlite3.Connection = Depends(get_db)):
@@ -503,34 +509,60 @@ async def export_pdf(data: dict, db: sqlite3.Connection = Depends(get_db)):
     sd = dict(student)
     enroll = _get_enrollment_info(cursor, student["id"])
     sd.update(enroll)
-    assessments = json.loads(sd.get("assessments") or "{}")
-    family = json.loads(sd.get("family_details") or "{}")
+
+    try:
+        family = json.loads(sd.get("family_details") or "{}")
+    except Exception:
+        family = {}
+
+    try:
+        a2 = json.loads(sd.get("a2_data") or "{}")
+    except Exception:
+        a2 = {}
+
+    try:
+        preferences = json.loads(sd.get("preferences") or "{}")
+    except Exception:
+        preferences = {}
+
+    try:
+        assessments = json.loads(sd.get("assessments") or "{}")
+    except Exception:
+        assessments = {}
 
     node_data = {
+        "school": {
+            "name": sd.get("school_name") or "NA",
+            "address1": sd.get("school_address1") or "NA",
+            "address2": sd.get("school_address2") or "NA",
+            "pincode": sd.get("school_pincode") or "NA",
+            "udiseCode": sd.get("udise_code") or "NA",
+            "principal": sd.get("principal_name") or "NA",
+            "board": sd.get("board") or "NA"
+        },
         "profile": {
             "name": sd.get("full_name") or "NA",
+            "dob": sd.get("dob") or "NA",
             "roll": enroll.get("roll_number") or "NA",
             "reg": enroll.get("registration_number") or "NA",
             "class": enroll.get("class_name") or "NA",
             "sec": enroll.get("section") or "NA",
-            "dob": sd.get("dob") or "NA"
+            "teacherName": enroll.get("teacher_name") or "NA",
+            "teacherCode": enroll.get("teacher_code") or "NA",
+            "gender": sd.get("gender") or "NA",
+            "bloodGroup": sd.get("blood_group") or "NA",
+            "height": sd.get("height") or "NA",
+            "weight": sd.get("weight") or "NA",
+            "address": sd.get("address") or "NA",
+            "phone": sd.get("phone") or "NA",
+            "motherTongue": sd.get("mother_tongue") or "NA",
+            "mediumOfInstruction": sd.get("medium_of_instruction") or "NA",
+            "ruralUrban": sd.get("rural_urban") or "NA"
         },
-        "family": {
-            "mName": family.get("motherName") or "NA",
-            "fName": family.get("fatherName") or "NA",
-            "lang": family.get("motherTongue") or "NA"
-        },
-        "attendance": {
-            "months": ["Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar"],
-            "workingDays": [0]*12,
-            "attendedDays": [0]*12,
-            "reasons": assessments.get("attendanceRemarks") or "N/A"
-        },
-        "assessment": {
-            "domain": assessments.get("domain") or "NA",
-            "activities": assessments.get("activities") or "NA",
-            "remarks": assessments.get("remarks") or "NA"
-        }
+        "family": family,
+        "a2": a2,
+        "preferences": preferences,
+        "assessments": assessments
     }
 
     with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as tf:
@@ -542,10 +574,7 @@ async def export_pdf(data: dict, db: sqlite3.Connection = Depends(get_db)):
     file_name = f"Report_Card_{design}_{user_id}_{int(time.time())}.pdf"
     file_path = os.path.join(exports_dir, file_name)
 
-    script_map = {"cloned": "generate_grid_pdf.js", "premium": "generate_new_pdf.js", "comprehensive": "generate_comprehensive_pdf.js"}
-    script_name = script_map.get(design, "generate_grid_pdf.js")
-    script_path = os.path.join(os.path.dirname(__file__), "..", script_name)
-
+    script_path = os.path.join(os.path.dirname(__file__), "..", "generate_unified_pdf.js")
     process = subprocess.run(["node", script_path, temp_path, file_path], capture_output=True, text=True)
     os.unlink(temp_path)
 

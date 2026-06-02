@@ -21,6 +21,7 @@ import GemButton from "../../components/GemButton";
 import PremiumBackground from "../../components/PremiumBackground";
 import { gems } from "../../colour_themes";
 import useAutoSave from "../../hooks/useAutoSave";
+import GemCutCard from "../../components/GemCutCard";
 
 const { width } = Dimensions.get("window");
 
@@ -240,7 +241,7 @@ export default function TeacherRegistrationPage() {
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           
           {/* Section: Official Student Record */}
-          <View style={[styles.card, { borderColor: gems.emerald }]}>
+          <GemCutCard borderColor={gems.emerald} style={styles.card}>
             <View style={styles.inlaidHeader}>
               <View style={[styles.inlaidIconBox, { borderColor: gems.emerald }]}>
                 <Ionicons name="person-circle-outline" size={18} color={gems.emerald} />
@@ -287,10 +288,10 @@ export default function TeacherRegistrationPage() {
                  {renderTrigger("Section", section, "e.g. A", setSection, { teacherOnly: true })}
                </View>
             </View>
-          </View>
+          </GemCutCard>
 
           {/* Section: Residence & Contact */}
-          <View style={[styles.card, { borderColor: gems.sapphire }]}>
+          <GemCutCard borderColor={gems.sapphire} style={styles.card}>
             <View style={styles.inlaidHeader}>
               <View style={[styles.inlaidIconBox, { borderColor: gems.sapphire }]}>
                 <Ionicons name="home-outline" size={18} color={gems.sapphire} />
@@ -302,10 +303,10 @@ export default function TeacherRegistrationPage() {
             {renderTrigger("Address Line 1", address1, "House no, Street", setAddress1, { teacherOnly: true })}
             {renderTrigger("Address Line 2", address2, "Locality, City", setAddress2, { teacherOnly: true })}
             {renderTrigger("Phone Number", phone, "10-digit mobile", setPhone, { teacherOnly: true })}
-          </View>
+          </GemCutCard>
 
           {/* Section: School Details */}
-          <View style={[styles.card, { borderColor: gems.topaz }]}>
+          <GemCutCard borderColor={gems.topaz} style={styles.card}>
             <View style={styles.inlaidHeader}>
               <View style={[styles.inlaidIconBox, { borderColor: gems.topaz }]}>
                 <Ionicons name="business-outline" size={18} color={gems.topaz} />
@@ -327,7 +328,7 @@ export default function TeacherRegistrationPage() {
                </View>
             </View>
             {renderTrigger("Teacher Code", teacherCode, "Official ID", setTeacherCode, { teacherOnly: true })}
-          </View>
+          </GemCutCard>
 
           <GemButton 
             onPress={handleNext} 
@@ -361,15 +362,7 @@ const styles = StyleSheet.create({
 
   scrollContent: { padding: 20, paddingBottom: 40 },
   card: {
-    backgroundColor: "rgba(245, 245, 245, 0.85)", 
-    borderRadius: 24,
-    padding: 20,
     marginBottom: 20,
-    borderWidth: 1.5,
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.1,
-    shadowRadius: 15,
-    elevation: 5,
   },
   inlaidHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 15 },
   inlaidIconBox: { width: 36, height: 36, borderRadius: 10, borderWidth: 1, justifyContent: 'center', alignItems: 'center', marginRight: 12 },
