@@ -52,6 +52,47 @@ const initDb = () => {
     db.run(`ALTER TABLE students ADD COLUMN medium_of_instruction TEXT`, (err) => {});
     db.run(`ALTER TABLE students ADD COLUMN rural_urban TEXT`, (err) => {});
 
+    // Migration: Add columns required by Node.js schema if missing
+    db.run(`ALTER TABLE students ADD COLUMN registration_number TEXT`, (err) => {});
+    db.run(`ALTER TABLE students ADD COLUMN class_name TEXT`, (err) => {});
+    db.run(`ALTER TABLE students ADD COLUMN section TEXT`, (err) => {});
+    db.run(`ALTER TABLE students ADD COLUMN school TEXT`, (err) => {});
+
+    // Copy enrollment data to students columns if they were null and student_enrollments exists
+    const populateQuery = `
+      UPDATE students SET 
+        registration_number = COALESCE(registration_number, (
+          SELECT se.registration_number 
+          FROM student_enrollments se 
+          WHERE se.student_id = students.id 
+          ORDER BY se.id DESC LIMIT 1
+        )),
+        school = COALESCE(school, (
+          SELECT se.school 
+          FROM student_enrollments se 
+          WHERE se.student_id = students.id 
+          ORDER BY se.id DESC LIMIT 1
+        )),
+        class_name = COALESCE(class_name, (
+          SELECT c.grade 
+          FROM student_enrollments se 
+          JOIN classes c ON se.class_id = c.id 
+          WHERE se.student_id = students.id 
+          ORDER BY se.id DESC LIMIT 1
+        )),
+        section = COALESCE(section, (
+          SELECT c.section 
+          FROM student_enrollments se 
+          JOIN classes c ON se.class_id = c.id 
+          WHERE se.student_id = students.id 
+          ORDER BY se.id DESC LIMIT 1
+        ))
+      WHERE class_name IS NULL OR section IS NULL OR registration_number IS NULL
+    `;
+    db.run(populateQuery, (err) => {
+      // Ignore if student_enrollments does not exist or other SQLite constraint
+    });
+
     console.log("Database schema synced.");
 
     // 3. Report Cards History

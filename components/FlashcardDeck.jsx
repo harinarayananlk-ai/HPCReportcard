@@ -86,11 +86,11 @@ export default function FlashcardDeck({ questions, onAnswer, onComplete }) {
       {/* Center Card */}
       <Animated.View style={[styles.cardFrame, cardAnimatedStyle]}>
         <GemCutCard
-          borderColor='#B8972E'
+          borderColor={gems.sapphire}
           style={{ width: '100%' }}
           contentStyle={{ padding: 24, minHeight: 200, justifyContent: 'center', alignItems: 'center' }}
         >
-          <Text style={[styles.categoryLabel, { color: '#B8972E' }]}>QUESTION</Text>
+          <Text style={[styles.categoryLabel, { color: gems.sapphire }]}>QUESTION</Text>
           <Text style={[styles.questionText, { color: theme.text }]}>
             {currentQuestion}
           </Text>
@@ -101,37 +101,37 @@ export default function FlashcardDeck({ questions, onAnswer, onComplete }) {
       <View style={styles.optionsGrid}>
         <View style={styles.row}>
           <TouchableOpacity
-            style={[styles.optionBtn, { borderColor: gems.emerald, backgroundColor: gems.emerald + '15' }]}
+            style={[styles.optionBtn, { borderColor: gems.silver, backgroundColor: gems.silver + '15' }]}
             onPress={() => handleSelectOption('Yes')}
           >
             <Text style={styles.emoji}>😊</Text>
-            <Text style={[styles.btnText, { color: gems.emerald }]}>Yes</Text>
+            <Text style={[styles.btnText, { color: gems.silver }]}>Yes</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.optionBtn, { borderColor: gems.topaz, backgroundColor: gems.topaz + '15' }]}
+            style={[styles.optionBtn, { borderColor: gems.sapphire, backgroundColor: gems.sapphire + '15' }]}
             onPress={() => handleSelectOption('Sometimes')}
           >
             <Text style={styles.emoji}>🤔</Text>
-            <Text style={[styles.btnText, { color: gems.topaz }]}>Sometimes</Text>
+            <Text style={[styles.btnText, { color: gems.sapphire }]}>Sometimes</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.row}>
           <TouchableOpacity
-            style={[styles.optionBtn, { borderColor: gems.ruby, backgroundColor: gems.ruby + '15' }]}
+            style={[styles.optionBtn, { borderColor: gems.sapphire, backgroundColor: gems.sapphire + '15' }]}
             onPress={() => handleSelectOption('No')}
           >
             <Text style={styles.emoji}>😟</Text>
-            <Text style={[styles.btnText, { color: gems.ruby }]}>No</Text>
+            <Text style={[styles.btnText, { color: gems.sapphire }]}>No</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.optionBtn, { borderColor: gems.moonstone, backgroundColor: gems.moonstone + '15' }]}
+            style={[styles.optionBtn, { borderColor: gems.silver, backgroundColor: gems.silver + '15' }]}
             onPress={() => handleSelectOption('Not Sure')}
           >
             <Text style={styles.emoji}>❓</Text>
-            <Text style={[styles.btnText, { color: gems.moonstone }]}>Not Sure</Text>
+            <Text style={[styles.btnText, { color: gems.silver }]}>Not Sure</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   progressText: {
     fontSize: 11,
     fontWeight: '700',
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     textTransform: 'uppercase',
     letterSpacing: 1,
     marginBottom: 6,
@@ -193,14 +193,14 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     letterSpacing: 2,
     marginBottom: 16,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
   questionText: {
     fontSize: 18,
     fontWeight: '500',
     textAlign: 'center',
     lineHeight: 26,
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
   },
   optionsGrid: {
     width: '90%',
@@ -226,6 +226,6 @@ const styles = StyleSheet.create({
   btnText: {
     fontSize: 14,
     fontWeight: '700',
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
 });

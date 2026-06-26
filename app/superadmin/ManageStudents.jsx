@@ -74,6 +74,7 @@ export default function ManageStudents() {
       const sectionKey = `${student.class_name} - ${student.section || 'Unassigned'}`;
       if (!sectionsObj[sectionKey]) {
         sectionsObj[sectionKey] = {
+          key: sectionKey,
           title: sectionKey,
           teacher: student.teacher_name || 'No Teacher Assigned',
           data: []
@@ -198,7 +199,7 @@ export default function ManageStudents() {
       ) : (
         <SectionList
           sections={getSections()}
-          keyExtractor={(item, index) => item.user_id + index}
+          keyExtractor={(item, index) => `student-${item.user_id}-${item.class_name || 'unassigned'}-${item.section || 'unassigned'}-${index}`}
           renderItem={renderStudent}
           renderSectionHeader={({ section: { title, teacher } }) => (
             <View style={styles.sectionHeader}>
@@ -285,20 +286,20 @@ const getStyles = (theme) => StyleSheet.create({
   masterActionText: {
     color: theme.accent,
     fontSize: 9,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     letterSpacing: 2,
   },
   title: {
     fontSize: 22,
     color: theme.text,
-    fontFamily: 'Jost_300Light',
+    fontFamily: 'Inter_400Regular',
     letterSpacing: 3,
   },
   subtitle: {
     fontSize: 10,
     color: theme.secondaryText,
     marginTop: 6,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     letterSpacing: 1,
     opacity: 0.6,
   },
@@ -317,7 +318,7 @@ const getStyles = (theme) => StyleSheet.create({
     flex: 1,
     color: theme.text,
     fontSize: 13,
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
     letterSpacing: 1,
   },
   studentCard: {
@@ -335,13 +336,13 @@ const getStyles = (theme) => StyleSheet.create({
   studentName: {
     fontSize: 16,
     color: theme.text,
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
   },
   studentMeta: {
     fontSize: 9,
     color: theme.secondaryText,
     marginTop: 4,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     letterSpacing: 1,
     opacity: 0.7,
   },
@@ -358,7 +359,7 @@ const getStyles = (theme) => StyleSheet.create({
   },
   badgeText: {
     fontSize: 8,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     letterSpacing: 1,
   },
   actionRow: {
@@ -377,7 +378,7 @@ const getStyles = (theme) => StyleSheet.create({
     color: theme.secondaryText,
     marginTop: 60,
     fontSize: 10,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     letterSpacing: 2,
     opacity: 0.5,
   },
@@ -394,7 +395,7 @@ const getStyles = (theme) => StyleSheet.create({
     fontSize: 18,
     color: theme.text,
     textAlign: 'center',
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     letterSpacing: 3,
   },
   modalSub: {
@@ -402,7 +403,7 @@ const getStyles = (theme) => StyleSheet.create({
     color: theme.secondaryText,
     textAlign: 'center',
     marginBottom: 32,
-    fontFamily: 'Jost_300Light',
+    fontFamily: 'Inter_400Regular',
     letterSpacing: 1,
   },
   field: {
@@ -413,7 +414,7 @@ const getStyles = (theme) => StyleSheet.create({
     color: theme.secondaryText,
     marginBottom: 10,
     letterSpacing: 2,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     opacity: 0.8,
   },
   modalInput: {
@@ -422,7 +423,7 @@ const getStyles = (theme) => StyleSheet.create({
     paddingHorizontal: 20,
     color: theme.text,
     borderWidth: 1,
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
   },
   modalButtons: {
     flexDirection: 'row',
@@ -438,7 +439,7 @@ const getStyles = (theme) => StyleSheet.create({
   },
   cancelText: {
     fontSize: 11,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     letterSpacing: 2,
   },
   saveBtn: {
@@ -452,7 +453,7 @@ const getStyles = (theme) => StyleSheet.create({
     color: theme.buttonText,
     fontSize: 11,
     textAlign: 'center',
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     letterSpacing: 2,
   },
   sectionHeader: {
@@ -468,7 +469,7 @@ const getStyles = (theme) => StyleSheet.create({
   sectionTitleText: {
     color: theme.text,
     fontSize: 12,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     letterSpacing: 2,
     opacity: 0.5,
   },
@@ -479,7 +480,7 @@ const getStyles = (theme) => StyleSheet.create({
   },
   tagText: {
     fontSize: 9,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     letterSpacing: 1,
   },
 });

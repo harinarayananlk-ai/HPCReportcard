@@ -50,7 +50,7 @@ export default function CompletePage() {
   const targetProfile = (isTeacher && activeStudentProfile) ? activeStudentProfile : profile;
   const router = useRouter();
 
-  const [schoolCalendar, setSchoolCalendar] = useState({ startMonthIdx: 0, workingDaysMap: {} });
+  const [schoolCalendar, setSchoolCalendar] = useState({ startDate: null, startMonthIdx: 0, workingDaysMap: {} });
   const [activeMonthIdx, setActiveMonthIdx] = useState(0);
   
   // Compute MONTHS after we have the start index
@@ -58,6 +58,52 @@ export default function CompletePage() {
     const start = schoolCalendar.startMonthIdx ?? 0;
     return [...baseMonths.slice(start), ...baseMonths.slice(0, start)];
   }, [schoolCalendar.startMonthIdx]);
+
+  const getRealDate = useCallback((relativeMonthIdx, day) => {
+    const start = schoolCalendar.startMonthIdx ?? 0;
+    const absoluteMonthIdx = (relativeMonthIdx + start) % 12;
+    
+    let startYear = 2026;
+    if (schoolCalendar.startDate) {
+      const parts = schoolCalendar.startDate.split('-');
+      if (parts[0]) {
+        startYear = parseInt(parts[0]);
+      }
+    }
+    
+    const year = absoluteMonthIdx < 9 ? startYear : startYear + 1;
+    const month = (absoluteMonthIdx + 3) % 12; // Apr is index 0 in baseMonths -> index 3 in JS months (0-indexed)
+    return new Date(year, month, day);
+  }, [schoolCalendar]);
+
+  const isWorkingDay = useCallback((relativeMonthIdx, day) => {
+    const start = schoolCalendar.startMonthIdx ?? 0;
+    const absoluteMonthIdx = (relativeMonthIdx + start) % 12;
+    const map = schoolCalendar.workingDaysMap || {};
+    const toggledDays = map[absoluteMonthIdx] || [];
+    
+    const cellDate = getRealDate(relativeMonthIdx, day);
+    
+    // Check if before precise start date
+    if (schoolCalendar.startDate) {
+      const parts = schoolCalendar.startDate.split('-');
+      if (parts.length === 3) {
+        const startD = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+        if (cellDate < startD) {
+          return false;
+        }
+      }
+    }
+    
+    const isSunday = cellDate.getDay() === 0;
+    const isToggled = toggledDays.includes(day);
+    
+    if (isSunday) {
+      return isToggled;
+    } else {
+      return !isToggled;
+    }
+  }, [schoolCalendar, getRealDate]);
 
   // State maps month index (0-11) to array of absent day numbers (1-31)
   const [absentDaysByMonth, setAbsentDaysByMonth] = useState({});
@@ -75,10 +121,8 @@ export default function CompletePage() {
       
       // Calculate working days
       let workingDays = 0;
-      const startOffset = (idx * 2) % 7;
       for (let d = 1; d <= monthInfo.days; d++) {
-        const col = (startOffset + d - 1) % 7;
-        if (col !== 6) workingDays++;
+        if (isWorkingDay(idx, d)) workingDays++;
       }
       totalWorking += workingDays;
       
@@ -96,7 +140,7 @@ export default function CompletePage() {
       present: totalPresent,
       percentage: percentage
     };
-  }, [MONTHS, absentDaysByMonth]);
+  }, [MONTHS, absentDaysByMonth, isWorkingDay]);
 
   useEffect(() => {
     if (targetUserId) {
@@ -128,7 +172,11 @@ export default function CompletePage() {
       const res = await fetch(`${API_URL}/students/profile/${'global_school_settings'}`);
       const data = await res.json();
       const sd = data?.schoolCalendar || {};
-      setSchoolCalendar({ startMonthIdx: sd.startMonthIdx ?? 0, workingDaysMap: sd.workingDaysMap ?? {} });
+      setSchoolCalendar({ 
+        startDate: sd.startDate,
+        startMonthIdx: sd.startMonthIdx ?? 0, 
+        workingDaysMap: sd.workingDaysMap ?? {} 
+      });
     } catch (e) {
       console.warn('Failed to load global school settings', e);
     }
@@ -139,13 +187,8 @@ export default function CompletePage() {
     const monthInfo = MONTHS[monthIdx];
     let workingDays = 0;
     
-    // Calculate working days (Total days - Sundays)
-    // For simplicity, let's assume month starts on a Wednesday (offset = 2) for rendering, 
-    // but Sundays are offset + day % 7 == 6.
-    const startOffset = (monthIdx * 2) % 7; // Pseudo random start day for visual variation
     for (let d = 1; d <= monthInfo.days; d++) {
-        const col = (startOffset + d - 1) % 7;
-        if (col !== 6) workingDays++; // Not Sunday
+        if (isWorkingDay(monthIdx, d)) workingDays++;
     }
 
     const absent = (absentDaysByMonth[monthIdx] || []).length;
@@ -233,7 +276,8 @@ export default function CompletePage() {
 
   const renderCalendar = (monthIdx) => {
       const monthInfo = MONTHS[monthIdx];
-      const startOffset = (monthIdx * 2) % 7;
+      const firstDay = getRealDate(monthIdx, 1);
+      const startOffset = (firstDay.getDay() + 6) % 7;
       
       const grid = [];
       let currentWeek = [];
@@ -246,6 +290,7 @@ export default function CompletePage() {
       for (let d = 1; d <= monthInfo.days; d++) {
           const col = (startOffset + d - 1) % 7;
           const isSunday = col === 6;
+          const isWorking = isWorkingDay(monthIdx, d);
           const isAbsent = (absentDaysByMonth[monthIdx] || []).includes(d);
 
           currentWeek.push(
@@ -254,16 +299,18 @@ export default function CompletePage() {
                 style={[
                     styles.calCell, 
                     isSunday ? styles.calCellSunday : null,
+                    !isWorking ? styles.calCellNotWorking : null,
                     isAbsent ? styles.calCellAbsent : null
                 ]}
-                disabled={isSunday || !isTeacher}
+                disabled={!isWorking || !isTeacher}
                 onPress={() => toggleAbsent(monthIdx, d)}
               >
                   <Text style={[
                       styles.calDayText,
                       isSunday ? styles.calDayTextSunday : null,
+                      !isWorking ? { color: '#9ca3af' } : null,
                       isAbsent ? styles.calDayTextAbsent : null,
-                      { color: isAbsent ? '#FFF' : theme.text }
+                      { color: isAbsent ? '#FFF' : (!isWorking ? '#9ca3af' : theme.text) }
                   ]}>
                       {d}
                   </Text>
@@ -443,45 +490,45 @@ const styles = StyleSheet.create({
   backBtn: { width: 44, height: 44, borderRadius: 12, backgroundColor: "rgba(255,255,255,0.05)", justifyContent: "center", alignItems: "center", borderWidth: 1, borderColor: "rgba(255,255,255,0.1)" },
   saveHeaderBtn: { width: 44, height: 44, borderRadius: 12, justifyContent: "center", alignItems: "center", borderWidth: 1, backgroundColor: 'rgba(255,255,255,0.05)' },
   headerTitleContainer: { flex: 1, alignItems: "center" },
-  title: { fontSize: 18, fontWeight: "300", color: "#FFFFFF", letterSpacing: 4, fontFamily: "Jost_300Light" },
-  subtitle: { fontSize: 9, color: "rgba(255,255,255,0.5)", letterSpacing: 1, marginTop: 2, textTransform: "uppercase", fontFamily: "Jost_400Regular" },
+  title: { fontSize: 18, fontWeight: "300", color: "#FFFFFF", letterSpacing: 4, fontFamily: "Inter_400Regular" },
+  subtitle: { fontSize: 9, color: "rgba(255,255,255,0.5)", letterSpacing: 1, marginTop: 2, textTransform: "uppercase", fontFamily: "Inter_400Regular" },
   
   monthSelector: { paddingHorizontal: 20, marginBottom: 20 },
   monthPill: { paddingHorizontal: 20, paddingVertical: 10, borderRadius: 20, marginRight: 10, borderWidth: 1, borderColor: 'rgba(0,0,0,0.05)' },
-  monthPillText: { fontSize: 12, fontWeight: '700', fontFamily: 'Jost_600SemiBold', letterSpacing: 1 },
+  monthPillText: { fontSize: 12, fontWeight: '700', fontFamily: 'Outfit_600SemiBold', letterSpacing: 1 },
 
   scrollContent: { padding: 20, paddingBottom: 60, paddingTop: 0 },
   card: { marginBottom: 20 },
   inlaidHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 15 },
   inlaidIconBox: { width: 36, height: 36, borderRadius: 10, borderWidth: 1, justifyContent: 'center', alignItems: 'center', marginRight: 12 },
-  sectionTitle: { fontSize: 13, fontWeight: '700', letterSpacing: 1, fontFamily: 'Jost_600SemiBold' },
+  sectionTitle: { fontSize: 13, fontWeight: '700', letterSpacing: 1, fontFamily: 'Outfit_600SemiBold' },
   sectionDivider: { height: 1, marginBottom: 20, borderRadius: 1 },
 
   calendarContainer: { width: '100%' },
   calHeaderRow: { flexDirection: 'row', marginBottom: 10 },
   calHeaderCell: { flex: 1, alignItems: 'center' },
-  calHeaderText: { fontSize: 11, fontWeight: '700', color: '#666', fontFamily: 'Jost_600SemiBold' },
+  calHeaderText: { fontSize: 11, fontWeight: '700', color: '#666', fontFamily: 'Outfit_600SemiBold' },
   calRow: { flexDirection: 'row', marginBottom: 10 },
   calCell: { flex: 1, height: 40, justifyContent: 'center', alignItems: 'center', borderRadius: 8 },
   calCellSunday: { backgroundColor: 'rgba(0,0,0,0.03)', opacity: 0.5 },
   calCellAbsent: { backgroundColor: '#ef4444' },
   calCellNotWorking: { backgroundColor: '#9ca3af', opacity: 0.5 },
-  calDayText: { fontSize: 14, fontFamily: 'Jost_400Regular' },
+  calDayText: { fontSize: 14, fontFamily: 'Inter_400Regular' },
   calDayTextSunday: { color: 'rgba(0,0,0,0.3)' },
   calDayTextAbsent: { fontWeight: '700' },
   absentDot: { position: 'absolute', bottom: 4, width: 4, height: 4, borderRadius: 2, backgroundColor: '#FFF' },
 
   statsContainer: { flexDirection: 'row', marginTop: 20, borderTopWidth: 1, paddingTop: 20, borderColor: 'rgba(0,0,0,0.1)' },
   statBox: { flex: 1, alignItems: 'center' },
-  statVal: { fontSize: 18, fontWeight: '700', fontFamily: 'Jost_600SemiBold', marginBottom: 4 },
-  statLbl: { fontSize: 9, color: '#666', letterSpacing: 1, fontFamily: 'Jost_300Light' },
+  statVal: { fontSize: 18, fontWeight: '700', fontFamily: 'Outfit_600SemiBold', marginBottom: 4 },
+  statLbl: { fontSize: 9, color: '#666', letterSpacing: 1, fontFamily: 'Inter_400Regular' },
 
   helperText: { fontSize: 10, color: '#888', marginTop: 15, fontStyle: 'italic', textAlign: 'center' },
 
   label: { fontSize: 10, color: '#666', fontWeight: '700', marginBottom: 8, letterSpacing: 1, textTransform: 'uppercase' },
-  reasonInput: { backgroundColor: 'rgba(255,255,255,0.5)', borderRadius: 12, padding: 15, minHeight: 80, textAlignVertical: 'top', fontSize: 14, fontFamily: 'Jost_400Regular', marginTop: 10, borderWidth: 1 },
+  reasonInput: { backgroundColor: 'rgba(255,255,255,0.5)', borderRadius: 12, padding: 15, minHeight: 80, textAlignVertical: 'top', fontSize: 14, fontFamily: 'Inter_400Regular', marginTop: 10, borderWidth: 1 },
 
-  saveBtnText: { color: '#FFF', fontSize: 14, fontWeight: '700', letterSpacing: 2, fontFamily: 'Jost_600SemiBold', paddingVertical: 18 },
+  saveBtnText: { color: '#FFF', fontSize: 14, fontWeight: '700', letterSpacing: 2, fontFamily: 'Outfit_600SemiBold', paddingVertical: 18 },
 
   buttonCol: {
     flexDirection: 'column',
@@ -495,7 +542,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     letterSpacing: 1.5,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     textAlign: 'center',
   },
   annualSummaryCard: {
@@ -507,7 +554,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1.5,
     textAlign: 'center',
     marginBottom: 12,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
   annualStatsRow: {
     flexDirection: 'row',
@@ -521,7 +568,7 @@ const styles = StyleSheet.create({
   annualStatVal: {
     fontSize: 16,
     fontWeight: '700',
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     marginBottom: 2,
   },
   annualStatLbl: {
@@ -529,6 +576,6 @@ const styles = StyleSheet.create({
     color: '#666',
     letterSpacing: 0.5,
     textAlign: 'center',
-    fontFamily: 'Jost_300Light',
+    fontFamily: 'Inter_400Regular',
   },
 });

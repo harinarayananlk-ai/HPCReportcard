@@ -74,12 +74,24 @@ const updateProfile = (req, res) => {
       
       if (assessments && typeof assessments === 'object') {
         if (role === 'student') {
-           // THE WALL: Student can ONLY update `selfAssessment` and `a3_s2` (parent, self, peer assessments)
+           // THE WALL: Student/Parent can ONLY update specific assessments
            if (assessments.selfAssessment !== undefined) {
                finalAssess.selfAssessment = assessments.selfAssessment;
            }
            if (assessments.a3_s2 !== undefined) {
                finalAssess.a3_s2 = assessments.a3_s2;
+           }
+           if (assessments.a4_s3 !== undefined) {
+               finalAssess.a4_s3 = assessments.a4_s3;
+           }
+           if (assessments.a4_s2 !== undefined) {
+               finalAssess.a4_s2 = assessments.a4_s2;
+           }
+           if (assessments.a4_s1 !== undefined) {
+               finalAssess.a4_s1 = assessments.a4_s1;
+           }
+           if (assessments.domainMatricesV2 !== undefined) {
+               finalAssess.domainMatricesV2 = assessments.domainMatricesV2;
            }
         } else {
            // Teachers (or superadmins) override everything passed in the payload

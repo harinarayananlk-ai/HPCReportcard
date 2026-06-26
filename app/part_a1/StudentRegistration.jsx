@@ -241,10 +241,10 @@ export default function TeacherRegistrationPage() {
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           
           {/* Section: Official Student Record */}
-          <GemCutCard borderColor={gems.emerald} style={styles.card}>
+          <GemCutCard borderColor={gems.silver} style={styles.card}>
             <View style={styles.inlaidHeader}>
-              <View style={[styles.inlaidIconBox, { borderColor: gems.emerald }]}>
-                <Ionicons name="person-circle-outline" size={18} color={gems.emerald} />
+              <View style={[styles.inlaidIconBox, { borderColor: gems.silver }]}>
+                <Ionicons name="person-circle-outline" size={18} color={gems.silver} />
               </View>
               <Text style={[styles.sectionTitle, { color: theme.text }]}>OFFICIAL STUDENT RECORD</Text>
             </View>
@@ -306,10 +306,10 @@ export default function TeacherRegistrationPage() {
           </GemCutCard>
 
           {/* Section: School Details */}
-          <GemCutCard borderColor={gems.topaz} style={styles.card}>
+          <GemCutCard borderColor={gems.sapphire} style={styles.card}>
             <View style={styles.inlaidHeader}>
-              <View style={[styles.inlaidIconBox, { borderColor: gems.topaz }]}>
-                <Ionicons name="business-outline" size={18} color={gems.topaz} />
+              <View style={[styles.inlaidIconBox, { borderColor: gems.sapphire }]}>
+                <Ionicons name="business-outline" size={18} color={gems.sapphire} />
               </View>
               <Text style={[styles.sectionTitle, { color: theme.text }]}>SCHOOL INFORMATION</Text>
             </View>
@@ -353,8 +353,8 @@ const styles = StyleSheet.create({
   header: { flexDirection: "row", alignItems: "center", paddingHorizontal: 20, paddingVertical: 15 },
   backBtn: { width: 44, height: 44, borderRadius: 12, backgroundColor: "rgba(255,255,255,0.05)", justifyContent: "center", alignItems: "center", borderWidth: 1, borderColor: "rgba(255,255,255,0.1)" },
   headerTitleContainer: { flex: 1, alignItems: "center" },
-  title: { fontSize: 18, fontWeight: "300", color: "#FFFFFF", letterSpacing: 4, fontFamily: "Jost_300Light" },
-  subtitle: { fontSize: 9, color: "rgba(255,255,255,0.5)", letterSpacing: 1, marginTop: 2, textTransform: "uppercase", fontFamily: "Jost_400Regular" },
+  title: { fontSize: 18, fontWeight: "300", color: "#FFFFFF", letterSpacing: 4, fontFamily: "Inter_400Regular" },
+  subtitle: { fontSize: 9, color: "rgba(255,255,255,0.5)", letterSpacing: 1, marginTop: 2, textTransform: "uppercase", fontFamily: "Inter_400Regular" },
   
   progressTracker: { paddingHorizontal: 40, paddingVertical: 20 },
   progressLine: { height: 2, backgroundColor: "rgba(255,255,255,0.1)", borderRadius: 1, position: 'relative' },
@@ -366,7 +366,7 @@ const styles = StyleSheet.create({
   },
   inlaidHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 15 },
   inlaidIconBox: { width: 36, height: 36, borderRadius: 10, borderWidth: 1, justifyContent: 'center', alignItems: 'center', marginRight: 12 },
-  sectionTitle: { fontSize: 13, fontWeight: '700', letterSpacing: 1, fontFamily: 'Jost_600SemiBold' },
+  sectionTitle: { fontSize: 13, fontWeight: '700', letterSpacing: 1, fontFamily: 'Outfit_600SemiBold' },
   sectionDivider: { height: 1, marginBottom: 20, borderRadius: 1 },
 
   inputGroup: { marginBottom: 18 },
@@ -378,7 +378,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 12,
     fontSize: 14,
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
   },
   inputFocusLine: { position: 'absolute', bottom: 0, left: 15, right: 15, height: 1, backgroundColor: 'rgba(0,0,0,0.05)' },
   
@@ -398,5 +398,5 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     alignSelf: 'center',
   },
-  nextBtnText: { color: '#FFF', fontSize: 14, fontWeight: '700', letterSpacing: 2, fontFamily: 'Jost_600SemiBold' },
+  nextBtnText: { color: '#FFF', fontSize: 14, fontWeight: '700', letterSpacing: 2, fontFamily: 'Outfit_600SemiBold' },
 });

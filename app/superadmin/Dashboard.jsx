@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions, Animated, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions, Animated, StatusBar, Alert, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useTheme } from '../../context/GlobalContext';
+import { useTheme, useAuth, API_URL } from '../../context/GlobalContext';
 import { gems } from '../../colour_themes';
 import SoundButton from '../../components/SoundButton';
 import { Ionicons } from '@expo/vector-icons';
-import { Alert } from 'react-native';
 import PremiumBackground from '../../components/PremiumBackground';
 import GemCutCard from '../../components/GemCutCard';
 
@@ -13,10 +12,15 @@ const { width } = Dimensions.get('window');
 
 export default function SuperadminDashboard() {
   const { theme } = useTheme();
+  const { schoolInfo } = useAuth();
   const router = useRouter();
-  const accentColor = gems.jade;
+  const accentColor = gems.sapphire;
   const styles = getStyles(theme, accentColor);
   const [fadeAnim] = useState(new Animated.Value(0));
+
+  const [classTeachersCount, setClassTeachersCount] = useState(0);
+  const [studentsCount, setStudentsCount] = useState(0);
+  const [loadingStats, setLoadingStats] = useState(true);
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -26,16 +30,63 @@ export default function SuperadminDashboard() {
     }).start();
   }, []);
 
-  const stats = [
-    { label: 'UPLINKED_STUDENTS', value: '124', icon: 'people-outline', color: theme.primary },
-    { label: 'ACTIVE_FACULTY', value: '12', icon: 'school-outline', color: accentColor },
-    { label: 'TOTAL_CERTIFICATES', value: '450+', icon: 'document-text-outline', color: '#B8860B' }, // Gold color
-  ];
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setLoadingStats(true);
+        const studentsRes = await fetch(`${API_URL}/admin/students`);
+        const studentsData = await studentsRes.json();
+        
+        if (Array.isArray(studentsData)) {
+          setStudentsCount(studentsData.length);
+          
+          // Unique classrooms (grade + section)
+          const classrooms = new Set();
+          studentsData.forEach(student => {
+            if (student.class_name && student.section) {
+              classrooms.add(`${student.class_name}-${student.section}`);
+            }
+          });
+          setClassTeachersCount(classrooms.size);
+        } else {
+          setStudentsCount(0);
+          setClassTeachersCount(0);
+        }
+      } catch (e) {
+        console.warn("Failed to fetch superadmin stats", e);
+      } finally {
+        setLoadingStats(false);
+      }
+    };
+    fetchStats();
+  }, [API_URL]);
+
+  const showSchoolInfo = () => {
+    const sName = schoolInfo?.name || "Samosa High International School";
+    const sUdise = schoolInfo?.udise_code || "09876543210";
+    const sBoard = schoolInfo?.board || "CBSE";
+    const sPrincipal = schoolInfo?.principal_name || "Dr. Rasgulla Roy";
+    const sAddress = schoolInfo ? `${schoolInfo.address_line1 || ''}, ${schoolInfo.address_line2 || ''} (Pin: ${schoolInfo.pincode || ''})` : "42 Samosa Marg, Near Chutney Circle, Delhi - 110001";
+    const sPhone = schoolInfo?.contact_phone || "011-23456789";
+    const sEmail = schoolInfo?.contact_email || "admin@samosahigh.edu.in";
+    const sMedium = "English";
+
+    Alert.alert(
+      "School Information",
+      `🏫 Name: ${sName}\n` +
+      `🔢 UDISE Code: ${sUdise}\n` +
+      `📋 Board: ${sBoard}\n` +
+      `🎓 Principal: ${sPrincipal}\n` +
+      `🗣️ Medium: ${sMedium}\n\n` +
+      `📍 Address: ${sAddress}\n` +
+      `📞 Contact: ${sPhone} / ${sEmail}`,
+      [{ text: "Close", style: "cancel" }]
+    );
+  };
 
   const quickActions = [
     { title: 'Identity & Hall', subtitle: 'Global oversight of all nodes', icon: 'people-outline', route: '/superadmin/ManageStudents' },
-    { title: 'Temporal Advance', subtitle: 'Bulk academic migration', icon: 'calendar-outline', route: null },
-    { title: 'System Core', subtitle: 'Configure school architecture', icon: 'settings-outline', route: null },
+    { title: 'Attendance Chart (Main)', subtitle: 'Configure school working & leave days', icon: 'calendar-outline', route: '/superadmin/SuperadminCalendar' },
   ];
 
   return (
@@ -62,15 +113,43 @@ export default function SuperadminDashboard() {
 
           {/* Stats Grid */}
           <View style={styles.statsGrid}>
-            {stats.map((stat, i) => (
-              <GemCutCard key={i} style={styles.statCard} contentStyle={{ padding: 16 }}>
-                <View style={[styles.iconBox, { backgroundColor: stat.color + '15' }]}>
-                  <Ionicons name={stat.icon} size={20} color={stat.color} />
+            <TouchableOpacity 
+              style={styles.statCard} 
+              activeOpacity={0.8}
+              onPress={showSchoolInfo}
+            >
+              <GemCutCard style={{ width: '100%' }} contentStyle={{ padding: 16, alignItems: 'center' }}>
+                <View style={[styles.iconBox, { backgroundColor: theme.primary + '15' }]}>
+                  <Ionicons name="business-outline" size={20} color={theme.primary} />
                 </View>
-                <Text style={styles.statValue}>{stat.value}</Text>
-                <Text style={styles.statLabel}>{stat.label}</Text>
+                <Text style={[styles.statValue, { fontSize: 13, textAlign: 'center' }]}>SCHOOL INFO</Text>
+                <Text style={styles.statLabel}>VIEW DETAILS</Text>
               </GemCutCard>
-            ))}
+            </TouchableOpacity>
+
+            <GemCutCard style={styles.statCard} contentStyle={{ padding: 16, alignItems: 'center' }}>
+              <View style={[styles.iconBox, { backgroundColor: accentColor + '15' }]}>
+                <Ionicons name="school-outline" size={20} color={accentColor} />
+              </View>
+              {loadingStats ? (
+                <ActivityIndicator size="small" color={accentColor} />
+              ) : (
+                <Text style={styles.statValue}>{classTeachersCount}</Text>
+              )}
+              <Text style={styles.statLabel}>CLASS TEACHERS</Text>
+            </GemCutCard>
+
+            <GemCutCard style={styles.statCard} contentStyle={{ padding: 16, alignItems: 'center' }}>
+              <View style={[styles.iconBox, { backgroundColor: '#B8860B15' }]}>
+                <Ionicons name="people-outline" size={20} color="#B8860B" />
+              </View>
+              {loadingStats ? (
+                <ActivityIndicator size="small" color="#B8860B" />
+              ) : (
+                <Text style={styles.statValue}>{studentsCount}</Text>
+              )}
+              <Text style={styles.statLabel}>STUDENTS</Text>
+            </GemCutCard>
           </View>
 
           {/* Quick Actions */}
@@ -137,7 +216,7 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
   welcome: {
     fontSize: 9,
     color: accentColor,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     letterSpacing: 3,
   },
   title: {
@@ -145,7 +224,7 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     color: theme.text,
     letterSpacing: 4,
     marginTop: 6,
-    fontFamily: 'Jost_300Light',
+    fontFamily: 'Inter_400Regular',
   },
   profileIcon: {
     width: 48,
@@ -178,14 +257,14 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
   statValue: {
     fontSize: 20,
     color: theme.text,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
   statLabel: {
     fontSize: 8,
     color: theme.secondaryText,
     textAlign: 'center',
     marginTop: 4,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     letterSpacing: 1.5,
     opacity: 0.6,
   },
@@ -194,7 +273,7 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     color: theme.secondaryText,
     marginBottom: 20,
     letterSpacing: 2.5,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     textTransform: 'uppercase',
     opacity: 0.8,
   },
@@ -225,14 +304,14 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
   actionTitle: {
     fontSize: 15,
     color: theme.text,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     letterSpacing: 1,
   },
   actionSubtitle: {
     fontSize: 11,
     color: theme.secondaryText,
     marginTop: 2,
-    fontFamily: 'Jost_300Light',
+    fontFamily: 'Inter_400Regular',
     letterSpacing: 0.5,
   },
   statusBox: {
@@ -252,7 +331,7 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
   statusText: {
     fontSize: 8,
     color: theme.secondaryText,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     letterSpacing: 1.5,
   },
 });

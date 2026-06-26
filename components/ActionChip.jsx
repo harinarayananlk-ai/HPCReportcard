@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, Pressable } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, {
   useSharedValue,
@@ -9,8 +9,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useTheme } from '../context/GlobalContext';
 import { gems } from '../colour_themes';
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+import SoundButton from './SoundButton';
 
 export default function ActionChip({ label, isActive, onToggle }) {
   const { theme } = useTheme();
@@ -45,8 +44,7 @@ export default function ActionChip({ label, isActive, onToggle }) {
   );
 
   return (
-    <AnimatedPressable
-      onPress={handlePress}
+    <Animated.View
       style={[
         styles.chipContainer,
         animatedStyle,
@@ -59,19 +57,27 @@ export default function ActionChip({ label, isActive, onToggle }) {
         },
       ]}
     >
-      {isActive ? (
-        <LinearGradient
-          colors={[gems.sapphire, gems.moonstone]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={styles.gradient}
-        >
-          {chipContent}
-        </LinearGradient>
-      ) : (
-        chipContent
-      )}
-    </AnimatedPressable>
+      <SoundButton
+        onPress={handlePress}
+        activeOpacity={0.85}
+        style={styles.soundButton}
+      >
+        {isActive ? (
+          <LinearGradient
+            colors={[gems.sapphire, gems.moonstone]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.gradient}
+          >
+            {chipContent}
+          </LinearGradient>
+        ) : (
+          <View style={styles.nonActiveContent}>
+            {chipContent}
+          </View>
+        )}
+      </SoundButton>
+    </Animated.View>
   );
 }
 
@@ -82,6 +88,10 @@ const styles = StyleSheet.create({
     marginRight: 8,
     marginBottom: 8,
     overflow: 'hidden',
+    alignSelf: 'flex-start',
+  },
+  soundButton: {
+    alignSelf: 'flex-start',
   },
   gradient: {
     paddingHorizontal: 16,
@@ -89,11 +99,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  text: {
+  nonActiveContent: {
     paddingHorizontal: 16,
     paddingVertical: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text: {
     fontSize: 12,
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
     letterSpacing: 0.5,
   },
 });

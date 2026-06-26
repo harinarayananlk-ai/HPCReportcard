@@ -212,7 +212,7 @@ export default function MenuDropdown() {
 
           {/* Back Face: Clean Text "MENU" (Larger bold text) */}
           <Animated.View style={[styles.btnFace, backBtnStyle]}>
-            <Text style={[styles.menuText, { color: gems.topaz }]}>MENU</Text>
+            <Text style={[styles.menuText, { color: gems.sapphire }]}>MENU</Text>
           </Animated.View>
         </SoundButton>
       </Animated.View>
@@ -250,10 +250,10 @@ export default function MenuDropdown() {
           }}
           style={[
             styles.cardBody,
-            { backgroundColor: solidBg, borderColor: gems.emerald },
+            { backgroundColor: solidBg, borderColor: gems.silver },
           ]}
         >
-          <Text style={[styles.cardText, { color: gems.emerald }]}>PART B</Text>
+          <Text style={[styles.cardText, { color: gems.silver }]}>PART B</Text>
         </TouchableOpacity>
       </Animated.View>
 
@@ -265,10 +265,10 @@ export default function MenuDropdown() {
           onPress={() => handleNavigate("/part_c_s1/YearEndSummary")}
           style={[
             styles.cardBody,
-            { backgroundColor: solidBg, borderColor: gems.topaz },
+            { backgroundColor: solidBg, borderColor: gems.sapphire },
           ]}
         >
-          <Text style={[styles.cardText, { color: gems.topaz }]}>PART C</Text>
+          <Text style={[styles.cardText, { color: gems.sapphire }]}>PART C</Text>
         </TouchableOpacity>
       </Animated.View>
     </View>
@@ -298,7 +298,7 @@ const styles = StyleSheet.create({
   menuText: {
     fontSize: 15,
     fontWeight: "bold",
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
     letterSpacing: 1.5,
     textAlign: "center",
   },
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     left: 50 - 0.75, // Centered under the 100px button (half width is 50)
     top: 44,
     width: 1.5,
-    backgroundColor: gems.topaz, // Gold thread
+    backgroundColor: gems.sapphire, // Sapphire thread
     zIndex: -1,
   },
   domino: {
@@ -332,7 +332,7 @@ const styles = StyleSheet.create({
   },
   cardText: {
     fontSize: 10,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
     letterSpacing: 1,
     textAlign: "center",
   },

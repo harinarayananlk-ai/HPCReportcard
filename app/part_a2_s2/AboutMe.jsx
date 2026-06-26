@@ -282,7 +282,7 @@ export default function AboutMe() {
 
           {/* Favorites Food */}
           <View style={[styles.favBox, { borderColor: gems.sapphire + '30' }]}>
-            <Text style={[styles.miniListHeader, { color: gems.topaz }]}>🍔 Food</Text>
+            <Text style={[styles.miniListHeader, { color: gems.silver }]}>🍔 Food</Text>
             {favFood.map((food, i) => (
               <TextInput
                 key={`food-${i}`}
@@ -297,7 +297,7 @@ export default function AboutMe() {
 
           {/* Favorites Games */}
           <View style={[styles.favBox, { borderColor: gems.sapphire + '30' }]}>
-            <Text style={[styles.miniListHeader, { color: gems.topaz }]}>⚽ Games</Text>
+            <Text style={[styles.miniListHeader, { color: gems.silver }]}>⚽ Games</Text>
             {favGames.map((game, i) => (
               <TextInput
                 key={`game-${i}`}
@@ -312,7 +312,7 @@ export default function AboutMe() {
 
           {/* Favorites Festivals */}
           <View style={[styles.favBox, { borderColor: gems.sapphire + '30' }]}>
-            <Text style={[styles.miniListHeader, { color: gems.topaz }]}>✨ Festivals</Text>
+            <Text style={[styles.miniListHeader, { color: gems.silver }]}>✨ Festivals</Text>
             {favFestivals.map((fest, i) => (
               <TextInput
                 key={`fest-${i}`}
@@ -327,7 +327,7 @@ export default function AboutMe() {
 
           {/* Things to learn */}
           <View style={[styles.favBox, { borderColor: gems.sapphire + '30' }]}>
-            <Text style={[styles.miniListHeader, { color: gems.topaz }]}>🎓 Things to learn</Text>
+            <Text style={[styles.miniListHeader, { color: gems.silver }]}>🎓 Things to learn</Text>
             {favThingsToLearn.map((thing, i) => (
               <TextInput
                 key={`thing-${i}`}
@@ -372,8 +372,8 @@ export default function AboutMe() {
             <Text style={[styles.title, { color: theme.text }]}>ME AND MY SURROUNDINGS</Text>
             <Text style={[styles.subtitle, { color: theme.secondaryText }]}>✨ Preparatory Stage (S2) ✨</Text>
           </View>
-          <SoundButton onPress={handleSave} style={[styles.backBtn, { borderColor: gems.topaz + '80' }]}>
-            <Ionicons name="sparkles" size={20} color={gems.topaz} />
+          <SoundButton onPress={handleSave} style={[styles.backBtn, { borderColor: gems.silver + '80' }]}>
+            <Ionicons name="sparkles" size={20} color={gems.silver} />
           </SoundButton>
         </View>
 
@@ -411,14 +411,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '300',
     letterSpacing: 3,
-    fontFamily: 'Jost_300Light',
+    fontFamily: 'Inter_400Regular',
   },
   subtitle: {
     fontSize: 9,
     letterSpacing: 1,
     marginTop: 2,
     textTransform: 'uppercase',
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
   },
   stepperContainer: {
     flex: 1,
@@ -450,7 +450,7 @@ const styles = StyleSheet.create({
   photoLabel: {
     fontSize: 10,
     marginTop: 4,
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
   },
   inputHeading: {
     fontSize: 11,
@@ -458,7 +458,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     textTransform: 'uppercase',
     marginBottom: 4,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
   familyBox: {
     width: '100%',
@@ -507,7 +507,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     letterSpacing: 0.5,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     textTransform: 'uppercase',
     marginBottom: 8,
   },
@@ -516,7 +516,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 4,
     fontSize: 13,
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
     marginBottom: 10,
   },
   blueUnderline: {
@@ -541,7 +541,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     letterSpacing: 1.5,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     textAlign: 'center',
   },
 });

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -22,10 +22,11 @@ import GemButton from '../../components/GemButton';
 import TimelineNode from '../../components/TimelineNode';
 import AutoResizingInput from '../../components/AutoResizingInput';
 import { gems } from '../../colour_themes';
+import useAutoSave from '../../hooks/useAutoSave';
 
 export default function AmbitionCard() {
   const { theme } = useTheme();
-  const { user, profile, activeStudentId, activeStudentProfile, setActiveStudentProfile } = useAuth();
+  const { user, profile, setProfile: setAuthProfile, activeStudentId, activeStudentProfile, setActiveStudentProfile } = useAuth();
   const router = useRouter();
 
   const isTeacher = user?.role === 'teacher' || user?.role === 'superadmin';
@@ -88,45 +89,48 @@ export default function AmbitionCard() {
     }
   }, [targetProfile]);
 
-  const handleSave = async (finalAssess = null) => {
+  const getPayload = useCallback(() => {
+    const currentAssess = typeof targetProfile?.assessments === 'string'
+      ? JSON.parse(targetProfile.assessments || '{}')
+      : (targetProfile?.assessments || {});
+    return {
+      assessments: {
+        ...currentAssess,
+        a3_s3: {
+          ambition,
+          achieveAmbition,
+          skills,
+          subjects,
+          habits,
+          guidance,
+          guidanceHelp,
+          guidanceLearn,
+          feelingsAchieve,
+          feelingsParents,
+        }
+      }
+    };
+  }, [targetProfile, ambition, achieveAmbition, skills, subjects, habits, guidance, guidanceHelp, guidanceLearn, feelingsAchieve, feelingsParents]);
+
+  const { triggerSave } = useAutoSave(targetUserId, getPayload, [
+    ambition,
+    achieveAmbition,
+    skills,
+    subjects,
+    habits,
+    guidance,
+    guidanceHelp,
+    guidanceLearn,
+    feelingsAchieve,
+    feelingsParents
+  ]);
+
+  const handleSave = async () => {
     if (!targetUserId) return;
     setLoading(true);
     try {
-      const currentAssess = typeof targetProfile?.assessments === 'string'
-        ? JSON.parse(targetProfile.assessments || '{}')
-        : (targetProfile?.assessments || {});
-
-      const a3_s3 = (finalAssess && !finalAssess.target && !finalAssess.nativeEvent) ? finalAssess : {
-        ambition,
-        achieveAmbition,
-        skills,
-        subjects,
-        habits,
-        guidance,
-        guidanceHelp,
-        guidanceLearn,
-        feelingsAchieve,
-        feelingsParents,
-      };
-
-      const updatedAssess = { ...currentAssess, a3_s3 };
-
-      const res = await fetch(`${API_URL}/students/profile`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: targetUserId,
-          registrationNumber: targetProfile?.registration_number,
-          assessments: updatedAssess,
-        }),
-      });
-
-      if (res.ok) {
-        const updated = { ...targetProfile, assessments: updatedAssess };
-        if (isTeacher && activeStudentId) setActiveStudentProfile(updated);
-        else setActiveStudentProfile(updated);
-        Alert.alert('Saved', 'Ambition timeline progress saved!');
-      }
+      await triggerSave();
+      Alert.alert('Saved', 'Ambition timeline progress saved!');
     } catch (e) {
       console.error(e);
     } finally {
@@ -135,19 +139,7 @@ export default function AmbitionCard() {
   };
 
   const handleNext = async () => {
-    const data = {
-      ambition,
-      achieveAmbition,
-      skills,
-      subjects,
-      habits,
-      guidance,
-      guidanceHelp,
-      guidanceLearn,
-      feelingsAchieve,
-      feelingsParents,
-    };
-    await handleSave(data);
+    await handleSave();
     router.push('/part_a4_s3/ParentFeedback');
   };
 
@@ -210,8 +202,8 @@ export default function AmbitionCard() {
             <Text style={[styles.title, { color: theme.text }]}>MY AMBITION CARD</Text>
             <Text style={[styles.subtitle, { color: theme.secondaryText }]}>✨ Part A3 Timeline ✨</Text>
           </View>
-          <SoundButton onPress={() => handleSave()} style={[styles.backBtn, { borderColor: gems.topaz + '80' }]}>
-            <Ionicons name="cloud-upload-outline" size={20} color={gems.topaz} />
+          <SoundButton onPress={() => handleSave()} style={[styles.backBtn, { borderColor: gems.silver + '80' }]}>
+            <Ionicons name="cloud-upload-outline" size={20} color={gems.silver} />
           </SoundButton>
         </View>
 
@@ -278,7 +270,7 @@ export default function AmbitionCard() {
               <Text style={[styles.nodeHint, { color: theme.secondaryText }]}>Subjects I need to focus on (Max 3):</Text>
               {subjects.length < 3 && (
                 <TouchableOpacity onPress={addSubject}>
-                  <Ionicons name="add-circle" size={20} color={gems.emerald} />
+                  <Ionicons name="add-circle" size={20} color={gems.silver} />
                 </TouchableOpacity>
               )}
             </View>
@@ -293,7 +285,7 @@ export default function AmbitionCard() {
                   onChangeText={(v) => updateItemInArray(subjects, setSubjects, i, v)}
                 />
                 <TouchableOpacity onPress={() => removeSubject(i)}>
-                  <Ionicons name="trash-outline" size={18} color={gems.ruby} />
+                  <Ionicons name="trash-outline" size={18} color={gems.sapphire} />
                 </TouchableOpacity>
               </View>
             ))}
@@ -311,7 +303,7 @@ export default function AmbitionCard() {
               <Text style={[styles.nodeHint, { color: theme.secondaryText }]}>Habits I need to build (Max 3):</Text>
               {habits.length < 3 && (
                 <TouchableOpacity onPress={addHabit}>
-                  <Ionicons name="add-circle" size={20} color={gems.emerald} />
+                  <Ionicons name="add-circle" size={20} color={gems.silver} />
                 </TouchableOpacity>
               )}
             </View>
@@ -326,7 +318,7 @@ export default function AmbitionCard() {
                   onChangeText={(v) => updateItemInArray(habits, setHabits, i, v)}
                 />
                 <TouchableOpacity onPress={() => removeHabit(i)}>
-                  <Ionicons name="trash-outline" size={18} color={gems.ruby} />
+                  <Ionicons name="trash-outline" size={18} color={gems.sapphire} />
                 </TouchableOpacity>
               </View>
             ))}
@@ -438,14 +430,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '300',
     letterSpacing: 2,
-    fontFamily: 'Jost_300Light',
+    fontFamily: 'Inter_400Regular',
   },
   subtitle: {
     fontSize: 9,
     letterSpacing: 1,
     marginTop: 2,
     textTransform: 'uppercase',
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -458,14 +450,14 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     textTransform: 'uppercase',
     marginBottom: 8,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
   timelineInput: {
     borderBottomWidth: 1.5,
     paddingVertical: 6,
     paddingHorizontal: 4,
     fontSize: 13,
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
     marginBottom: 10,
   },
   blueUnderline: {
@@ -503,7 +495,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     letterSpacing: 1.5,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     textAlign: 'center',
   },
 });

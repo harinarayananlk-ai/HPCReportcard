@@ -51,7 +51,7 @@ export default function TeacherProfile() {
 
   return (
     <View style={{ flex: 1 }}>
-      <PremiumBackground gemColor={gems.jade} />
+      <PremiumBackground gemColor={gems.sapphire} />
       <SafeAreaView style={styles.container}>
         <StatusBar barStyle={theme.isDark ? "light-content" : "dark-content"} />
         <KeyboardAvoidingView
@@ -77,7 +77,7 @@ export default function TeacherProfile() {
               <Text style={styles.avatarSubtitle}>RECONFIGURE VISUAL UPLINK</Text>
             </View>
 
-            <GemCutCard borderColor={gems.jade + '60'} contentStyle={{ padding: 24 }}>
+            <GemCutCard borderColor={gems.sapphire + '60'} contentStyle={{ padding: 24 }}>
               <View style={styles.form}>
                 {renderField("Full Name", name, "NAME_STRING", setName)}
                 {renderField("UDISE Code", udiseCode, "11_DIGIT_ID", setUdiseCode, "numeric")}
@@ -121,12 +121,12 @@ const getStyles = (theme) => StyleSheet.create({
   backText: {
     color: theme.text,
     fontSize: 20,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
   },
   headerTitle: {
     color: theme.text,
     fontSize: 14,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
     letterSpacing: 3,
   },
   scrollContent: {
@@ -153,12 +153,12 @@ const getStyles = (theme) => StyleSheet.create({
   avatarInitial: {
     color: theme.text,
     fontSize: 44,
-    fontFamily: "Jost_300Light",
+    fontFamily: "Inter_400Regular",
   },
   avatarSubtitle: {
     color: theme.secondaryText,
     fontSize: 10,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
     letterSpacing: 2,
     opacity: 0.7,
   },
@@ -172,7 +172,7 @@ const getStyles = (theme) => StyleSheet.create({
   label: {
     color: theme.secondaryText,
     fontSize: 10,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
     textTransform: "uppercase",
     letterSpacing: 2,
     marginBottom: 10,
@@ -185,7 +185,7 @@ const getStyles = (theme) => StyleSheet.create({
     paddingHorizontal: 20,
     color: theme.text,
     fontSize: 15,
-    fontFamily: "Jost_400Regular",
+    fontFamily: "Inter_400Regular",
     borderWidth: 1,
     borderColor: theme.border + '50',
   },
@@ -203,7 +203,7 @@ const getStyles = (theme) => StyleSheet.create({
   saveButtonText: {
     color: theme.buttonText,
     fontSize: 14,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
     letterSpacing: 3,
   },
 });

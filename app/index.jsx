@@ -315,7 +315,7 @@ const getStyles = (theme) => StyleSheet.create({
     fontWeight: "300", // Sleek minimalist thinner font
     color: theme.text,
     letterSpacing: 8,
-    fontFamily: "Jost_300Light",
+    fontFamily: "Inter_400Regular",
     textShadowColor: "rgba(0,0,0,0.2)", // Neutral subtle shadow
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 10,
@@ -345,7 +345,7 @@ const getStyles = (theme) => StyleSheet.create({
     textAlign: "center",
     marginBottom: 6,
     letterSpacing: 3,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
   },
   subtitle: {
     fontSize: 10,
@@ -355,7 +355,7 @@ const getStyles = (theme) => StyleSheet.create({
     fontWeight: "400",
     textTransform: "uppercase",
     letterSpacing: 2,
-    fontFamily: "Jost_400Regular",
+    fontFamily: "Inter_400Regular",
   },
   roleSelector: {
     flexDirection: "row",
@@ -386,7 +386,7 @@ const getStyles = (theme) => StyleSheet.create({
     fontWeight: "500",
     color: theme.secondaryText,
     letterSpacing: 1.5,
-    fontFamily: "Jost_400Regular",
+    fontFamily: "Inter_400Regular",
   },
   activeRoleText: {
     color: theme.text,
@@ -404,7 +404,7 @@ const getStyles = (theme) => StyleSheet.create({
     color: theme.secondaryText,
     letterSpacing: 2,
     marginBottom: 8,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
   },
   input: {
     height: 48,
@@ -417,7 +417,7 @@ const getStyles = (theme) => StyleSheet.create({
     backgroundColor: 'transparent',
     color: theme.text,
     fontSize: 14,
-    fontFamily: "Jost_400Regular",
+    fontFamily: "Inter_400Regular",
   },
   button: {
     paddingVertical: 16,
@@ -436,7 +436,7 @@ const getStyles = (theme) => StyleSheet.create({
     textAlign: "center",
     fontWeight: "700",
     letterSpacing: 3,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
   },
   absoluteBypassLeft: {
     position: 'absolute',

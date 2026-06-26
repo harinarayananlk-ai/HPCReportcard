@@ -148,7 +148,7 @@ export default function GearGroup({ style }) {
           style={[
             styles.glowCircle, 
             { 
-              backgroundColor: gems.topaz,
+              backgroundColor: gems.sapphire,
               opacity: glowOpacity,
               transform: [{ scale: Animated.add(1, Animated.multiply(glowAnim, 0.2)) }]
             }
@@ -166,7 +166,7 @@ export default function GearGroup({ style }) {
           {/* Center gear - Large */}
           <Animated.View style={[styles.largeGear, { transform: [{ rotate: largeSpin }] }]}>
             <View style={styles.largeGearShadow} />
-            <Ionicons name="settings-sharp" size={42} color={gems.topaz} />
+            <Ionicons name="settings-sharp" size={42} color={gems.sapphire} />
           </Animated.View>
 
           {/* Bottom right gear - Small */}

@@ -1,16 +1,17 @@
 export const gems = {
   sapphire: "#0D47A1",        // Rich Royal Sapphire
-  aquamarine: "#7FFFD4",      // Bright Aquamarine
-  emerald: "#2E8B57",         // Vibrant Emerald
-  jade: "#00A36C",            // Deep Jade
-  topaz: "#B8972E",           // Matte Luxe Gold
-  gold: "#B8972E",            // Alias for gold
-  citrine: "#E4D00A",         // Bright Citrine
-  amethyst: "#9966CC",        // Classic Amethyst
-  ruby: "#D2042D",            // Vibrant Ruby
+  silver: "#D1D1D1",          // Matte Silver
+  aquamarine: "#0D47A1",      // Mapped to Sapphire
+  emerald: "#D1D1D1",         // Mapped to Silver
+  jade: "#D1D1D1",            // Mapped to Silver
+  topaz: "#0D47A1",           // Mapped to Sapphire
+  gold: "#0D47A1",            // Mapped to Sapphire
+  citrine: "#0D47A1",         // Mapped to Sapphire
+  amethyst: "#0D47A1",        // Mapped to Sapphire
+  ruby: "#0D47A1",            // Mapped to Sapphire
   moonstone: "#4682B4",       // Steel Blue Moonstone
-  pearl: "#E5E4E2",           // Platinum Silver
-  onyx: "#2F2F2F",            // Matte Charcoal
+  pearl: "#D1D1D1",           // Mapped to Silver
+  onyx: "#1E1E1E",            // Matte Charcoal
 };
 
 export const themes = {
@@ -37,8 +38,8 @@ export const themes = {
     background: "#121212", // Matte Obsidian
     surface: "#2A2A2A", // Matte Anthracite
     card: "#1E1E1E", // Deep Charcoal
-    text: "#CCCCCC", // Matte Silver text
-    secondaryText: "#888888",
+    text: "#FFFFFF", // High-contrast White text
+    secondaryText: "#B0B0B0", // High-contrast secondary text
     accent: "#4A90E2", // Soft Sapphire
     primary: "#8C733E", // Muted Bronze-Gold
     buttonText: "#FFFFFF",

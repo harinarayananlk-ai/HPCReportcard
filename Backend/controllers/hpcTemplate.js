@@ -1586,6 +1586,81 @@ function buildHpcHtml(studentData) {
             </div>
         </div>
         `;
+
+        // ───────────────────────────────────────────────────────────
+        // PART C: YEAR-END EVALUATION / SCHOOL READINESS SUMMARY (STAGE 2)
+        // ───────────────────────────────────────────────────────────
+        const dmV2 = studentData.assessments?.domainMatricesV2 || {};
+        const partCDomainsS2 = [
+            { key: 's2_lang1', title: 'Language Education (Language 1 - R1)', icon: '📖', color: '#2E5894' },
+            { key: 's2_lang2', title: 'Language Education (Language 2 - R2)', icon: '💬', color: '#B8972E' },
+            { key: 's2_math', title: 'Mathematics', icon: '🧮', color: '#2E8B57' },
+            { key: 's2_world', title: 'The World Around Us', icon: '🌍', color: '#2E5894' },
+            { key: 's2_art_visual', title: 'Art Education (Visual Arts)', icon: '🎨', color: '#8C1B1B' },
+            { key: 's2_art_theatre', title: 'Art Education (Theatre)', icon: '🎭', color: '#B8972E' },
+            { key: 's2_art_music', title: 'Art Education (Music)', icon: '🎵', color: '#2E8B57' },
+            { key: 's2_art_dance', title: 'Art Education (Dance & Movement)', icon: '💃', color: '#8C1B1B' },
+            { key: 's2_phys_ls1', title: 'Physical Education (Learning Standard 1)', icon: '🏃', color: '#2E5894' },
+            { key: 's2_phys_ls2', title: 'Physical Education (Learning Standard 2)', icon: '🤸', color: '#B8972E' }
+        ];
+
+        const s2Chunks = [];
+        for (let i = 0; i < partCDomainsS2.length; i += 3) {
+            s2Chunks.push(partCDomainsS2.slice(i, i + 3));
+        }
+
+        s2Chunks.forEach((chunk, pageIndex) => {
+            htmlContent += `
+            <div class="page">
+                <div class="page-bg ${getBg()}"></div>
+                <div class="glow-overlay"></div>
+                <div class="matte-shield"></div>
+                <div class="page-border"></div>
+                <div class="content-container">
+                    <div class="section-title">Part C: Year-End Summary & School Readiness (Page ${pageIndex + 1})</div>
+                    
+                    ${chunk.map((dom) => {
+                        const cMatrix = dmV2[dom.key] || {};
+                        return `
+                        <div class="glass-card" style="margin-bottom: 12px; padding: 12px;">
+                            <div style="font-size: 11px; font-weight:700; color:${dom.color}; margin-bottom: 6px; text-transform: uppercase;">
+                                ${dom.icon} ${dom.title} Assessment Matrix
+                            </div>
+                            <table class="rubric-table" style="margin-top: 5px;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 25%; background:${dom.color};">Criteria</th>
+                                        <th style="width: 25%; background:${dom.color};"><span class="badge-stream" style="width:10px;height:10px;vertical-align:middle;margin-right:4px;"></span> Stream</th>
+                                        <th style="width: 25%; background:${dom.color};"><span class="badge-mountain" style="width:10px;height:10px;vertical-align:middle;margin-right:4px;"></span> Mountain</th>
+                                        <th style="width: 25%; background:${dom.color};"><span class="badge-sky" style="width:10px;height:10px;vertical-align:middle;margin-right:4px;"></span> Sky</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${["Awareness", "Sensitivity", "Creativity"].map((ability, r) => `
+                                        <tr>
+                                            <td class="rubric-row-title" style="font-size:8px;">${ability}</td>
+                                            ${[0, 1, 2].map(c => {
+                                                const val = cMatrix[`${r}-${c}`] || '';
+                                                const isActive = val.trim().length > 0;
+                                                let gemIcon = '';
+                                                if (isActive) {
+                                                    if (c === 0) gemIcon = `<span class="badge-stream gem-rating-icon" style="width:14px;height:14px;"></span>`;
+                                                    if (c === 1) gemIcon = `<span class="badge-mountain gem-rating-icon" style="width:14px;height:14px;"></span>`;
+                                                    if (c === 2) gemIcon = `<span class="badge-sky gem-rating-icon" style="width:14px;height:14px;"></span>`;
+                                                }
+                                                return `<td class="matrix-cell-content ${isActive ? 'active' : ''}" style="font-size: 8.5px; padding: 4px;">${gemIcon} ${escapeHtml(val) || '-'}</td>`;
+                                            }).join('')}
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+            `;
+        });
     }
 
     // ───────────────────────────────────────────────────────────
@@ -1892,6 +1967,85 @@ function buildHpcHtml(studentData) {
             </div>
         </div>
         `;
+
+        // ───────────────────────────────────────────────────────────
+        // PART C: YEAR-END EVALUATION / SCHOOL READINESS SUMMARY (STAGE 3)
+        // ───────────────────────────────────────────────────────────
+        const dmV2 = studentData.assessments?.domainMatricesV2 || {};
+        const partCDomainsS3 = [
+            { key: 's3_lang1', title: 'Language Education (Language 1 - R1)', icon: '📖', color: '#2E5894' },
+            { key: 's3_lang2', title: 'Language Education (Language 2 - R2)', icon: '💬', color: '#B8972E' },
+            { key: 's3_lang3', title: 'Language Education (Language 3 - R3)', icon: '🗣️', color: '#2E8B57' },
+            { key: 's3_math', title: 'Mathematics', icon: '🧮', color: '#2E5894' },
+            { key: 's3_science', title: 'Science', icon: '🧪', color: '#8C1B1B' },
+            { key: 's3_social', title: 'Social Science', icon: '🌍', color: '#B8972E' },
+            { key: 's3_art_visual', title: 'Art Education (Visual Arts)', icon: '🎨', color: '#2E8B57' },
+            { key: 's3_art_theatre', title: 'Art Education (Theatre)', icon: '🎭', color: '#8C1B1B' },
+            { key: 's3_art_music', title: 'Art Education (Music)', icon: '🎵', color: '#2E5894' },
+            { key: 's3_art_dance', title: 'Art Education (Dance & Movement)', icon: '💃', color: '#B8972E' },
+            { key: 's3_art_ls2', title: 'Art Education (Learning Standard 2)', icon: '🎨', color: '#2E8B57' },
+            { key: 's3_phys_ls1', title: 'Physical Education (Learning Standard 1)', icon: '🏃', color: '#8C1B1B' },
+            { key: 's3_phys_ls2', title: 'Physical Education (Learning Standard 2)', icon: '🤸', color: '#2E5894' },
+            { key: 's3_vocational', title: 'Vocational/Skill Education', icon: '🛠️', color: '#B8972E' }
+        ];
+
+        const s3Chunks = [];
+        for (let i = 0; i < partCDomainsS3.length; i += 3) {
+            s3Chunks.push(partCDomainsS3.slice(i, i + 3));
+        }
+
+        s3Chunks.forEach((chunk, pageIndex) => {
+            htmlContent += `
+            <div class="page">
+                <div class="page-bg ${getBg()}"></div>
+                <div class="glow-overlay"></div>
+                <div class="matte-shield"></div>
+                <div class="page-border"></div>
+                <div class="content-container">
+                    <div class="section-title">Part C: Year-End Summary & School Readiness (Page ${pageIndex + 1})</div>
+                    
+                    ${chunk.map((dom) => {
+                        const cMatrix = dmV2[dom.key] || {};
+                        return `
+                        <div class="glass-card" style="margin-bottom: 12px; padding: 12px;">
+                            <div style="font-size: 11px; font-weight:700; color:${dom.color}; margin-bottom: 6px; text-transform: uppercase;">
+                                ${dom.icon} ${dom.title} Assessment Matrix
+                            </div>
+                            <table class="rubric-table" style="margin-top: 5px;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 25%; background:${dom.color};">Criteria</th>
+                                        <th style="width: 25%; background:${dom.color};"><span class="badge-stream" style="width:10px;height:10px;vertical-align:middle;margin-right:4px;"></span> Stream</th>
+                                        <th style="width: 25%; background:${dom.color};"><span class="badge-mountain" style="width:10px;height:10px;vertical-align:middle;margin-right:4px;"></span> Mountain</th>
+                                        <th style="width: 25%; background:${dom.color};"><span class="badge-sky" style="width:10px;height:10px;vertical-align:middle;margin-right:4px;"></span> Sky</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${["Awareness", "Sensitivity", "Creativity"].map((ability, r) => `
+                                        <tr>
+                                            <td class="rubric-row-title" style="font-size:8px;">${ability}</td>
+                                            ${[0, 1, 2].map(c => {
+                                                const val = cMatrix[`${r}-${c}`] || '';
+                                                const isActive = val.trim().length > 0;
+                                                let gemIcon = '';
+                                                if (isActive) {
+                                                    if (c === 0) gemIcon = `<span class="badge-stream gem-rating-icon" style="width:14px;height:14px;"></span>`;
+                                                    if (c === 1) gemIcon = `<span class="badge-mountain gem-rating-icon" style="width:14px;height:14px;"></span>`;
+                                                    if (c === 2) gemIcon = `<span class="badge-sky gem-rating-icon" style="width:14px;height:14px;"></span>`;
+                                                }
+                                                return `<td class="matrix-cell-content ${isActive ? 'active' : ''}" style="font-size: 8.5px; padding: 4px;">${gemIcon} ${escapeHtml(val) || '-'}</td>`;
+                                            }).join('')}
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+            `;
+        });
     }
 
     htmlContent += `

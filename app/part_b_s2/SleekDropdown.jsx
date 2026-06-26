@@ -78,7 +78,7 @@ export default function SleekDropdown({ label, options, selectedValue, onSelect,
                                         style={[styles.item, { borderBottomColor: dropdownTheme.border, backgroundColor: isSelected(item) ? dropdownTheme.border : 'transparent' }]}
                                         onPress={() => toggleSelection(item)}
                                     >
-                                        <Text style={[styles.itemText, { color: dropdownTheme.text, fontFamily: isSelected(item) ? 'Outfit-Bold' : 'Outfit-Regular' }]}>{item}</Text>
+                                        <Text style={[styles.itemText, { color: dropdownTheme.text, fontFamily: isSelected(item) ? 'Outfit_600SemiBold' : 'Inter_400Regular' }]}>{item}</Text>
                                     </TouchableOpacity>
                                 );
                             }}
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
         marginBottom: 6,
         textTransform: 'uppercase',
         letterSpacing: 0.5,
-        fontFamily: 'Outfit-Bold',
+        fontFamily: 'Outfit_600SemiBold',
     },
     dropdownHeader: {
         flexDirection: 'row',
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     },
     headerText: {
         fontSize: 15,
-        fontFamily: 'Outfit-Regular',
+        fontFamily: 'Inter_400Regular',
     },
     modalOverlay: {
         flex: 1,
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     },
     doneText: {
         fontSize: 16,
-        fontFamily: 'Outfit-Bold',
+        fontFamily: 'Outfit_600SemiBold',
         letterSpacing: 1,
     }
 });

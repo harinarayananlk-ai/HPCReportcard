@@ -69,7 +69,7 @@ const HOME_RESOURCES = [
 
 export default function AssessmentCards() {
   const { theme } = useTheme();
-  const { user, profile, activeStudentId, activeStudentProfile, setActiveStudentProfile } = useAuth();
+  const { user, profile, setProfile: setAuthProfile, activeStudentId, activeStudentProfile, setActiveStudentProfile } = useAuth();
   const router = useRouter();
 
   const isTeacher = user?.role === 'teacher' || user?.role === 'superadmin';
@@ -212,7 +212,7 @@ export default function AssessmentCards() {
       if (res.ok) {
         const updated = { ...targetProfile, assessments: updatedAssess };
         if (isTeacher && activeStudentId) setActiveStudentProfile(updated);
-        else setActiveStudentProfile(updated);
+        else setAuthProfile(updated);
         Alert.alert('Saved', 'Assessment answers updated.');
       }
     } catch (e) {
@@ -338,7 +338,7 @@ export default function AssessmentCards() {
             </View>
 
             <View style={styles.buttonCol}>
-              <GemButton gemType="emerald" onPress={proceedFromPeer1Name}>
+              <GemButton gemType="silver" onPress={proceedFromPeer1Name}>
                 <Text style={styles.btnText}>START ASSESSMENT</Text>
               </GemButton>
             </View>
@@ -380,7 +380,7 @@ export default function AssessmentCards() {
             </View>
 
             <View style={styles.buttonCol}>
-              <GemButton gemType="emerald" onPress={proceedFromPeer2Name}>
+              <GemButton gemType="silver" onPress={proceedFromPeer2Name}>
                 <Text style={styles.btnText}>START ASSESSMENT</Text>
               </GemButton>
             </View>
@@ -517,7 +517,7 @@ export default function AssessmentCards() {
         return (
           <GemCutCard style={styles.formContainer} contentStyle={{ padding: 20 }}>
             <View style={styles.successIconBox}>
-              <Ionicons name="checkmark-circle" size={80} color={gems.emerald} />
+              <Ionicons name="checkmark-circle" size={80} color={gems.silver} />
             </View>
             <Text style={[styles.sectionTitle, { color: theme.text, textAlign: 'center' }]}>Completed!</Text>
             <Text style={[styles.sectionDesc, { color: theme.secondaryText, textAlign: 'center', marginBottom: 30 }]}>
@@ -547,8 +547,8 @@ export default function AssessmentCards() {
             <Text style={[styles.title, { color: theme.text }]}>SOCIAL-EMOTIONAL CARDS</Text>
             <Text style={[styles.subtitle, { color: theme.secondaryText }]}>✨ Part A3 Assessment ✨</Text>
           </View>
-          <SoundButton onPress={() => handleSave()} style={[styles.backBtn, { borderColor: gems.topaz + '80' }]}>
-            <Ionicons name="cloud-upload-outline" size={20} color={gems.topaz} />
+          <SoundButton onPress={() => handleSave()} style={[styles.backBtn, { borderColor: gems.silver + '80' }]}>
+            <Ionicons name="cloud-upload-outline" size={20} color={gems.silver} />
           </SoundButton>
         </View>
 
@@ -582,14 +582,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '300',
     letterSpacing: 2,
-    fontFamily: 'Jost_300Light',
+    fontFamily: 'Inter_400Regular',
   },
   subtitle: {
     fontSize: 9,
     letterSpacing: 1,
     marginTop: 2,
     textTransform: 'uppercase',
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
   },
   scrollContent: {
     flexGrow: 1,
@@ -607,12 +607,12 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '700',
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     marginBottom: 8,
   },
   sectionDesc: {
     fontSize: 13,
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
     marginBottom: 24,
     lineHeight: 18,
   },
@@ -625,7 +625,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     textTransform: 'uppercase',
     marginBottom: 6,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
   textInput: {
     borderWidth: 1.5,
@@ -633,7 +633,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     fontSize: 14,
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
     minHeight: 48,
     backgroundColor: 'rgba(255, 255, 255, 0.04)',
   },
@@ -652,7 +652,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     letterSpacing: 1.5,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     textAlign: 'center',
   },
   resourcesGrid: {

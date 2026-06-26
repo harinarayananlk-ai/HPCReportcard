@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import {
     View, StyleSheet, TextInput, Text, ScrollView,
     StatusBar, TouchableOpacity, Dimensions, Platform, Alert, Pressable,
@@ -399,7 +399,7 @@ const AutoSaveToast = ({ isSaving, hasError, theme }) => {
 export default function SelectionPage() {
     const router = useRouter();
     const { theme } = useTheme();
-    const { user, profile, activeStudentId, activeStudentProfile, setActiveStudentProfile } = useAuth();
+    const { user, profile, setProfile: setAuthProfile, activeStudentId, activeStudentProfile, setActiveStudentProfile } = useAuth();
     const targetUserId = activeStudentId || user?.id;
     const targetProfile = activeStudentProfile || profile;
     const isStudent = user?.role === 'student';
@@ -605,73 +605,123 @@ export default function SelectionPage() {
         }
     }, [activeData.matrix2]);
 
+    const isDirty = useRef(false);
+    const domainsDataRef = useRef(domainsData);
+    const currentDomainIndexRef = useRef(currentDomainIndex);
+
+    // Keep refs up-to-date
+    useEffect(() => {
+        domainsDataRef.current = domainsData;
+    }, [domainsData]);
+
+    useEffect(() => {
+        currentDomainIndexRef.current = currentDomainIndex;
+    }, [currentDomainIndex]);
+
+    // Mark dirty when domainsData changes (ignore initial load)
+    useEffect(() => {
+        if (!isLoading) {
+            isDirty.current = true;
+        }
+    }, [domainsData]);
+
+    // ── Immediate Save Function ──
+    const saveProfileImmediate = useCallback(async () => {
+        if (!isDirty.current || !targetUserId) return;
+        isDirty.current = false;
+
+        const currentDomainsData = domainsDataRef.current;
+        const currentIdx = currentDomainIndexRef.current;
+        const currentDomName = domains[currentIdx];
+        const currentActiveData = currentDomainsData[currentDomName] || createInitialDomainState();
+
+        try {
+            const currentAssess = typeof targetProfile?.assessments === 'string'
+                ? JSON.parse(targetProfile.assessments) : (targetProfile?.assessments || {});
+
+            const updatedAssess = {
+                ...currentAssess,
+                domainsData: currentDomainsData,
+                domain: currentDomName,
+                goal: currentActiveData.goals,
+                competency: currentActiveData.competencies,
+                activities: currentActiveData.activities,
+                rubricTable: currentActiveData.matrix1,
+                teacherFeedback: currentActiveData.teacherFeedback,
+                selfPeer: {
+                    selfLiked: currentActiveData.selfLiked,
+                    selfEasy: currentActiveData.selfEasy,
+                    selfNeeded: currentActiveData.selfNeeded,
+                    peerLiked: currentActiveData.peerLiked,
+                    peerEasy: currentActiveData.peerEasy,
+                    peerNeeded: currentActiveData.peerNeeded
+                },
+                parentObservation: {
+                    resources: currentActiveData.parentResources,
+                    remarks: currentActiveData.parentRemarks
+                }
+            };
+
+            const res = await fetch(`${API_URL}/students/profile`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: targetUserId,
+                    registrationNumber: targetProfile?.registration_number,
+                    role: user?.role || 'student',
+                    assessments: updatedAssess
+                })
+            });
+
+            if (res.ok) {
+                const updatedProfile = { ...targetProfile, assessments: updatedAssess };
+                if (activeStudentId) {
+                    setActiveStudentProfile(updatedProfile);
+                } else {
+                    setAuthProfile(updatedProfile);
+                }
+            } else {
+                setHasError(true);
+            }
+        } catch (err) {
+            setHasError(true);
+        }
+    }, [targetUserId, targetProfile, activeStudentId, user?.role, setActiveStudentProfile, setAuthProfile]);
+
     // ── Auto-Save Logic (1.5s Debounce) ──
     useEffect(() => {
-        if (!targetUserId || isLoading) return;
+        if (!targetUserId || isLoading || !isDirty.current) return;
 
         setIsSaving(true);
         setHasError(false);
 
         const timer = setTimeout(async () => {
-            try {
-                const currentAssess = typeof targetProfile?.assessments === 'string'
-                    ? JSON.parse(targetProfile.assessments) : (targetProfile?.assessments || {});
-
-                const updatedAssess = {
-                    ...currentAssess,
-                    domainsData: domainsData,
-                    // Legacy compatibility values mirrored for PDF rendering
-                    domain: currentDomainName,
-                    goal: activeData.goals,
-                    competency: activeData.competencies,
-                    activities: activeData.activities,
-                    rubricTable: activeData.matrix1,
-                    teacherFeedback: activeData.teacherFeedback,
-                    selfPeer: {
-                        selfLiked: activeData.selfLiked,
-                        selfEasy: activeData.selfEasy,
-                        selfNeeded: activeData.selfNeeded,
-                        peerLiked: activeData.peerLiked,
-                        peerEasy: activeData.peerEasy,
-                        peerNeeded: activeData.peerNeeded
-                    },
-                    parentObservation: {
-                        resources: activeData.parentResources,
-                        remarks: activeData.parentRemarks
-                    }
-                };
-
-                const res = await fetch(`${API_URL}/students/profile`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        userId: targetUserId,
-                        registrationNumber: targetProfile?.registration_number,
-                        role: user?.role || 'student',
-                        assessments: updatedAssess
-                    })
-                });
-
-                if (res.ok) {
-                    if (activeStudentId) {
-                        setActiveStudentProfile({ ...targetProfile, assessments: updatedAssess });
-                    }
-                } else {
-                    setHasError(true);
-                }
-            } catch (err) {
-                setHasError(true);
-            } finally {
-                setIsSaving(false);
-            }
+            await saveProfileImmediate();
+            setIsSaving(false);
         }, 1500);
 
         return () => clearTimeout(timer);
-    }, [domainsData, currentDomainIndex]);
+    }, [domainsData, isLoading, targetUserId, saveProfileImmediate]);
+
+    // Flush unsaved changes immediately on unmount
+    useEffect(() => {
+        return () => {
+            if (isDirty.current) {
+                saveProfileImmediate();
+            }
+        };
+    }, [saveProfileImmediate]);
 
     // ── 3D Cube Spin Transition ──
-    const handleDomainChange = (nextIndex) => {
+    const handleDomainChange = async (nextIndex) => {
         if (nextIndex === currentDomainIndex || isTransitioning) return;
+
+        // Save immediately before domain transition
+        if (isDirty.current) {
+            setIsSaving(true);
+            await saveProfileImmediate();
+            setIsSaving(false);
+        }
 
         setTransitionNextIndex(nextIndex);
         setIsTransitioning(true);
@@ -778,7 +828,13 @@ export default function SelectionPage() {
     };
 
     // ── Next / Finish click handler ──
-    const handleNextButton = () => {
+    const handleNextButton = async () => {
+        if (isDirty.current) {
+            setIsSaving(true);
+            await saveProfileImmediate();
+            setIsSaving(false);
+        }
+
         if (currentDomainIndex < 5) {
             handleDomainChange(currentDomainIndex + 1);
         } else {
@@ -807,7 +863,7 @@ export default function SelectionPage() {
 
     return (
         <View style={{ flex: 1, backgroundColor: pageBgColor }}>
-            <PremiumBackground gemColor={gems.amethyst} />
+            <PremiumBackground gemColor={gems.sapphire} />
             <StatusBar translucent barStyle={theme.isDark ? "light-content" : "dark-content"} backgroundColor="transparent" />
 
             <SafeAreaView style={{ flex: 1 }} edges={['bottom', 'left', 'right']}>
@@ -1111,8 +1167,8 @@ export default function SelectionPage() {
                                         <Text style={[styles.headerTitles, { color: theme.isDark ? '#9966CC' : '#6A1B9A' }]}>ABILITY</Text>
                                     </View>
                                     <View style={[styles.headerCellBase, { width: '24%', backgroundColor: theme.isDark ? '#222' : '#FFFFFF', borderRightColor: theme.isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)' }]}><AnimatedWaves color={activeData.matrix1Level === 'river' ? gems.sapphire : theme.text} active={activeData.matrix1Level === 'river'} /></View>
-                                    <View style={[styles.headerCellBase, { width: '24%', backgroundColor: theme.isDark ? '#222' : '#FFFFFF', borderRightColor: theme.isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)' }]}><AnimatedMountain color={activeData.matrix1Level === 'mountain' ? gems.emerald : theme.text} active={activeData.matrix1Level === 'mountain'} /></View>
-                                    <View style={[styles.headerCellBase, { width: '24%', borderRightWidth: 0, backgroundColor: theme.isDark ? '#222' : '#FFFFFF' }]}><AnimatedSky color={activeData.matrix1Level === 'sky' ? gems.topaz : theme.text} active={activeData.matrix1Level === 'sky'} /></View>
+                                    <View style={[styles.headerCellBase, { width: '24%', backgroundColor: theme.isDark ? '#222' : '#FFFFFF', borderRightColor: theme.isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)' }]}><AnimatedMountain color={activeData.matrix1Level === 'mountain' ? gems.silver : theme.text} active={activeData.matrix1Level === 'mountain'} /></View>
+                                    <View style={[styles.headerCellBase, { width: '24%', borderRightWidth: 0, backgroundColor: theme.isDark ? '#222' : '#FFFFFF' }]}><AnimatedSky color={activeData.matrix1Level === 'sky' ? gems.sapphire : theme.text} active={activeData.matrix1Level === 'sky'} /></View>
                                 </View>
                                 {["AWARENESS", "SENSITIVITY", "CREATIVITY"].map((rowLabel, rIdx) => {
                                     const activeCol = (activeData.matrix1[`${rIdx}-0`]?.trim()) ? 0 : (activeData.matrix1[`${rIdx}-1`]?.trim()) ? 1 : (activeData.matrix1[`${rIdx}-2`]?.trim()) ? 2 : -1;
@@ -1187,8 +1243,8 @@ export default function SelectionPage() {
                                         <Text style={[styles.headerTitles, { color: theme.isDark ? '#9966CC' : '#6A1B9A' }]}>ABILITY</Text>
                                     </View>
                                     <View style={[styles.headerCellBase, { width: '24%', backgroundColor: theme.isDark ? '#222' : '#FFFFFF', borderRightColor: theme.isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)' }]}><AnimatedWaves color={activeData.matrix2Level === 'river' ? gems.sapphire : theme.text} active={activeData.matrix2Level === 'river'} /></View>
-                                    <View style={[styles.headerCellBase, { width: '24%', backgroundColor: theme.isDark ? '#222' : '#FFFFFF', borderRightColor: theme.isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)' }]}><AnimatedMountain color={activeData.matrix2Level === 'mountain' ? gems.emerald : theme.text} active={activeData.matrix2Level === 'mountain'} /></View>
-                                    <View style={[styles.headerCellBase, { width: '24%', borderRightWidth: 0, backgroundColor: theme.isDark ? '#222' : '#FFFFFF' }]}><AnimatedSky color={activeData.matrix2Level === 'sky' ? gems.topaz : theme.text} active={activeData.matrix2Level === 'sky'} /></View>
+                                    <View style={[styles.headerCellBase, { width: '24%', backgroundColor: theme.isDark ? '#222' : '#FFFFFF', borderRightColor: theme.isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)' }]}><AnimatedMountain color={activeData.matrix2Level === 'mountain' ? gems.silver : theme.text} active={activeData.matrix2Level === 'mountain'} /></View>
+                                    <View style={[styles.headerCellBase, { width: '24%', borderRightWidth: 0, backgroundColor: theme.isDark ? '#222' : '#FFFFFF' }]}><AnimatedSky color={activeData.matrix2Level === 'sky' ? gems.sapphire : theme.text} active={activeData.matrix2Level === 'sky'} /></View>
                                 </View>
                                 {["AWARENESS", "SENSITIVITY", "CREATIVITY"].map((rowLabel, rIdx) => {
                                     const activeCol = (activeData.matrix2[`${rIdx}-0`]?.trim()) ? 0 : (activeData.matrix2[`${rIdx}-1`]?.trim()) ? 1 : (activeData.matrix2[`${rIdx}-2`]?.trim()) ? 2 : -1;
@@ -1435,7 +1491,7 @@ export default function SelectionPage() {
                                 )}
 
                                 <GemButton
-                                    gemType="teal"
+                                    gemType="silver"
                                     onPress={handleNextButton}
                                     disabled={isSaving}
                                     width={currentDomainIndex > 0 ? 180 : 220}
@@ -1479,7 +1535,7 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: '800',
         letterSpacing: 1.5,
-        fontFamily: 'Jost_600SemiBold',
+        fontFamily: 'Outfit_600SemiBold',
         textTransform: 'uppercase'
     },
     progressBarWrapper: {
@@ -1531,7 +1587,7 @@ const styles = StyleSheet.create({
     },
     progressNodeText: {
         fontSize: 10,
-        fontFamily: 'Jost_600SemiBold'
+        fontFamily: 'Outfit_600SemiBold'
     },
     megaScroll: {
         flex: 1,
@@ -1553,7 +1609,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '800',
         letterSpacing: 2,
-        fontFamily: 'Jost_600SemiBold'
+        fontFamily: 'Outfit_600SemiBold'
     },
     domainHeaderDivider: {
         height: 1,
@@ -1575,7 +1631,7 @@ const styles = StyleSheet.create({
         fontWeight: '800',
         letterSpacing: 1.5,
         textTransform: 'uppercase',
-        fontFamily: 'Jost_600SemiBold'
+        fontFamily: 'Outfit_600SemiBold'
     },
     infoButton: {
         width: 18,
@@ -1612,7 +1668,7 @@ const styles = StyleSheet.create({
     tooltipText: {
         fontSize: 11,
         lineHeight: 16,
-        fontFamily: 'Jost_400Regular'
+        fontFamily: 'Inter_400Regular'
     },
     glassCard: {
         marginBottom: 16
@@ -1655,7 +1711,7 @@ const styles = StyleSheet.create({
         fontSize: 13,
         fontWeight: '600',
         lineHeight: 18,
-        fontFamily: 'Jost_400Regular'
+        fontFamily: 'Inter_400Regular'
     },
     competencyRevealContainer: {
         marginTop: 15,
@@ -1690,19 +1746,19 @@ const styles = StyleSheet.create({
     competencyChipText: {
         fontSize: 11,
         lineHeight: 15,
-        fontFamily: 'Jost_400Regular'
+        fontFamily: 'Inter_400Regular'
     },
     textAreaInput: {
         minHeight: 100,
         fontSize: 13,
         lineHeight: 18,
-        fontFamily: 'Jost_400Regular'
+        fontFamily: 'Inter_400Regular'
     },
     feedbackTextAreaInput: {
         minHeight: 110,
         fontSize: 13,
         lineHeight: 18,
-        fontFamily: 'Jost_400Regular'
+        fontFamily: 'Inter_400Regular'
     },
     feedbackContainerCard: {
         marginBottom: 16
@@ -1741,7 +1797,7 @@ const styles = StyleSheet.create({
         fontWeight: '800',
         letterSpacing: 1.5,
         textTransform: 'uppercase',
-        fontFamily: 'Jost_600SemiBold'
+        fontFamily: 'Outfit_600SemiBold'
     },
     captionBadge: {
         marginTop: 10,
@@ -1814,7 +1870,7 @@ const styles = StyleSheet.create({
         textAlignVertical: 'top',
         textAlign: 'center',
         padding: 4,
-        fontFamily: 'Jost_400Regular'
+        fontFamily: 'Inter_400Regular'
     },
     subCardHeader: {
         fontSize: 12,
@@ -1822,14 +1878,14 @@ const styles = StyleSheet.create({
         letterSpacing: 1,
         textTransform: 'uppercase',
         marginBottom: 12,
-        fontFamily: 'Jost_600SemiBold'
+        fontFamily: 'Outfit_600SemiBold'
     },
     questionHeaderLabel: {
         fontSize: 11,
         fontWeight: '600',
         marginBottom: 8,
         marginTop: 15,
-        fontFamily: 'Jost_400Regular'
+        fontFamily: 'Inter_400Regular'
     },
     emojiRow: {
         flexDirection: 'row',
@@ -1908,7 +1964,7 @@ const styles = StyleSheet.create({
     checkboxLabelText: {
         fontSize: 10,
         fontWeight: '600',
-        fontFamily: 'Jost_400Regular'
+        fontFamily: 'Inter_400Regular'
     },
     bottomNavButtonsWrapper: {
         flexDirection: 'row',

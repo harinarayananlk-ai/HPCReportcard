@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 18,
-        fontFamily: 'Outfit-Bold',
+        fontFamily: 'Outfit_600SemiBold',
     },
     scroll: {
         padding: 20,
@@ -85,12 +85,12 @@ const styles = StyleSheet.create({
     },
     itemTitle: {
         fontSize: 16,
-        fontFamily: 'Outfit-Bold',
+        fontFamily: 'Outfit_600SemiBold',
         marginBottom: 4,
     },
     itemText: {
         fontSize: 15,
         lineHeight: 22,
-        fontFamily: 'Outfit-Regular',
+        fontFamily: 'Inter_400Regular',
     }
 });

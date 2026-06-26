@@ -88,7 +88,7 @@ export default function Settings() {
                           <View style={[styles.colorSquare, { backgroundColor: availableThemes[key].background, borderColor: availableThemes[key].border }]} />
                           <Text style={[
                             styles.pickerButtonText,
-                            theme.name === availableThemes[key].name && { color: accentColor, fontFamily: "Jost_600SemiBold" }
+                            theme.name === availableThemes[key].name && { color: accentColor, fontFamily: "Outfit_600SemiBold" }
                           ]}>
                             {availableThemes[key].name.toUpperCase()}
                           </Text>
@@ -136,12 +136,12 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
   backText: {
     color: theme.text,
     fontSize: 20,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
   },
   headerTitle: {
     color: theme.text,
     fontSize: 14,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
     letterSpacing: 3,
   },
   scrollContent: {
@@ -172,7 +172,7 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
   settingLabel: {
     color: theme.text,
     fontSize: 14,
-    fontFamily: "Jost_400Regular",
+    fontFamily: "Inter_400Regular",
     letterSpacing: 1,
   },
   rowRight: {
@@ -183,14 +183,14 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     color: theme.secondaryText,
     fontSize: 10,
     marginRight: 8,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
     letterSpacing: 1,
     opacity: 0.6,
   },
   chevron: {
     color: theme.secondaryText,
     fontSize: 20,
-    fontFamily: "Jost_300Light",
+    fontFamily: "Inter_400Regular",
     transform: [{ rotate: "0deg" }],
     opacity: 0.5,
   },
@@ -220,7 +220,7 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
   pickerButtonText: {
     color: theme.secondaryText,
     fontSize: 11,
-    fontFamily: "Jost_400Regular",
+    fontFamily: "Inter_400Regular",
     letterSpacing: 1,
   },
   logoutButton: {
@@ -235,7 +235,7 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
   logoutText: {
     color: theme.error,
     fontSize: 11,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
     letterSpacing: 3,
   },
 });

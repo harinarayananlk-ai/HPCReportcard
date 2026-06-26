@@ -61,7 +61,7 @@ export default function StudentHomepage() {
   const [reports, setReports] = useState([]);
   const [showPassword, setShowPassword] = useState(false);
   const styles = getStyles(theme);
-  const accentColor = gems.moonstone;
+  const accentColor = gems.sapphire;
 
   const targetUserId = activeStudentId || user?.id;
 
@@ -112,7 +112,7 @@ export default function StudentHomepage() {
             styles.header, 
             { 
               backgroundColor: theme.isDark ? "rgba(40, 40, 45, 0.7)" : "rgba(255, 255, 255, 0.7)",
-              borderColor: gems.topaz + '40'
+              borderColor: gems.silver + '40'
             }
           ]}
         >
@@ -121,11 +121,11 @@ export default function StudentHomepage() {
               <Text style={styles.greeting}>✨ Hello ✨</Text>
               <Text style={styles.userName}>{profile?.full_name || user?.username || "Adventurer"}</Text>
             </View>
-            <View style={[styles.avatar, { borderColor: gems.topaz }]}>
+            <View style={[styles.avatar, { borderColor: gems.silver }]}>
                <Text style={styles.avatarText}>{(profile?.full_name || user?.username || "S")[0].toUpperCase()}</Text>
             </View>
           </View>
-          <Sparkle style={{ top: 20, right: 80 }} color={gems.topaz} />
+          <Sparkle style={{ top: 20, right: 80 }} color={gems.silver} />
 
           {/* Premium Basic Details Card */}
           <GemCutCard 
@@ -331,23 +331,23 @@ const getStyles = (theme) => StyleSheet.create({
   },
   greeting: {
     fontSize: 10,
-    color: gems.emerald,
+    color: gems.silver,
     fontWeight: "900",
     letterSpacing: 2,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
   },
   userName: {
     fontSize: 24,
     fontWeight: "300",
     color: theme.text,
     marginTop: 4,
-    fontFamily: "Jost_300Light",
+    fontFamily: "Inter_400Regular",
   },
   avatar: {
     width: 48,
     height: 48,
     borderRadius: 14,
-    backgroundColor: gems.emerald,
+    backgroundColor: gems.silver,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 2,
@@ -357,7 +357,7 @@ const getStyles = (theme) => StyleSheet.create({
     color: theme.buttonText,
     fontSize: 20,
     fontWeight: "600",
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
   },
   detailsCard: {
     marginTop: 12,
@@ -365,10 +365,10 @@ const getStyles = (theme) => StyleSheet.create({
   detailsTitle: {
     fontSize: 10,
     fontWeight: "900",
-    color: gems.moonstone,
+    color: gems.sapphire,
     letterSpacing: 2,
     marginBottom: 16,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
   },
   detailsGrid: {
     flexDirection: "row",
@@ -385,13 +385,13 @@ const getStyles = (theme) => StyleSheet.create({
     color: theme.secondaryText,
     letterSpacing: 1,
     marginBottom: 4,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
     textTransform: "uppercase",
   },
   detailVal: {
     fontSize: 13,
     fontWeight: "400",
-    fontFamily: "Jost_400Regular",
+    fontFamily: "Inter_400Regular",
   },
   passwordRow: {
     flexDirection: "row",
@@ -411,7 +411,7 @@ const getStyles = (theme) => StyleSheet.create({
     textTransform: "uppercase",
     letterSpacing: 2,
     marginBottom: 20,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
   },
   actionList: {
     gap: 12,
@@ -438,13 +438,13 @@ const getStyles = (theme) => StyleSheet.create({
     fontSize: 15,
     fontWeight: "600",
     color: "#222",
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
   },
   actionDesc: {
     fontSize: 11,
     color: theme.secondaryText,
     marginTop: 2,
-    fontFamily: "Jost_300Light",
+    fontFamily: "Inter_400Regular",
   },
   historySection: {
     marginTop: 40,
@@ -473,13 +473,13 @@ const getStyles = (theme) => StyleSheet.create({
     fontWeight: "600",
     color: theme.text,
     letterSpacing: 1,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
   },
   historyTerm: {
     fontSize: 10,
     color: theme.secondaryText,
     marginTop: 2,
-    fontFamily: "Jost_300Light",
+    fontFamily: "Inter_400Regular",
   },
   viewBadge: {
     paddingHorizontal: 12,
@@ -491,7 +491,7 @@ const getStyles = (theme) => StyleSheet.create({
     fontSize: 9,
     fontWeight: "600",
     letterSpacing: 1,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
   },
   emptyCard: {
     padding: 40,
@@ -507,7 +507,7 @@ const getStyles = (theme) => StyleSheet.create({
     fontSize: 12,
     marginTop: 12,
     fontWeight: "300",
-    fontFamily: "Jost_300Light",
+    fontFamily: "Inter_400Regular",
   },
   monthCard: {
     alignItems: "center",
@@ -515,17 +515,17 @@ const getStyles = (theme) => StyleSheet.create({
   monthLabel: {
     fontSize: 10,
     fontWeight: "600",
-    color: gems.emerald,
+    color: gems.silver,
     marginBottom: 4,
     textTransform: "uppercase",
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
   },
   monthValue: {
     fontSize: 13,
     fontWeight: "600",
     color: theme.text,
     marginBottom: 8,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
   },
   progressContainer: {
     width: "100%",
@@ -543,6 +543,6 @@ const getStyles = (theme) => StyleSheet.create({
     fontSize: 10,
     fontWeight: "300",
     color: theme.secondaryText,
-    fontFamily: "Jost_300Light",
+    fontFamily: "Inter_400Regular",
   },
 });

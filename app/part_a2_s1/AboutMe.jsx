@@ -105,13 +105,32 @@ export default function AboutMe() {
   // Load Initial Data
   useEffect(() => {
     if (targetProfile) {
-      const fd = typeof targetProfile.family_details === 'string'
-        ? JSON.parse(targetProfile.family_details || '{}')
-        : (targetProfile.family_details || {});
-      const a2 = targetProfile.a2_data || fd.a2_foundational || {};
-      const prefs = typeof targetProfile.preferences === 'string'
-        ? JSON.parse(targetProfile.preferences || '{}')
-        : (targetProfile.preferences || {});
+      let fd = {};
+      try {
+        fd = typeof targetProfile.family_details === 'string'
+          ? JSON.parse(targetProfile.family_details || '{}')
+          : (targetProfile.family_details || {});
+      } catch (e) {
+        console.warn("[Foundational AboutMe] family_details parse error:", e);
+      }
+
+      let a2 = {};
+      try {
+        a2 = typeof targetProfile.a2_data === 'string'
+          ? JSON.parse(targetProfile.a2_data || '{}')
+          : (targetProfile.a2_data || fd.a2_foundational || {});
+      } catch (e) {
+        console.warn("[Foundational AboutMe] a2_data parse error:", e);
+      }
+
+      let prefs = {};
+      try {
+        prefs = typeof targetProfile.preferences === 'string'
+          ? JSON.parse(targetProfile.preferences || '{}')
+          : (targetProfile.preferences || {});
+      } catch (e) {
+        console.warn("[Foundational AboutMe] preferences parse error:", e);
+      }
 
       setName(prev => prev || targetProfile.full_name || a2.name || '');
       setAge(prev => prev || targetProfile.age || a2.age || '');
@@ -121,23 +140,24 @@ export default function AboutMe() {
       setFamilyPhoto(prev => prev || a2.familyPhoto || '');
       
       if (a2.friends && Array.isArray(a2.friends)) {
-        setFriends(prev => prev[0] ? prev : a2.friends);
+        setFriends(a2.friends);
+      } else {
+        setFriends(['']);
       }
+
       if (a2.aspiration) {
         setAspiration(prev => prev || a2.aspiration);
       }
 
       const mergedFavs = { ...prefs, ...(a2.favourites || {}) };
-      if (Object.keys(mergedFavs).length > 0) {
-        setFavourites(prev => ({
-          colour: prev.colour || mergedFavs.colour || '',
-          food: prev.food || mergedFavs.food || '',
-          animal: prev.animal || mergedFavs.animal || '',
-          flower: prev.flower || mergedFavs.flower || '',
-          sport: prev.sport || mergedFavs.sport || '',
-          subject: prev.subject || mergedFavs.subject || '',
-        }));
-      }
+      setFavourites({
+        colour: mergedFavs.colour || '',
+        food: mergedFavs.food || '',
+        animal: mergedFavs.animal || '',
+        flower: mergedFavs.flower || '',
+        sport: mergedFavs.sport || '',
+        subject: mergedFavs.subject || '',
+      });
     }
   }, [targetProfile]);
 
@@ -349,12 +369,12 @@ export default function AboutMe() {
   });
 
   const favoriteCards = [
-    { key: 'colour', emoji: '🎨', label: 'Colour', color: gems.ruby },
-    { key: 'food', emoji: '🍕', label: 'Food', color: gems.topaz },
-    { key: 'animal', emoji: '🐱', label: 'Animal', color: gems.emerald },
-    { key: 'flower', emoji: '🌸', label: 'Flower', color: gems.amethyst },
+    { key: 'colour', emoji: '🎨', label: 'Colour', color: gems.sapphire },
+    { key: 'food', emoji: '🍕', label: 'Food', color: gems.sapphire },
+    { key: 'animal', emoji: '🐱', label: 'Animal', color: gems.silver },
+    { key: 'flower', emoji: '🌸', label: 'Flower', color: gems.silver },
     { key: 'sport', emoji: '⚽', label: 'Sport', color: gems.sapphire },
-    { key: 'subject', emoji: '📚', label: 'Subject', color: gems.moonstone },
+    { key: 'subject', emoji: '📚', label: 'Subject', color: gems.sapphire },
   ];
 
   const renderSlideContent = () => {
@@ -478,7 +498,7 @@ export default function AboutMe() {
                 <Text style={[styles.inputLabel, { color: theme.secondaryText }]}>My Best Friends (Max 6)</Text>
                 {friends.length < 6 && (
                   <TouchableOpacity onPress={addFriend} style={styles.addFriendBtn}>
-                    <Ionicons name="add-circle" size={24} color={gems.emerald} />
+                    <Ionicons name="add-circle" size={24} color={gems.silver} />
                   </TouchableOpacity>
                 )}
               </View>
@@ -493,7 +513,7 @@ export default function AboutMe() {
                     onChangeText={(val) => updateFriend(idx, val)}
                   />
                   <TouchableOpacity onPress={() => removeFriend(idx)} style={styles.removeFriendBtn}>
-                    <Ionicons name="trash-outline" size={20} color={gems.ruby} />
+                    <Ionicons name="trash-outline" size={20} color={gems.sapphire} />
                   </TouchableOpacity>
                 </View>
               ))}
@@ -592,8 +612,8 @@ export default function AboutMe() {
             <Text style={[styles.title, { color: theme.text }]}>ME AND MY SURROUNDINGS</Text>
             <Text style={[styles.subtitle, { color: theme.secondaryText }]}>✨ Foundational Stage ✨</Text>
           </View>
-          <SoundButton onPress={handleSave} style={[styles.backBtn, { borderColor: gems.topaz + '80' }]}>
-            <Ionicons name="sparkles" size={20} color={gems.topaz} />
+          <SoundButton onPress={handleSave} style={[styles.backBtn, { borderColor: gems.silver + '80' }]}>
+            <Ionicons name="sparkles" size={20} color={gems.silver} />
           </SoundButton>
         </View>
 
@@ -665,14 +685,14 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '300',
     letterSpacing: 2,
-    fontFamily: 'Jost_300Light',
+    fontFamily: 'Inter_400Regular',
   },
   subtitle: {
     fontSize: 9,
     letterSpacing: 1,
     marginTop: 2,
     textTransform: 'uppercase',
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
   },
   dotsContainer: {
     flexDirection: 'row',
@@ -703,7 +723,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: PAGE_WIDTH,
-    height: '95%',
+    flex: 1,
     backgroundColor: 'transparent',
     overflow: 'visible',
   },
@@ -718,7 +738,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     letterSpacing: 0.5,
     marginBottom: 20,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
   photoDropzone: {
     width: '100%',
@@ -742,7 +762,7 @@ const styles = StyleSheet.create({
   },
   hintText: {
     fontSize: 12,
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
   },
   inputGroup: {
     marginBottom: 16,
@@ -754,7 +774,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     textTransform: 'uppercase',
     marginBottom: 6,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
   textInput: {
     borderWidth: 1.5,
@@ -762,7 +782,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     fontSize: 14,
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
     minHeight: 48,
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
   },
@@ -832,12 +852,12 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     textTransform: 'uppercase',
     marginBottom: 4,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
   favValueText: {
     fontSize: 13,
     fontWeight: '500',
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
   },
   actionRow: {
     flexDirection: 'column',
@@ -853,7 +873,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '700',
     letterSpacing: 1.5,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     textAlign: 'center',
   },
 });

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import {
     View, StyleSheet, TextInput, Text, ScrollView,
     StatusBar, TouchableOpacity, Dimensions, Platform, Alert, Pressable,
@@ -687,7 +687,7 @@ const CubeFace = ({ title, activeIcon, rotationY, rotateX, translateZ, textOpaci
 export default function SelectionPage() {
     const router = useRouter();
     const { theme } = useTheme();
-    const { user, profile, activeStudentId, activeStudentProfile, setActiveStudentProfile } = useAuth();
+    const { user, profile, setProfile: setAuthProfile, activeStudentId, activeStudentProfile, setActiveStudentProfile } = useAuth();
     const targetUserId = activeStudentId || user?.id;
     const targetProfile = activeStudentProfile || profile;
     const isStudent = user?.role === 'student';
@@ -932,55 +932,104 @@ export default function SelectionPage() {
         };
     }, [activeData.studentProgress, activeData.peerProgress, calculatedTeacherScores]);
 
+    const isDirty = useRef(false);
+    const domainsDataRef = useRef(domainsData);
+    const currentSlideIndexRef = useRef(currentSlideIndex);
+
+    // Keep refs up-to-date
+    useEffect(() => {
+        domainsDataRef.current = domainsData;
+    }, [domainsData]);
+
+    useEffect(() => {
+        currentSlideIndexRef.current = currentSlideIndex;
+    }, [currentSlideIndex]);
+
+    // Mark dirty when domainsData changes (ignore initial load)
+    useEffect(() => {
+        if (!isLoading) {
+            isDirty.current = true;
+        }
+    }, [domainsData]);
+
+    // ── Immediate Save Function ──
+    const saveProfileImmediate = useCallback(async () => {
+        if (!isDirty.current || !targetUserId) return;
+        isDirty.current = false;
+
+        const currentDomainsData = domainsDataRef.current;
+        const currentSlideIdx = currentSlideIndexRef.current;
+
+        try {
+            const currentAssess = typeof targetProfile?.assessments === 'string'
+                ? JSON.parse(targetProfile.assessments) : (targetProfile?.assessments || {});
+
+            const updatedAssess = {
+                ...currentAssess,
+                domainsData: currentDomainsData,
+                currentSlideIndex: currentSlideIdx
+            };
+
+            const res = await fetch(`${API_URL}/students/profile`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: targetUserId,
+                    registrationNumber: targetProfile?.registration_number,
+                    role: user?.role || 'student',
+                    assessments: updatedAssess
+                })
+            });
+
+            if (res.ok) {
+                const updatedProfile = { ...targetProfile, assessments: updatedAssess };
+                if (activeStudentId) {
+                    setActiveStudentProfile(updatedProfile);
+                } else {
+                    setAuthProfile(updatedProfile);
+                }
+            } else {
+                setHasError(true);
+            }
+        } catch (err) {
+            setHasError(true);
+        }
+    }, [targetUserId, targetProfile, activeStudentId, user?.role, setActiveStudentProfile, setAuthProfile]);
+
     // ── Auto-Save Logic (1.5s Debounce) ──
     useEffect(() => {
-        if (!targetUserId || isLoading) return;
+        if (!targetUserId || isLoading || !isDirty.current) return;
 
         setIsSaving(true);
         setHasError(false);
 
         const timer = setTimeout(async () => {
-            try {
-                const currentAssess = typeof targetProfile?.assessments === 'string'
-                    ? JSON.parse(targetProfile.assessments) : (targetProfile?.assessments || {});
-
-                const updatedAssess = {
-                    ...currentAssess,
-                    domainsData: domainsData,
-                    currentSlideIndex: currentSlideIndex
-                };
-
-                const res = await fetch(`${API_URL}/students/profile`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        userId: targetUserId,
-                        registrationNumber: targetProfile?.registration_number,
-                        role: user?.role || 'student',
-                        assessments: updatedAssess
-                    })
-                });
-
-                if (res.ok) {
-                    if (activeStudentId) {
-                        setActiveStudentProfile({ ...targetProfile, assessments: updatedAssess });
-                    }
-                } else {
-                    setHasError(true);
-                }
-            } catch (_err) {
-                setHasError(true);
-            } finally {
-                setIsSaving(false);
-            }
+            await saveProfileImmediate();
+            setIsSaving(false);
         }, 1500);
 
         return () => clearTimeout(timer);
-    }, [domainsData, currentSlideIndex]);
+    }, [domainsData, isLoading, targetUserId, saveProfileImmediate]);
+
+    // Flush unsaved changes immediately on unmount
+    useEffect(() => {
+        return () => {
+            if (isDirty.current) {
+                saveProfileImmediate();
+            }
+        };
+    }, [saveProfileImmediate]);
 
     // ── 3D Cube Spin Transition ──
-    const handleDomainChange = (nextIndex) => {
+    const handleDomainChange = async (nextIndex) => {
         if (nextIndex === currentSlideIndex || isTransitioning) return;
+
+        // Save immediately before domain transition
+        if (isDirty.current) {
+            setIsSaving(true);
+            await saveProfileImmediate();
+            setIsSaving(false);
+        }
 
         setTransitionNextIndex(nextIndex);
         setIsTransitioning(true);
@@ -1122,7 +1171,14 @@ export default function SelectionPage() {
         updateActiveField(section, currentGridObj);
     };
 
-    const handleNextButton = () => {
+    // ── Next / Finish click handler ──
+    const handleNextButton = async () => {
+        if (isDirty.current) {
+            setIsSaving(true);
+            await saveProfileImmediate();
+            setIsSaving(false);
+        }
+
         if (currentSlideIndex < 13) {
             handleDomainChange(currentSlideIndex + 1);
         } else {
@@ -1910,7 +1966,7 @@ export default function SelectionPage() {
                                 theme={theme}
                             />
                             <GemCutCard style={styles.glassCard} contentStyle={{ padding: 16 }}>
-                                <Text style={[styles.cardSubLabel, { color: theme.secondaryText }]}>Teacher's Observations and Recommendations:</Text>
+                                <Text style={[styles.cardSubLabel, { color: theme.secondaryText }]}>{"Teacher's Observations and Recommendations:"}</Text>
                                 <TextInput
                                     style={[styles.textAreaInput, { color: theme.text, minHeight: 80, borderBottomWidth: 1, borderBottomColor: theme.isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)' }]}
                                     multiline
@@ -1971,7 +2027,7 @@ export default function SelectionPage() {
                                 )}
 
                                 <GemButton
-                                    gemType="blue"
+                                    gemType="sapphire"
                                     onPress={handleNextButton}
                                     disabled={isSaving}
                                     width={currentSlideIndex > 0 ? 180 : 220}
@@ -2014,7 +2070,7 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: '800',
         letterSpacing: 1.5,
-        fontFamily: 'Jost_600SemiBold',
+        fontFamily: 'Outfit_600SemiBold',
         textTransform: 'uppercase'
     },
     progressBarWrapper: {
@@ -2066,7 +2122,7 @@ const styles = StyleSheet.create({
     },
     progressNodeText: {
         fontSize: 10,
-        fontFamily: 'Jost_600SemiBold'
+        fontFamily: 'Outfit_600SemiBold'
     },
     megaScroll: {
         flex: 1,
@@ -2088,7 +2144,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: '800',
         letterSpacing: 2,
-        fontFamily: 'Jost_600SemiBold'
+        fontFamily: 'Outfit_600SemiBold'
     },
     domainHeaderDivider: {
         height: 1,
@@ -2119,7 +2175,7 @@ const styles = StyleSheet.create({
         fontWeight: '800',
         letterSpacing: 1.5,
         textTransform: 'uppercase',
-        fontFamily: 'Jost_600SemiBold'
+        fontFamily: 'Outfit_600SemiBold'
     },
     infoButton: {
         width: 18,
@@ -2156,7 +2212,7 @@ const styles = StyleSheet.create({
     tooltipText: {
         fontSize: 11,
         lineHeight: 16,
-        fontFamily: 'Jost_400Regular'
+        fontFamily: 'Inter_400Regular'
     },
     glassCard: {
         marginBottom: 16
@@ -2195,7 +2251,7 @@ const styles = StyleSheet.create({
         fontSize: 13,
         fontWeight: '600',
         lineHeight: 18,
-        fontFamily: 'Jost_400Regular'
+        fontFamily: 'Inter_400Regular'
     },
     competencyRevealContainer: {
         marginTop: 15,
@@ -2230,7 +2286,7 @@ const styles = StyleSheet.create({
     competencyChipText: {
         fontSize: 11,
         lineHeight: 15,
-        fontFamily: 'Jost_400Regular'
+        fontFamily: 'Inter_400Regular'
     },
     cardSubLabel: {
         fontSize: 11,
@@ -2256,14 +2312,14 @@ const styles = StyleSheet.create({
     },
     approachChipText: {
         fontSize: 11,
-        fontFamily: 'Jost_400Regular'
+        fontFamily: 'Inter_400Regular'
     },
     underlinedTextInput: {
         borderBottomWidth: 1.5,
         borderBottomColor: 'rgba(0, 85, 255, 0.3)',
         paddingVertical: 6,
         fontSize: 13,
-        fontFamily: 'Jost_400Regular'
+        fontFamily: 'Inter_400Regular'
     },
     timeInputsRow: {
         flexDirection: 'row',
@@ -2302,7 +2358,7 @@ const styles = StyleSheet.create({
         fontWeight: '800',
         letterSpacing: 1.5,
         textTransform: 'uppercase',
-        fontFamily: 'Jost_600SemiBold'
+        fontFamily: 'Outfit_600SemiBold'
     },
     captionBadge: {
         marginTop: 10,
@@ -2357,13 +2413,13 @@ const styles = StyleSheet.create({
         textAlignVertical: 'top',
         textAlign: 'center',
         padding: 4,
-        fontFamily: 'Jost_400Regular'
+        fontFamily: 'Inter_400Regular'
     },
     questionHeaderLabel: {
         fontSize: 11,
         fontWeight: '600',
         marginBottom: 8,
-        fontFamily: 'Jost_400Regular'
+        fontFamily: 'Inter_400Regular'
     },
     emojiRow: {
         flexDirection: 'row',
@@ -2420,20 +2476,20 @@ const styles = StyleSheet.create({
     },
     stmtChipText: {
         fontSize: 11,
-        fontFamily: 'Jost_400Regular',
+        fontFamily: 'Inter_400Regular',
         flex: 1
     },
     promptLabel: {
         fontSize: 11,
         fontWeight: '600',
         marginBottom: 4,
-        fontFamily: 'Jost_400Regular'
+        fontFamily: 'Inter_400Regular'
     },
     glowingUnderlinedInput: {
         borderBottomWidth: 1.5,
         paddingVertical: 4,
         fontSize: 13,
-        fontFamily: 'Jost_400Regular'
+        fontFamily: 'Inter_400Regular'
     },
     wheelCardTitle: {
         fontSize: 12,
@@ -2516,7 +2572,7 @@ const styles = StyleSheet.create({
     },
     strengthChipText: {
         fontSize: 10,
-        fontFamily: 'Jost_400Regular'
+        fontFamily: 'Inter_400Regular'
     },
     bottomNavButtonsWrapper: {
         flexDirection: 'row',

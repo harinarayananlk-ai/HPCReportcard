@@ -21,31 +21,19 @@ const GEM_PALETTES = {
         bottom2: '#041530', right1: '#0D4499', right2: '#061C40',
         glow: '#4A90E2', sparkle: '#B8D4F8',
     },
-    emerald: {
-        center: '#10A858', top1: '#FFFFFF', top2: '#A0F0C0',
-        left1: '#D0F8E0', left2: '#40D880', bottom1: '#086830',
-        bottom2: '#043018', right1: '#0C8848', right2: '#064820',
-        glow: '#2ECC71', sparkle: '#A8F0C8',
-    },
-    topaz: {
-        center: '#C8962E', top1: '#FFFFFF', top2: '#FFD780',
-        left1: '#FFF0C0', left2: '#E8A830', bottom1: '#8C6A18',
-        bottom2: '#4A3408', right1: '#A07820', right2: '#604010',
-        glow: '#D4AF37', sparkle: '#FFE8A0',
-    },
-    ruby: {
-        center: '#C01030', top1: '#FFFFFF', top2: '#FF8090',
-        left1: '#FFD0D8', left2: '#E83050', bottom1: '#801020',
-        bottom2: '#400810', right1: '#A01828', right2: '#600C18',
-        glow: '#E74C3C', sparkle: '#FFA0A0',
-    },
-    pearl: {
+    silver: {
         center: '#D8D4D0', top1: '#FFFFFF', top2: '#F0EDE8',
         left1: '#FAFAF8', left2: '#E8E4E0', bottom1: '#B0ACA8',
         bottom2: '#888480', right1: '#C8C4C0', right2: '#A0A098',
         glow: '#E5E4E2', sparkle: '#FFFFFF',
     },
 };
+
+// Aliases for backward compatibility
+GEM_PALETTES.pearl = GEM_PALETTES.silver;
+GEM_PALETTES.emerald = GEM_PALETTES.silver;
+GEM_PALETTES.topaz = GEM_PALETTES.sapphire;
+GEM_PALETTES.ruby = GEM_PALETTES.sapphire;
 
 export default function GemAccent({ gemType = 'sapphire', size = 24, style }) {
     const p = GEM_PALETTES[gemType] || GEM_PALETTES.sapphire;

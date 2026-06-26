@@ -25,12 +25,14 @@ const gemAspectRatios = {
 // Legacy gemType mapping → new image keys
 const gemTypeMap = {
   sapphire: 'sapphire',
-  emerald: 'teal',
-  jade: 'teal',
-  topaz: 'silver',
-  citrine: 'silver',
-  aquamarine: 'ice',
-  onyx: 'onyx',
+  emerald: 'silver',
+  jade: 'silver',
+  topaz: 'sapphire',
+  citrine: 'sapphire',
+  aquamarine: 'sapphire',
+  onyx: 'sapphire',
+  silver: 'silver',
+  teal: 'silver',
 };
 
 export default function GemButton({ children, onPress, style, disabled, gemType, goldOutline, width }) {

@@ -253,8 +253,8 @@ export default function LayoutBuilder() {
               <Text style={[styles.headerTitle, { color: theme.text }]}>ME AND MY SURROUNDINGS</Text>
               <Text style={[styles.headerSubtitle, { color: theme.secondaryText }]}>✨ Middle & Secondary ✨</Text>
             </View>
-            <SoundButton onPress={handleSave} style={[styles.backBtn, { borderColor: gems.topaz + '80' }]}>
-              <Ionicons name="cloud-upload-outline" size={20} color={gems.topaz} />
+            <SoundButton onPress={handleSave} style={[styles.backBtn, { borderColor: gems.silver + '80' }]}>
+              <Ionicons name="cloud-upload-outline" size={20} color={gems.silver} />
             </SoundButton>
           </View>
 
@@ -370,7 +370,7 @@ export default function LayoutBuilder() {
             <SectionCard title="5. My Learnings" icon="book-outline" theme={theme}>
               <View style={{ flexDirection: 'row', gap: 16 }}>
                 <View style={{ flex: 1 }}>
-                  <Text style={[styles.subLabel, { color: gems.topaz }]}>At School</Text>
+                  <Text style={[styles.subLabel, { color: gems.sapphire }]}>At School</Text>
                   {schoolLearnings.map((item, i) => (
                     <TextInput
                       key={`school-${i}`}
@@ -383,7 +383,7 @@ export default function LayoutBuilder() {
                   ))}
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={[styles.subLabel, { color: gems.topaz }]}>Outside School</Text>
+                  <Text style={[styles.subLabel, { color: gems.sapphire }]}>Outside School</Text>
                   {outsideLearnings.map((item, i) => (
                     <TextInput
                       key={`outside-${i}`}
@@ -442,7 +442,7 @@ export default function LayoutBuilder() {
           <BlurView intensity={80} tint={theme.isDark ? "dark" : "light"} style={StyleSheet.absoluteFill}>
             <View style={styles.maintenanceOverlay}>
               <View style={[styles.maintenanceCard, { backgroundColor: theme.card, borderColor: theme.border }]}>
-                <Ionicons name="construct-outline" size={60} color={gems.topaz} />
+                <Ionicons name="construct-outline" size={60} color={gems.silver} />
                 <Text style={[styles.maintenanceTitle, { color: theme.text }]}>UNDER MAINTENANCE</Text>
                 <Text style={[styles.maintenanceText, { color: theme.secondaryText }]}>
                   The Secondary Stage (Grades 9-12) report card layout is currently undergoing updates. Please check back later!
@@ -483,13 +483,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "300",
     letterSpacing: 2,
-    fontFamily: "Jost_300Light",
+    fontFamily: "Inter_400Regular",
   },
   headerSubtitle: {
     fontSize: 10,
     fontWeight: "300",
     opacity: 0.8,
-    fontFamily: "Jost_300Light",
+    fontFamily: "Inter_400Regular",
     marginTop: 2,
   },
   scroll: {
@@ -518,7 +518,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
     letterSpacing: 0.5,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
   divider: {
     height: 1,
@@ -553,7 +553,7 @@ const styles = StyleSheet.create({
   },
   sentenceText: {
     fontSize: 14,
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
   },
   inlineInput: {
     flex: 1,
@@ -565,7 +565,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     textTransform: 'uppercase',
     marginBottom: 6,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
   dropdownContainer: {
     marginBottom: 12,
@@ -600,14 +600,14 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     textTransform: 'uppercase',
     marginBottom: 10,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
   learningInput: {
     borderBottomWidth: 1.5,
     paddingVertical: 6,
     paddingHorizontal: 4,
     fontSize: 13,
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
     marginBottom: 12,
   },
   blueUnderline: {
@@ -634,7 +634,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     letterSpacing: 1.5,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     textAlign: 'center',
   },
   maintenanceOverlay: {
@@ -661,12 +661,12 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
     marginTop: 16,
     marginBottom: 10,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
   maintenanceText: {
     fontSize: 13,
     lineHeight: 18,
     textAlign: 'center',
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
   },
 });

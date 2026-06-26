@@ -94,7 +94,7 @@ export default function AccordionStepper({ steps, activeStep, onStepChange }) {
                   
                   {index < steps.length - 1 && (
                     <GemButton
-                      gemType="emerald"
+                      gemType="silver"
                       width={120}
                       onPress={() => onStepChange(index + 1)}
                       style={styles.nextBtn}
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
   circleText: {
     fontSize: 12,
     fontWeight: '700',
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
   line: {
     width: 2,
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
     letterSpacing: 0.5,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
   stepBody: {
     marginTop: 8,
@@ -220,6 +220,6 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '700',
     letterSpacing: 1.5,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
 });

@@ -13,7 +13,7 @@ import GemButton from '../../components/GemButton';
 const { width: W } = Dimensions.get('window');
 
 export default function SelfPeerAssessmentPage() {
-    const { user, profile, activeStudentId, activeStudentProfile, setActiveStudentProfile } = useAuth();
+    const { user, profile, setProfile: setAuthProfile, activeStudentId, activeStudentProfile, setActiveStudentProfile } = useAuth();
     const { theme } = useTheme();
     const router = useRouter();
     const styles = getStyles(theme);
@@ -125,8 +125,12 @@ export default function SelfPeerAssessmentPage() {
                     })
                 });
 
-                if (res.ok && activeStudentId) {
-                    setActiveStudentProfile({ ...targetProfile, assessments: updatedAssess });
+                if (res.ok) {
+                    if (activeStudentId) {
+                        setActiveStudentProfile({ ...targetProfile, assessments: updatedAssess });
+                    } else {
+                        setAuthProfile({ ...targetProfile, assessments: updatedAssess });
+                    }
                 }
             } catch (err) {
                 console.error("[SelfPeerAssessmentPage] Save error:", err);
@@ -248,7 +252,7 @@ export default function SelfPeerAssessmentPage() {
                 </Animated.View>
 
                 <GemButton
-                    gemType="silver"
+                    gemType="sapphire"
                     onPress={handleNext}
                     disabled={isSyncing}
                     width={180}

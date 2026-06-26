@@ -9,12 +9,26 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useFonts, Jost_300Light, Jost_400Regular, Jost_600SemiBold } from '@expo-google-fonts/jost';
+import { Outfit_300Light, Outfit_400Regular, Outfit_500Medium, Outfit_600SemiBold, Outfit_700Bold } from '@expo-google-fonts/outfit';
+import { Inter_300Light, Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold } from '@expo-google-fonts/inter';
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     Jost_300Light,
     Jost_400Regular,
     Jost_600SemiBold,
+    Outfit_300Light,
+    Outfit_400Regular,
+    Outfit_500Medium,
+    Outfit_600SemiBold,
+    Outfit_700Bold,
+    Inter_300Light,
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    Inter_700Bold,
+    'Outfit-Bold': Outfit_700Bold,
+    'Outfit-Regular': Outfit_400Regular,
   });
   const [appReady, setAppReady] = useState(false);
 

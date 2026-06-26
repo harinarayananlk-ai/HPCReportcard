@@ -12,7 +12,7 @@ import { Image } from 'expo-image';
 import GemButton from '../../components/GemButton';
 
 export default function ParentObservationPage() {
-    const { user, profile, activeStudentId, activeStudentProfile, setActiveStudentProfile } = useAuth();
+    const { user, profile, setProfile: setAuthProfile, activeStudentId, activeStudentProfile, setActiveStudentProfile } = useAuth();
     const { theme } = useTheme();
     const router = useRouter();
     const styles = getStyles(theme);
@@ -99,8 +99,12 @@ export default function ParentObservationPage() {
                     })
                 });
 
-                if (res.ok && activeStudentId) {
-                    setActiveStudentProfile({ ...targetProfile, assessments: updatedAssess });
+                if (res.ok) {
+                    if (activeStudentId) {
+                        setActiveStudentProfile({ ...targetProfile, assessments: updatedAssess });
+                    } else {
+                        setAuthProfile({ ...targetProfile, assessments: updatedAssess });
+                    }
                 }
                 Alert.alert("Success", "Parent observation saved!");
             } catch (err) {
@@ -170,7 +174,7 @@ export default function ParentObservationPage() {
                 </Animated.View>
 
                 <GemButton
-                    gemType="silver"
+                    gemType="sapphire"
                     onPress={handleFinish}
                     disabled={isSyncing}
                     width={180}

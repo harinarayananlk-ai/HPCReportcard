@@ -107,8 +107,8 @@ const TableInput = ({ value, onChange, editable = true, theme, styles }) => (
 export default function UnifiedRubric() {
     const router = useRouter();
     const { theme } = useTheme();
-    const { user, profile, activeStudentId, activeStudentProfile, setActiveStudentProfile } = useAuth();
-    const accentColor = gems.citrine;
+    const { user, profile, setProfile: setAuthProfile, activeStudentId, activeStudentProfile, setActiveStudentProfile } = useAuth();
+    const accentColor = gems.sapphire;
     const styles = getStyles(theme, accentColor);
 
     const targetUserId = activeStudentId || user?.id;
@@ -293,8 +293,12 @@ export default function UnifiedRubric() {
                     })
                 });
 
-                if (res.ok && activeStudentId) {
-                    setActiveStudentProfile({ ...targetProfile, assessments: updatedAssess });
+                if (res.ok) {
+                    if (activeStudentId) {
+                        setActiveStudentProfile({ ...targetProfile, assessments: updatedAssess });
+                    } else {
+                        setAuthProfile({ ...targetProfile, assessments: updatedAssess });
+                    }
                 }
             } catch (err) {
                 Alert.alert("Error", "Failed to sync assessment data.");
@@ -492,7 +496,7 @@ export default function UnifiedRubric() {
                     </Animated.View>
 
                     <GemButton 
-                        gemType="citrine"
+                        gemType="sapphire"
                         style={{marginTop: 30}}
                         onPress={handleFinish}
                         disabled={isLoading}
@@ -512,24 +516,24 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     scrollContent: { padding: 20 },
     header: { flexDirection: 'row', alignItems: 'center', paddingVertical: 15 },
     backBtn: { width: 44, height: 44, justifyContent: 'center' },
-    headerTitle: { color: theme.text, fontSize: 18, fontWeight: '300', letterSpacing: 2, textTransform: 'uppercase', fontFamily: "Jost_300Light" },
-    headerSub: { color: accentColor, fontSize: 10, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 1, fontFamily: "Jost_600SemiBold" },
+    headerTitle: { color: theme.text, fontSize: 18, fontWeight: '300', letterSpacing: 2, textTransform: 'uppercase', fontFamily: "Inter_400Regular" },
+    headerSub: { color: accentColor, fontSize: 10, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 1, fontFamily: "Outfit_600SemiBold" },
     animatedCardContainer: { overflow: 'visible' },
-    sectionLabel: { color: accentColor, fontSize: 11, fontWeight: '600', letterSpacing: 1, marginBottom: 15, fontFamily: "Jost_600SemiBold" },
+    sectionLabel: { color: accentColor, fontSize: 11, fontWeight: '600', letterSpacing: 1, marginBottom: 15, fontFamily: "Outfit_600SemiBold" },
     fieldBlock: { marginBottom: 20 },
-    fieldLabel: { color: theme.secondaryText, fontSize: 10, fontWeight: '300', marginBottom: 10, letterSpacing: 0.5, fontFamily: "Jost_300Light" },
+    fieldLabel: { color: theme.secondaryText, fontSize: 10, fontWeight: '300', marginBottom: 10, letterSpacing: 0.5, fontFamily: "Inter_400Regular" },
     labelRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-    textArea: { backgroundColor: 'transparent', color: theme.text, fontSize: 13, minHeight: 80, textAlignVertical: 'top', borderBottomWidth: StyleSheet.hairlineWidth, borderColor: accentColor + '80', fontFamily: "Jost_400Regular" },
-    note: { fontSize: 10, color: theme.muted, marginBottom: 15, fontStyle: 'italic', fontFamily: "Jost_300Light" },
+    textArea: { backgroundColor: 'transparent', color: theme.text, fontSize: 13, minHeight: 80, textAlignVertical: 'top', borderBottomWidth: StyleSheet.hairlineWidth, borderColor: accentColor + '80', fontFamily: "Inter_400Regular" },
+    note: { fontSize: 10, color: theme.muted, marginBottom: 15, fontStyle: 'italic', fontFamily: "Inter_400Regular" },
     table: { borderWidth: 1, borderRadius: 16, overflow: 'hidden', borderColor: theme.border },
     row: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: theme.border, minHeight: 80 },
     headerCellBase: { backgroundColor: theme.background, justifyContent: 'center', alignItems: 'center', borderRightWidth: 1, borderRightColor: theme.border, padding: 5 },
     cellBase: { justifyContent: 'center', borderRightWidth: 1, borderRightColor: theme.border, backgroundColor: theme.surface },
-    headerTitles: { fontSize: 8, fontWeight: '600', color: theme.secondaryText, textAlign: 'center', fontFamily: "Jost_600SemiBold" },
+    headerTitles: { fontSize: 8, fontWeight: '600', color: theme.secondaryText, textAlign: 'center', fontFamily: "Outfit_600SemiBold" },
     iconContainer: { alignItems: 'center', gap: 2 },
-    iconText: { fontSize: 7, fontWeight: '300', fontFamily: "Jost_300Light" },
+    iconText: { fontSize: 7, fontWeight: '300', fontFamily: "Inter_400Regular" },
     sideHeader: { alignItems: 'center', gap: 4 },
-    sideIconText: { fontSize: 7, fontWeight: '300', color: theme.secondaryText, fontFamily: "Jost_300Light" },
-    inputCell: { flex: 1, fontSize: 11, textAlign: 'center', padding: 4, fontFamily: "Jost_400Regular" },
-    finishBtnText: { color: theme.buttonText, fontWeight: '600', letterSpacing: 2, fontSize: 12, fontFamily: "Jost_600SemiBold" }
+    sideIconText: { fontSize: 7, fontWeight: '300', color: theme.secondaryText, fontFamily: "Inter_400Regular" },
+    inputCell: { flex: 1, fontSize: 11, textAlign: 'center', padding: 4, fontFamily: "Inter_400Regular" },
+    finishBtnText: { color: theme.buttonText, fontWeight: '600', letterSpacing: 2, fontSize: 12, fontFamily: "Outfit_600SemiBold" }
 });

@@ -85,7 +85,7 @@ const IMAGE_SOURCES = {
 };
 
 export default function TeacherFeedbackPage() {
-    const { user, profile, activeStudentId, activeStudentProfile, setActiveStudentProfile } = useAuth();
+    const { user, profile, setProfile: setAuthProfile, activeStudentId, activeStudentProfile, setActiveStudentProfile } = useAuth();
     const { theme } = useTheme();
     const router = useRouter();
     const styles = getStyles(theme);
@@ -173,8 +173,12 @@ export default function TeacherFeedbackPage() {
                     })
                 });
 
-                if (res.ok && activeStudentId) {
-                    setActiveStudentProfile({ ...targetProfile, assessments: updatedAssess });
+                if (res.ok) {
+                    if (activeStudentId) {
+                        setActiveStudentProfile({ ...targetProfile, assessments: updatedAssess });
+                    } else {
+                        setAuthProfile({ ...targetProfile, assessments: updatedAssess });
+                    }
                 }
             } catch (err) {
                 console.error("[TeacherFeedbackPage] Save error:", err);
@@ -232,12 +236,12 @@ export default function TeacherFeedbackPage() {
                             </View>
                             <View style={[styles.headerCellBase, { width: '24%' }]}>
                                 <TouchableOpacity onPress={() => setActiveLevel('mountain')} style={styles.headerTouchable}>
-                                    <AnimatedMountain color={activeLevel === 'mountain' ? gems.emerald : theme.text} styles={styles} active={activeLevel === 'mountain'} />
+                                    <AnimatedMountain color={activeLevel === 'mountain' ? gems.silver : theme.text} styles={styles} active={activeLevel === 'mountain'} />
                                 </TouchableOpacity>
                             </View>
                             <View style={[styles.headerCellBase, { width: '24%', borderRightWidth: 0 }]}>
                                 <TouchableOpacity onPress={() => setActiveLevel('sky')} style={styles.headerTouchable}>
-                                    <AnimatedSky color={activeLevel === 'sky' ? gems.topaz : theme.text} styles={styles} active={activeLevel === 'sky'} />
+                                    <AnimatedSky color={activeLevel === 'sky' ? gems.sapphire : theme.text} styles={styles} active={activeLevel === 'sky'} />
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -312,7 +316,7 @@ export default function TeacherFeedbackPage() {
                 </Animated.View>
 
                 <GemButton
-                    gemType="silver"
+                    gemType="sapphire"
                     onPress={handleNext}
                     disabled={isSyncing}
                     width={180}
@@ -339,7 +343,7 @@ const getStyles = (theme) => StyleSheet.create({
     container: { flex: 1 },
     header: { flexDirection: 'row', alignItems: 'center', padding: 20, paddingTop: 40 },
     backBtn: { padding: 10, marginRight: 10 },
-    title: { fontSize: 18, fontWeight: '800', color: theme.text, fontFamily: 'Jost_600SemiBold', letterSpacing: 1 },
+    title: { fontSize: 18, fontWeight: '800', color: theme.text, fontFamily: 'Outfit_600SemiBold', letterSpacing: 1 },
     scrollContent: { padding: 15 },
     sectionLabel: { 
         fontSize: 10, fontWeight: '800', color: theme.primary, 
@@ -423,7 +427,7 @@ const getStyles = (theme) => StyleSheet.create({
         color: theme.text, 
         fontSize: 14, 
         minHeight: 180,
-        fontFamily: "Jost_400Regular"
+        fontFamily: "Inter_400Regular"
     },
 
     // ── Button ──────────────────────────────────────────────────────────

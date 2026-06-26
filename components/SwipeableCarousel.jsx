@@ -78,7 +78,7 @@ export default function SwipeableCarousel({ slides, currentIndex, onSlideChange 
             style={[
               styles.dot,
               currentIndex === index
-                ? { backgroundColor: gems.topaz, width: 20 }
+                ? { backgroundColor: gems.sapphire, width: 20 }
                 : { backgroundColor: 'rgba(0, 0, 0, 0.15)' },
             ]}
           />

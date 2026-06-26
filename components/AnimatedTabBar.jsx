@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 12,
     letterSpacing: 1,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     textTransform: 'uppercase',
   },
 });

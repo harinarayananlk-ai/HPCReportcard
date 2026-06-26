@@ -27,7 +27,7 @@ export default function TeacherHome() {
     { title: "Manage Class", icon: "≡", path: "/TeacherTracking", primary: false },
   ];
 
-  const accentColor = gems.jade;
+  const accentColor = gems.sapphire;
   const styles = getStyles(theme, accentColor);
 
   return (
@@ -125,7 +125,7 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     fontWeight: "600",
     letterSpacing: 2,
     textTransform: "uppercase",
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
   },
   teacherName: {
     fontSize: 24,
@@ -133,7 +133,7 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     color: theme.text,
     letterSpacing: 2,
     marginTop: 4,
-    fontFamily: "Jost_300Light",
+    fontFamily: "Inter_400Regular",
   },
   avatarContainer: {
     position: "relative",
@@ -152,7 +152,7 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     color: theme.text,
     fontWeight: "600",
     fontSize: 18,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
   },
   editBadge: {
     position: "absolute",
@@ -179,7 +179,7 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     letterSpacing: 1.5,
     marginBottom: 20,
     marginLeft: 4,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
   },
   grid: {
     flexDirection: "row",
@@ -207,7 +207,7 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     color: theme.text,
     textTransform: "uppercase",
     letterSpacing: 1,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
   },
   primaryBoxTitle: {
     color: accentColor,
@@ -225,6 +225,6 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     fontWeight: "300",
     textTransform: "uppercase",
     letterSpacing: 1,
-    fontFamily: "Jost_300Light",
+    fontFamily: "Inter_400Regular",
   },
 });

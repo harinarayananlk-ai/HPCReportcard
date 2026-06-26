@@ -92,15 +92,13 @@ export default function GemCutCard({
   // Uniform center table fill color
   const tableFillColor = theme.isDark ? 'rgba(26, 26, 26, 0.92)' : 'rgba(255, 255, 255, 0.92)';
 
-  // Cross-platform pointer interaction bindings
+  const flattenedStyle = StyleSheet.flatten(style) || {};
+  const isFlex = flattenedStyle.flex !== undefined;
+
   const webPointerEvents = Platform.OS === 'web' ? {
     onMouseMove: handlePointerMove,
     onMouseLeave: handlePointerLeave,
-  } : {
-    onStartShouldSetResponder: () => true,
-    onResponderMove: handlePointerMove,
-    onResponderRelease: handlePointerLeave,
-  };
+  } : {};
 
   return (
     <View 
@@ -246,7 +244,12 @@ export default function GemCutCard({
           />
         </Svg>
       )}
-      <View style={[styles.contentWrapper, { padding: activeInset + 8 }, contentStyle]}>
+      <View style={[
+        styles.contentWrapper, 
+        isFlex && { flex: 1 }, 
+        { padding: activeInset + 8 }, 
+        contentStyle
+      ]}>
         {children}
       </View>
     </View>
@@ -262,5 +265,6 @@ const styles = StyleSheet.create({
   },
   contentWrapper: {
     width: '100%',
+    zIndex: 10, // Ensure inputs and scrollable content are drawn on top of the background SVG
   }
 });

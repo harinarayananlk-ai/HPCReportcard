@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInUp, FadeOut } from 'react-native-reanimated';
 import { useTheme } from '../context/GlobalContext';
 import { gems } from '../colour_themes';
 import { Ionicons } from '@expo/vector-icons';
 import GemCutCard from './GemCutCard';
+import SoundButton from './SoundButton';
 
 export default function TimelineNode({
   title,
@@ -22,16 +23,16 @@ export default function TimelineNode({
       {/* Left Timeline Spine & Bullet */}
       <View style={styles.spineContainer}>
         <LinearGradient
-          colors={[gems.topaz + '40', gems.topaz, gems.topaz + '40']}
+          colors={[gems.sapphire + '40', gems.sapphire, gems.sapphire + '40']}
           style={styles.spine}
         />
         <View
           style={[
             styles.bullet,
             {
-              backgroundColor: isComplete ? gems.emerald : theme.border,
-              borderColor: isComplete ? gems.emerald : theme.border,
-              shadowColor: isComplete ? gems.emerald : 'transparent',
+              backgroundColor: isComplete ? gems.silver : theme.border,
+              borderColor: isComplete ? gems.silver : theme.border,
+              shadowColor: isComplete ? gems.silver : 'transparent',
             },
           ]}
         >
@@ -43,10 +44,10 @@ export default function TimelineNode({
       <View style={styles.rightContent}>
         {/* Header (Touchable) */}
         <GemCutCard
-          borderColor={isExpanded ? gems.topaz : theme.border}
+          borderColor={isExpanded ? gems.sapphire : theme.border}
           contentStyle={{ padding: 0 }}
         >
-          <TouchableOpacity
+          <SoundButton
             onPress={onToggle}
             activeOpacity={0.7}
             style={styles.header}
@@ -56,7 +57,7 @@ export default function TimelineNode({
                 <Ionicons
                   name={icon}
                   size={18}
-                  color={isComplete ? gems.emerald : gems.topaz}
+                  color={isComplete ? gems.silver : gems.sapphire}
                   style={styles.headerIcon}
                 />
               )}
@@ -67,7 +68,7 @@ export default function TimelineNode({
               size={16}
               color={theme.secondaryText}
             />
-          </TouchableOpacity>
+          </SoundButton>
         </GemCutCard>
 
         {/* Expandable Body */}
@@ -145,6 +146,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
     letterSpacing: 0.5,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
 });

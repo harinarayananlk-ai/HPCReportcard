@@ -157,13 +157,13 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "300",
     letterSpacing: 2,
-    fontFamily: "Jost_300Light",
+    fontFamily: "Inter_400Regular",
   },
   subtitle: {
     fontSize: 12,
     marginTop: 8,
     lineHeight: 20,
-    fontFamily: "Jost_300Light",
+    fontFamily: "Inter_400Regular",
     textTransform: "uppercase",
     letterSpacing: 1,
   },
@@ -187,14 +187,14 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 18,
     fontWeight: "600",
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
     marginBottom: 12,
     textAlign: "center",
   },
   cardDesc: {
     fontSize: 13,
     lineHeight: 22,
-    fontFamily: "Jost_300Light",
+    fontFamily: "Inter_400Regular",
     textAlign: "center",
     marginBottom: 20,
   },
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   badgeText: {
     fontSize: 10,
     fontWeight: "600",
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
   },
   footer: {
     position: "absolute",
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
     letterSpacing: 3,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
   },
   backBtn: {
     marginTop: 24,

@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 10,
     fontSize: 14,
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
     textAlignVertical: 'top',
   },
 });

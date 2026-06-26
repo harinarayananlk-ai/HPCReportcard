@@ -62,7 +62,7 @@ const OPTIONS = [
 
 export default function ParentFeedback() {
   const { theme } = useTheme();
-  const { user, profile, activeStudentId, activeStudentProfile, setActiveStudentProfile } = useAuth();
+  const { user, profile, setProfile: setAuthProfile, activeStudentId, activeStudentProfile, setActiveStudentProfile } = useAuth();
   const router = useRouter();
 
   const isTeacher = user?.role === 'teacher' || user?.role === 'superadmin';
@@ -86,14 +86,19 @@ export default function ParentFeedback() {
   // Load Saved Data
   useEffect(() => {
     if (targetProfile) {
-      const assess = typeof targetProfile.assessments === 'string'
-        ? JSON.parse(targetProfile.assessments || '{}')
-        : (targetProfile.assessments || {});
+      let assess = {};
+      try {
+        assess = typeof targetProfile.assessments === 'string'
+          ? JSON.parse(targetProfile.assessments || '{}')
+          : (targetProfile.assessments || {});
+      } catch (e) {
+        console.warn("[ParentFeedback] assessments parse error:", e);
+      }
       const a4 = assess.a4_s3 || {};
 
-      if (a4.resources) setResources(a4.resources);
-      if (a4.surveyAnswers) setSurveyAnswers(a4.surveyAnswers);
-      if (a4.focusAreas) setFocusAreas(a4.focusAreas);
+      setResources(a4.resources || []);
+      setSurveyAnswers(a4.surveyAnswers || {});
+      setFocusAreas(a4.focusAreas || []);
       setOtherSupportText(a4.otherSupportText || '');
       setSupportText(a4.supportText || '');
     }
@@ -103,9 +108,14 @@ export default function ParentFeedback() {
     if (!targetUserId) return;
     setLoading(true);
     try {
-      const currentAssess = typeof targetProfile?.assessments === 'string'
-        ? JSON.parse(targetProfile.assessments || '{}')
-        : (targetProfile?.assessments || {});
+      let currentAssess = {};
+      try {
+        currentAssess = typeof targetProfile?.assessments === 'string'
+          ? JSON.parse(targetProfile.assessments || '{}')
+          : (targetProfile?.assessments || {});
+      } catch (e) {
+        console.warn("[ParentFeedback] assessments parse error in save:", e);
+      }
 
       const a4_s3 = finalAssess || {
         resources,
@@ -124,13 +134,14 @@ export default function ParentFeedback() {
           userId: targetUserId,
           registrationNumber: targetProfile?.registration_number,
           assessments: updatedAssess,
+          role: user?.role || 'student',
         }),
       });
 
       if (res.ok) {
         const updated = { ...targetProfile, assessments: updatedAssess };
         if (isTeacher && activeStudentId) setActiveStudentProfile(updated);
-        else setActiveStudentProfile(updated);
+        else setAuthProfile(updated);
         Alert.alert('Saved', 'Parent feedback responses saved!');
       }
     } catch (e) {
@@ -326,8 +337,8 @@ export default function ParentFeedback() {
             <Text style={[styles.title, { color: theme.text }]}>PARENT FEEDBACK</Text>
             <Text style={[styles.subtitle, { color: theme.secondaryText }]}>✨ Part A4 Support ✨</Text>
           </View>
-          <SoundButton onPress={() => handleSave()} style={[styles.backBtn, { borderColor: gems.topaz + '80' }]}>
-            <Ionicons name="cloud-upload-outline" size={20} color={gems.topaz} />
+          <SoundButton onPress={() => handleSave()} style={[styles.backBtn, { borderColor: gems.silver + '80' }]}>
+            <Ionicons name="cloud-upload-outline" size={20} color={gems.silver} />
           </SoundButton>
         </View>
 
@@ -340,7 +351,7 @@ export default function ParentFeedback() {
           />
 
           {/* Scrollable Form Content */}
-          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 60 }}>
+          <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 60 }}>
             {renderTabContent()}
           </ScrollView>
         </View>
@@ -370,14 +381,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '300',
     letterSpacing: 2,
-    fontFamily: 'Jost_300Light',
+    fontFamily: 'Inter_400Regular',
   },
   subtitle: {
     fontSize: 9,
     letterSpacing: 1,
     marginTop: 2,
     textTransform: 'uppercase',
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
   },
   container: {
     flex: 1,
@@ -391,14 +402,14 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 14,
     fontWeight: '700',
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     letterSpacing: 0.5,
     marginBottom: 6,
     textTransform: 'uppercase',
   },
   sectionDesc: {
     fontSize: 12,
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
     lineHeight: 16,
     marginBottom: 16,
   },
@@ -415,7 +426,7 @@ const styles = StyleSheet.create({
   },
   questionText: {
     fontSize: 13,
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
     lineHeight: 18,
   },
   optionsRow: {
@@ -438,7 +449,7 @@ const styles = StyleSheet.create({
   optionText: {
     fontSize: 8,
     fontWeight: '700',
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
   buttonCol: {
     flexDirection: 'column',
@@ -455,7 +466,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
     letterSpacing: 1.5,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     textAlign: 'center',
   },
   label: {
@@ -464,7 +475,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     textTransform: 'uppercase',
     marginBottom: 8,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
   otherInput: {
     borderBottomColor: gems.sapphire,
@@ -472,7 +483,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 8,
     fontSize: 14,
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
     color: '#000000',
   },
   blueUnderline: {

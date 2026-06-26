@@ -1,8 +1,8 @@
 import { useEffect, useRef, useCallback } from 'react';
-import { API_URL } from '../context/GlobalContext';
+import { useAuth, API_URL } from '../context/GlobalContext';
 
 /**
- * useAutoSave — saves form data to backend on page exit.
+ * useAutoSave — saves form data to backend periodically and on page exit.
  * Rule: empty fields NEVER overwrite filled ones (filtered client-side + server-side).
  *
  * @param {number} targetUserId - The user ID to save for
@@ -10,6 +10,7 @@ import { API_URL } from '../context/GlobalContext';
  * @param {object} deps - Dependency values that trigger marking as dirty
  */
 export default function useAutoSave(targetUserId, getPayload, deps = []) {
+    const { activeStudentId, setActiveStudentProfile, setProfile: setAuthProfile } = useAuth();
     const isDirty = useRef(false);
     const payloadRef = useRef(getPayload);
 
@@ -17,11 +18,6 @@ export default function useAutoSave(targetUserId, getPayload, deps = []) {
     useEffect(() => {
         payloadRef.current = getPayload;
     }, [getPayload]);
-
-    // Mark dirty when deps change
-    useEffect(() => {
-        isDirty.current = true;
-    }, deps);
 
     const save = useCallback(async () => {
         if (!isDirty.current || !targetUserId) return;
@@ -56,21 +52,52 @@ export default function useAutoSave(targetUserId, getPayload, deps = []) {
             // Only save if there's something beyond just userId
             if (Object.keys(cleaned).length <= 1) return;
 
-            await fetch(`${API_URL}/students/autosave`, {
+            const res = await fetch(`${API_URL}/students/autosave`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(cleaned),
             });
+
+            if (res.ok) {
+                // Fetch the updated profile from server to keep AuthContext state fresh
+                const profileRes = await fetch(`${API_URL}/students/profile/${targetUserId}`);
+                const updatedData = await profileRes.json();
+                if (updatedData && updatedData.user_id) {
+                    if (activeStudentId) {
+                        setActiveStudentProfile(updatedData);
+                    } else {
+                        setAuthProfile(updatedData);
+                    }
+                }
+            }
         } catch (e) {
             console.warn('[useAutoSave] Save failed:', e);
         }
-    }, [targetUserId]);
+    }, [targetUserId, activeStudentId, setActiveStudentProfile, setAuthProfile]);
 
-    // Save on unmount (page exit)
+    // Mark dirty and trigger debounced save when deps change
     useEffect(() => {
-        return () => { save(); };
+        isDirty.current = true;
+
+        const timer = setTimeout(() => {
+            save();
+        }, 1500);
+
+        return () => {
+            clearTimeout(timer);
+        };
+    }, deps); // eslint-disable-line react-hooks/exhaustive-deps
+
+    // Save immediately on unmount (page exit) if dirty
+    useEffect(() => {
+        return () => {
+            if (isDirty.current) {
+                save();
+            }
+        };
     }, [save]);
 
     // Return manual save trigger
     return { triggerSave: save };
 }
+

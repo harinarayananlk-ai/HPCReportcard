@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, ScrollView, TextInput, StatusBar, Alert, ActivityIndicator, Dimensions } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, ScrollView, TextInput, StatusBar, Alert, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTheme, useAuth, API_URL } from '../../context/GlobalContext';
 import PremiumBackground from '../../components/PremiumBackground';
-import SoundButton from '../../components/SoundButton';
 import MenuDropdown from '../../components/MenuDropdown';
-import Animated, { FadeInDown, useSharedValue, useAnimatedStyle, withTiming, withSpring, interpolate, runOnJS } from 'react-native-reanimated';
+import Animated, { FadeInDown, useSharedValue, useAnimatedStyle, withSpring, interpolate } from 'react-native-reanimated';
 import { Waves, Mountain, Cloud, Eye, Feather, Wand2 } from 'lucide-react-native';
 import { Image } from 'expo-image';
 import { gems } from '../../colour_themes';
-import { Ionicons } from '@expo/vector-icons';
+
+import useAutoSave from '../../hooks/useAutoSave';
 
 const IMAGE_SOURCES = {
     none: require('../../assets/images/visily-image-removebg-preview.png'),
@@ -19,13 +19,43 @@ const IMAGE_SOURCES = {
     sky: require('../../assets/images/ChatGPT_Image_May_11__2026__02_55_58_PM-removebg-preview.png'),
 };
 
-const DOMAINS = [
+const S1_DOMAINS = [
     { key: 'd1', title: 'Physical Development', icon: '🏃', accent: gems.sapphire },
-    { key: 'd2', title: 'Socio-Emotional', icon: '💛', accent: gems.topaz },
-    { key: 'd3', title: 'Cognitive', icon: '🧠', accent: gems.emerald },
+    { key: 'd2', title: 'Socio-Emotional', icon: '💛', accent: gems.sapphire },
+    { key: 'd3', title: 'Cognitive', icon: '🧠', accent: gems.silver },
     { key: 'd4', title: 'Language & Literacy', icon: '📖', accent: gems.sapphire },
-    { key: 'd5', title: 'Aesthetic & Cultural', icon: '🎨', accent: gems.ruby },
-    { key: 'd6', title: 'Positive Learning Habits', icon: '🌟', accent: gems.topaz },
+    { key: 'd5', title: 'Aesthetic & Cultural', icon: '🎨', accent: gems.sapphire },
+    { key: 'd6', title: 'Positive Learning Habits', icon: '🌟', accent: gems.sapphire },
+];
+
+const S2_DOMAINS = [
+    { key: 's2_lang1', title: 'Language Education (Language 1 - R1)', icon: '📖', accent: gems.sapphire },
+    { key: 's2_lang2', title: 'Language Education (Language 2 - R2)', icon: '💬', accent: gems.sapphire },
+    { key: 's2_math', title: 'Mathematics', icon: '🧮', accent: gems.silver },
+    { key: 's2_world', title: 'The World Around Us', icon: '🌍', accent: gems.sapphire },
+    { key: 's2_art_visual', title: 'Art Education (Visual Arts)', icon: '🎨', accent: gems.sapphire },
+    { key: 's2_art_theatre', title: 'Art Education (Theatre)', icon: '🎭', accent: gems.sapphire },
+    { key: 's2_art_music', title: 'Art Education (Music)', icon: '🎵', accent: gems.silver },
+    { key: 's2_art_dance', title: 'Art Education (Dance & Movement)', icon: '💃', accent: gems.sapphire },
+    { key: 's2_phys_ls1', title: 'Physical Education (Learning Standard 1)', icon: '🏃', accent: gems.sapphire },
+    { key: 's2_phys_ls2', title: 'Physical Education (Learning Standard 2)', icon: '🤸', accent: gems.sapphire },
+];
+
+const S3_DOMAINS = [
+    { key: 's3_lang1', title: 'Language Education (Language 1 - R1)', icon: '📖', accent: gems.sapphire },
+    { key: 's3_lang2', title: 'Language Education (Language 2 - R2)', icon: '💬', accent: gems.sapphire },
+    { key: 's3_lang3', title: 'Language Education (Language 3 - R3)', icon: '🗣️', accent: gems.silver },
+    { key: 's3_math', title: 'Mathematics', icon: '🧮', accent: gems.sapphire },
+    { key: 's3_science', title: 'Science', icon: '🧪', accent: gems.sapphire },
+    { key: 's3_social', title: 'Social Science', icon: '🌍', accent: gems.sapphire },
+    { key: 's3_art_visual', title: 'Art Education (Visual Arts)', icon: '🎨', accent: gems.silver },
+    { key: 's3_art_theatre', title: 'Art Education (Theatre)', icon: '🎭', accent: gems.sapphire },
+    { key: 's3_art_music', title: 'Art Education (Music)', icon: '🎵', accent: gems.sapphire },
+    { key: 's3_art_dance', title: 'Art Education (Dance & Movement)', icon: '💃', accent: gems.sapphire },
+    { key: 's3_art_ls2', title: 'Art Education (Learning Standard 2)', icon: '🎨', accent: gems.silver },
+    { key: 's3_phys_ls1', title: 'Physical Education (Learning Standard 1)', icon: '🏃', accent: gems.sapphire },
+    { key: 's3_phys_ls2', title: 'Physical Education (Learning Standard 2)', icon: '🤸', accent: gems.sapphire },
+    { key: 's3_vocational', title: 'Vocational/Skill Education', icon: '🛠️', accent: gems.sapphire },
 ];
 
 const EMPTY_MATRIX = { "0-0":"","0-1":"","0-2":"","1-0":"","1-1":"","1-2":"","2-0":"","2-1":"","2-2":"" };
@@ -113,8 +143,8 @@ const FlipCard = ({ domain, matrix, onCellChange, theme, isStudent }) => {
                             <View style={[fcs.hCell, fcs.labelCol, { borderRightColor: theme.border, backgroundColor: theme.isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)' }]} />
                             {[
                                 { icon: <Waves color={gems.sapphire} size={14} />, label: 'STR', color: gems.sapphire, level: 'river' },
-                                { icon: <Mountain color={gems.emerald} size={14} />, label: 'MTN', color: gems.emerald, level: 'mountain' },
-                                { icon: <Cloud color={gems.topaz} size={14} />, label: 'SKY', color: gems.topaz, level: 'sky' },
+                                { icon: <Mountain color={gems.silver} size={14} />, label: 'MTN', color: gems.silver, level: 'mountain' },
+                                { icon: <Cloud color={gems.sapphire} size={14} />, label: 'SKY', color: gems.sapphire, level: 'sky' },
                             ].map((col, ci) => (
                                 <TouchableOpacity
                                     key={ci}
@@ -187,16 +217,16 @@ const fcs = StyleSheet.create({
     frontImage: { width: 90, height: 90 },
     frontInfo: { flex: 1, marginLeft: 16 },
     frontIcon: { fontSize: 28, marginBottom: 4 },
-    frontTitle: { fontSize: 16, fontWeight: '700', fontFamily: 'Jost_600SemiBold', letterSpacing: 0.5 },
-    frontSub: { fontSize: 10, marginTop: 2, letterSpacing: 1, fontFamily: 'Jost_300Light', textTransform: 'uppercase' },
+    frontTitle: { fontSize: 16, fontWeight: '700', fontFamily: 'Outfit_600SemiBold', letterSpacing: 0.5 },
+    frontSub: { fontSize: 10, marginTop: 2, letterSpacing: 1, fontFamily: 'Inter_400Regular', textTransform: 'uppercase' },
     tapBadge: { marginTop: 12, alignSelf: 'flex-start', paddingHorizontal: 14, paddingVertical: 6, borderRadius: 16, borderWidth: 1 },
-    tapText: { fontSize: 9, fontWeight: '700', letterSpacing: 2, fontFamily: 'Jost_600SemiBold' },
+    tapText: { fontSize: 9, fontWeight: '700', letterSpacing: 2, fontFamily: 'Outfit_600SemiBold' },
     // Back
     backContent: { flex: 1, padding: 10, borderRadius: 20, borderWidth: 1 },
     backTop: { flexDirection: 'row', alignItems: 'center', marginBottom: 6, gap: 8 },
     backImage: { width: 44, height: 44 },
     backHeaderRight: { flex: 1 },
-    backTitle: { fontSize: 12, fontWeight: '700', fontFamily: 'Jost_600SemiBold', letterSpacing: 0.5 },
+    backTitle: { fontSize: 12, fontWeight: '700', fontFamily: 'Outfit_600SemiBold', letterSpacing: 0.5 },
     levelHint: { fontSize: 9, fontWeight: '600', letterSpacing: 1, marginTop: 1 },
     closePill: { width: 28, height: 28, borderRadius: 14, justifyContent: 'center', alignItems: 'center' },
     closeText: { fontSize: 14, fontWeight: '300' },
@@ -215,7 +245,7 @@ const fcs = StyleSheet.create({
 // ── Main Page ───────────────────────────────────────────────────────────
 
 export default function YearEndSummary() {
-    const { user, profile, activeStudentId, activeStudentProfile, setActiveStudentProfile } = useAuth();
+    const { user, profile, setProfile: setAuthProfile, activeStudentId, activeStudentProfile, setActiveStudentProfile } = useAuth();
     const { theme } = useTheme();
     const router = useRouter();
     const styles = getStyles(theme);
@@ -227,9 +257,33 @@ export default function YearEndSummary() {
     const [isLoading, setIsLoading] = useState(true);
     const [isSyncing, setIsSyncing] = useState(false);
 
-    const [domainMatrices, setDomainMatrices] = useState({
-        d1: { ...EMPTY_MATRIX }, d2: { ...EMPTY_MATRIX }, d3: { ...EMPTY_MATRIX },
-        d4: { ...EMPTY_MATRIX }, d5: { ...EMPTY_MATRIX }, d6: { ...EMPTY_MATRIX },
+    // Dynamic stage calculation helper
+    const getStudentStage = () => {
+        const className = (targetProfile?.class_name || targetProfile?.class || '').toLowerCase().trim();
+        if (className.includes('grade 3') || className.includes('grade 4') || className.includes('grade 5') || className.includes('class 3') || className.includes('class 4') || className.includes('class 5')) {
+            return 2; // Preparatory
+        } else if (className.includes('grade 6') || className.includes('grade 7') || className.includes('grade 8') || className.includes('class 6') || className.includes('class 7') || className.includes('class 8') || className.includes('middle')) {
+            return 3; // Middle
+        }
+        return 1; // Foundational
+    };
+    
+    const stage = getStudentStage();
+    
+    const getDomainsForStage = (s) => {
+        if (s === 2) return S2_DOMAINS;
+        if (s === 3) return S3_DOMAINS;
+        return S1_DOMAINS;
+    };
+    
+    const currentDomains = getDomainsForStage(stage);
+
+    const [domainMatrices, setDomainMatrices] = useState(() => {
+        const initial = {};
+        S1_DOMAINS.forEach(d => { initial[d.key] = { ...EMPTY_MATRIX }; });
+        S2_DOMAINS.forEach(d => { initial[d.key] = { ...EMPTY_MATRIX }; });
+        S3_DOMAINS.forEach(d => { initial[d.key] = { ...EMPTY_MATRIX }; });
+        return initial;
     });
 
     const handleCellChange = useCallback((domainKey, row, col, text) => {
@@ -238,6 +292,20 @@ export default function YearEndSummary() {
             [domainKey]: { ...prev[domainKey], [`${row}-${col}`]: text }
         }));
     }, []);
+
+    // AutoSave configuration
+    const getPayload = useCallback(() => {
+        const currentAssess = typeof targetProfile?.assessments === 'string'
+            ? JSON.parse(targetProfile.assessments) : (targetProfile?.assessments || {});
+        return {
+            assessments: {
+                ...currentAssess,
+                domainMatricesV2: domainMatrices
+            }
+        };
+    }, [targetProfile, domainMatrices]);
+
+    const { triggerSave } = useAutoSave(targetUserId, getPayload, [domainMatrices]);
 
     useEffect(() => {
         if (targetUserId) {
@@ -273,22 +341,7 @@ export default function YearEndSummary() {
         }
         setIsSyncing(true);
         try {
-            const currentAssess = typeof targetProfile?.assessments === 'string'
-                ? JSON.parse(targetProfile.assessments) : (targetProfile?.assessments || {});
-            const updatedAssess = { ...currentAssess, domainMatricesV2: domainMatrices };
-            const res = await fetch(`${API_URL}/students/profile`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    userId: targetUserId,
-                    registrationNumber: targetProfile?.registration_number,
-                    role: user?.role || 'student',
-                    assessments: updatedAssess
-                })
-            });
-            if (res.ok && activeStudentId) {
-                setActiveStudentProfile({ ...targetProfile, assessments: updatedAssess });
-            }
+            await triggerSave();
             Alert.alert("Saved", "Year-End Summary saved.");
         } catch (err) {
             console.error("[YearEndSummary] Save error:", err);
@@ -313,11 +366,11 @@ export default function YearEndSummary() {
             </View>
 
             <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
-                {DOMAINS.map((domain, idx) => (
+                {currentDomains.map((domain, idx) => (
                     <Animated.View key={domain.key} entering={FadeInDown.delay(100 + idx * 60)}>
                         <FlipCard
                             domain={domain}
-                            matrix={domainMatrices[domain.key]}
+                            matrix={domainMatrices[domain.key] || EMPTY_MATRIX}
                             onCellChange={handleCellChange}
                             theme={theme}
                             isStudent={isStudent}
@@ -343,8 +396,8 @@ const getStyles = (theme) => StyleSheet.create({
     container: { flex: 1 },
     header: { flexDirection: 'row', alignItems: 'center', padding: 20, paddingTop: 40 },
     backBtn: { padding: 10, marginRight: 10 },
-    title: { fontSize: 20, fontWeight: '800', color: theme.text, fontFamily: 'Jost_600SemiBold', letterSpacing: 1 },
-    subtitle: { fontSize: 11, color: theme.secondaryText, marginTop: 2, letterSpacing: 1, fontFamily: 'Jost_300Light', textTransform: 'uppercase' },
+    title: { fontSize: 20, fontWeight: '800', color: theme.text, fontFamily: 'Outfit_600SemiBold', letterSpacing: 1 },
+    subtitle: { fontSize: 11, color: theme.secondaryText, marginTop: 2, letterSpacing: 1, fontFamily: 'Inter_400Regular', textTransform: 'uppercase' },
     scrollContent: { padding: 15 },
     proceedBtn: {
         marginTop: 10, paddingVertical: 18, borderRadius: 16,
@@ -352,5 +405,5 @@ const getStyles = (theme) => StyleSheet.create({
         shadowColor: theme.primary, shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3, shadowRadius: 8, elevation: 6,
     },
-    proceedText: { color: theme.buttonText, fontWeight: '800', fontSize: 16, letterSpacing: 1, fontFamily: 'Jost_600SemiBold' },
+    proceedText: { color: theme.buttonText, fontWeight: '800', fontSize: 16, letterSpacing: 1, fontFamily: 'Outfit_600SemiBold' },
 });

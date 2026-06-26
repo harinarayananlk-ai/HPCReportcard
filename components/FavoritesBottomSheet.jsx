@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     borderWidth: 1.5,
-    borderColor: gems.topaz, // Gold trim
+    borderColor: gems.sapphire, // Sapphire trim
     paddingHorizontal: 20,
     paddingBottom: 24,
     shadowColor: '#000',
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#333',
     letterSpacing: 0.5,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
     textTransform: 'capitalize',
     marginTop: 4,
   },
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 18,
     color: '#222',
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
     paddingHorizontal: 8,
   },
   emojiText: {
@@ -245,6 +245,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '700',
     letterSpacing: 2,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
 });

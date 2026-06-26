@@ -344,8 +344,8 @@ const styles = StyleSheet.create({
   header: { flexDirection: "row", alignItems: "center", paddingHorizontal: 20, paddingVertical: 15 },
   backBtn: { width: 44, height: 44, borderRadius: 12, backgroundColor: "rgba(255,255,255,0.05)", justifyContent: "center", alignItems: "center", borderWidth: 1, borderColor: "rgba(255,255,255,0.1)" },
   headerTitleContainer: { flex: 1, alignItems: "center" },
-  title: { fontSize: 18, fontWeight: "300", color: "#FFFFFF", letterSpacing: 4, fontFamily: "Jost_300Light" },
-  subtitle: { fontSize: 9, color: "rgba(255,255,255,0.5)", letterSpacing: 1, marginTop: 2, textTransform: "uppercase", fontFamily: "Jost_400Regular" },
+  title: { fontSize: 18, fontWeight: "300", color: "#FFFFFF", letterSpacing: 4, fontFamily: "Inter_400Regular" },
+  subtitle: { fontSize: 9, color: "rgba(255,255,255,0.5)", letterSpacing: 1, marginTop: 2, textTransform: "uppercase", fontFamily: "Inter_400Regular" },
   
   progressTracker: { paddingHorizontal: 40, paddingVertical: 20 },
   progressLine: { height: 2, backgroundColor: "rgba(255,255,255,0.1)", borderRadius: 1, position: 'relative' },
@@ -358,7 +358,7 @@ const styles = StyleSheet.create({
   },
   inlaidHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 15 },
   inlaidIconBox: { width: 36, height: 36, borderRadius: 10, borderWidth: 1, justifyContent: 'center', alignItems: 'center', marginRight: 12 },
-  sectionTitle: { fontSize: 13, fontWeight: '700', letterSpacing: 1, fontFamily: 'Jost_600SemiBold' },
+  sectionTitle: { fontSize: 13, fontWeight: '700', letterSpacing: 1, fontFamily: 'Outfit_600SemiBold' },
   sectionDivider: { height: 1, marginBottom: 20, borderRadius: 1 },
 
   inputGroup: { marginBottom: 18 },
@@ -366,7 +366,7 @@ const styles = StyleSheet.create({
   inputWrapper: { position: 'relative' },
   input: {
     backgroundColor: 'rgba(46, 88, 148, 0.05)', 
-    borderRadius: 12, paddingHorizontal: 15, paddingVertical: 12, fontSize: 14, fontFamily: 'Jost_400Regular',
+    borderRadius: 12, paddingHorizontal: 15, paddingVertical: 12, fontSize: 14, fontFamily: 'Inter_400Regular',
   },
   inputFocusLine: { position: 'absolute', bottom: 0, left: 15, right: 15, height: 1, backgroundColor: 'rgba(0,0,0,0.05)' },
 
@@ -381,7 +381,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     alignSelf: 'center',
   },
-  nextBtnText: { color: '#FFF', fontSize: 14, fontWeight: '700', letterSpacing: 2, fontFamily: 'Jost_600SemiBold' },
+  nextBtnText: { color: '#FFF', fontSize: 14, fontWeight: '700', letterSpacing: 2, fontFamily: 'Outfit_600SemiBold' },
 
   modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'center', alignItems: 'center', padding: 20 },
   yearPickerCard: { backgroundColor: '#FFF', width: '100%', borderRadius: 24, padding: 20, maxHeight: height * 0.7, borderWidth: 2 },

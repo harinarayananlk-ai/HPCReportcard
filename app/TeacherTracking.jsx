@@ -23,7 +23,7 @@ export default function TeacherTracking() {
   const router = useRouter();
   const { theme } = useTheme();
   const { user, setActiveStudentId, setActiveStudentProfile } = useAuth();
-  const accentColor = gems.jade;
+  const accentColor = gems.sapphire;
   const styles = getStyles(theme, accentColor);
   const [students, setStudents] = useState([]);
   const [registrationNumber, setRegistrationNumber] = useState("");
@@ -157,7 +157,7 @@ export default function TeacherTracking() {
             onChangeText={setRegistrationNumber}
           />
           <GemButton
-            gemType="jade"
+            gemType="silver"
             onPress={handleAddStudent}
             disabled={adding}
           >
@@ -224,7 +224,7 @@ export default function TeacherTracking() {
 
                             <GemButton 
                               style={{marginTop: 16, marginBottom: 8, alignSelf: 'center'}}
-                              gemType="aquamarine"
+                              gemType="sapphire"
                               width={180}
                               onPress={async () => {
                                   setActiveStudentId(student.user_id);
@@ -280,13 +280,13 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     color: theme.secondaryText,
     fontSize: 14,
     fontWeight: "300",
-    fontFamily: "Jost_300Light",
+    fontFamily: "Inter_400Regular",
   },
   headerTitle: {
     color: theme.text,
     fontSize: 20,
     fontWeight: "600",
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
   },
   inputSection: {
     padding: 20,
@@ -296,7 +296,7 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     marginBottom: 12,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
   },
   input: {
     backgroundColor: 'rgba(255,255,255,0.4)',
@@ -310,7 +310,7 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     paddingVertical: 12,
     fontSize: 14,
     marginBottom: 20,
-    fontFamily: "Jost_400Regular",
+    fontFamily: "Inter_400Regular",
     borderRadius: 8,
   },
   addBtn: {
@@ -324,7 +324,7 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     fontSize: 12,
     fontWeight: "600",
     letterSpacing: 2,
-    fontFamily: "Jost_600SemiBold",
+    fontFamily: "Outfit_600SemiBold",
   },
   divider: {
     height: 1,
@@ -359,7 +359,7 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
   studentCount: {
     fontSize: 10,
     color: theme.secondaryText,
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
   },
   chevronIcon: {
     fontSize: 10,
@@ -383,12 +383,12 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
   studentNameText: {
     fontSize: 14,
     color: theme.text,
-    fontFamily: 'Jost_400Regular',
+    fontFamily: 'Inter_400Regular',
   },
   studentIdLabel: {
     fontSize: 10,
     color: theme.secondaryText,
-    fontFamily: 'Jost_300Light',
+    fontFamily: 'Inter_400Regular',
   },
   studentDetailCard: {
     marginTop: 4,
@@ -407,12 +407,12 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     fontSize: 10,
     color: theme.secondaryText,
     letterSpacing: 1,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
   detailValue: {
     fontSize: 12,
     fontWeight: '700',
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
   plainButton: {
     backgroundColor: accentColor + '15', // Sleek tinted background
@@ -431,6 +431,6 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     fontWeight: '700',
     fontSize: 11,
     letterSpacing: 1.5,
-    fontFamily: 'Jost_600SemiBold',
+    fontFamily: 'Outfit_600SemiBold',
   },
 });
