@@ -1259,18 +1259,36 @@ function buildHpcHtml(studentData) {
         `;
 
         const prepDomains = [
-            "Language 1 (Mother Tongue)",
-            "Language 2 (English/Second Language)",
+            "Language 1",
+            "Language 2",
             "Mathematics",
-            "Environmental Studies",
-            "Art & Aesthetic Education",
-            "Physical Education & Play"
+            "The World Around Us",
+            "Art Education (Visual Arts)",
+            "Art Education (Theatre)",
+            "Art Education (Music)",
+            "Art Education (Dance & Movement)",
+            "Physical Education (Learning Standard 1)",
+            "Physical Education (Learning Standard 2)"
         ];
+
+        const prepDomainTitles = {
+            "Language 1": "Language Education (Language 1 - Mother Tongue)",
+            "Language 2": "Language Education (Language 2 - English/Second)",
+            "Mathematics": "Mathematics",
+            "The World Around Us": "The World Around Us / Environmental Studies",
+            "Art Education (Visual Arts)": "Art Education (Visual Arts)",
+            "Art Education (Theatre)": "Art Education (Theatre)",
+            "Art Education (Music)": "Art Education (Music)",
+            "Art Education (Dance & Movement)": "Art Education (Dance & Movement)",
+            "Physical Education (Learning Standard 1)": "Physical Education (Learning Standard 1)",
+            "Physical Education (Learning Standard 2)": "Physical Education (Learning Standard 2)"
+        };
 
         const dsData = studentData.assessments?.domainsData || {};
 
-        prepDomains.forEach((domainName, idx) => {
-            const activeDetails = dsData[domainName] || {};
+        prepDomains.forEach((domainKey, idx) => {
+            const domainName = prepDomainTitles[domainKey] || domainKey;
+            const activeDetails = dsData[domainKey] || {};
             const goals = activeDetails.goals || [];
             const competencies = activeDetails.competencies || [];
             const activitiesDesc = activeDetails.activities || "";
@@ -1406,8 +1424,9 @@ function buildHpcHtml(studentData) {
                 if (!v) return "<span style='color:#aaa;'>NA</span>";
                 const val = v.toString().toLowerCase().trim();
                 if (val === 'yes') return "😊 <span style='color: #27ae60; font-weight: bold;'>Yes</span>";
+                if (val === 'sometimes') return "🤔 <span style='color: #d35400; font-weight: bold;'>Sometimes</span>";
                 if (val === 'no') return "😟 <span style='color: #c0392b; font-weight: bold;'>No</span>";
-                return "🤔 <span style='color: #d35400; font-weight: bold;'>Don't Know</span>";
+                return "❓ <span style='color: #777; font-weight: bold;'>Not Sure</span>";
             };
 
             // Page B: Preparatory Co-Scholastic Reflections & qualitative teacher comments + challenges & supports
@@ -1420,24 +1439,27 @@ function buildHpcHtml(studentData) {
                 <div class="content-container">
                     <div class="section-title">Domain D${idx + 1}: ${domainName} (Part B)</div>
 
-                    <div class="glass-card" style="margin-bottom: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                        <div>
-                            <div style="font-size: 10px; font-weight:700; color:#2E5894; margin-bottom: 6px; text-transform: uppercase;">Student Self-Reflection</div>
-                            <div style="font-size:11px; margin-bottom: 4px;">I liked doing this work: ${getVibeIcon(selfLikedVal)}</div>
-                            <div style="font-size:11px; margin-bottom: 6px;">I found this work easy: ${getVibeIcon(selfEasyVal)}</div>
-                            <div style="font-size:9px; font-weight:700; color:#777;">Support needed:</div>
-                            <div style="margin-top: 4px;">
-                                ${selfNeededList.length > 0 ? selfNeededList.map(n => `<span class="chip" style="padding: 2px 6px; font-size: 8px;">${escapeHtml(n)}</span>`).join('') : "<span style='font-size:10px;color:#aaa;'>None needed</span>"}
-                            </div>
-                        </div>
-                        <div style="border-left: 1px solid rgba(0,0,0,0.05); padding-left: 12px;">
-                            <div style="font-size: 10px; font-weight:700; color:#2E5894; margin-bottom: 6px; text-transform: uppercase;">Peer Reflection</div>
-                            <div style="font-size:11px; margin-bottom: 4px;">Friend liked this work: ${getVibeIcon(peerLikedVal)}</div>
-                            <div style="font-size:11px; margin-bottom: 6px;">Friend found it easy: ${getVibeIcon(peerEasyVal)}</div>
-                            <div style="font-size:9px; font-weight:700; color:#777;">Support friend needed:</div>
-                            <div style="margin-top: 4px;">
-                                ${peerNeededList.length > 0 ? peerNeededList.map(n => `<span class="chip" style="padding: 2px 6px; font-size: 8px;">${escapeHtml(n)}</span>`).join('') : "<span style='font-size:10px;color:#aaa;'>None needed</span>"}
-                            </div>
+                    <div class="glass-card" style="margin-bottom: 12px;">
+                        <div style="font-size: 10px; font-weight:700; color:#2E5894; margin-bottom: 8px; text-transform: uppercase;">Student Self-Reflection Checklist</div>
+                        <div class="info-grid">
+                            ${[
+                                { id: "q1", text: "I followed my teacher’s instructions." },
+                                { id: "q2", text: "I liked doing this work." },
+                                { id: "q3", text: "I asked for help if I didn’t understand." },
+                                { id: "q4", text: "I tried my best in this task." },
+                                { id: "q5", text: "I am proud of my work." },
+                                { id: "q6", text: "I want to do this task again." },
+                                { id: "q7", text: "I liked working with my classmate/s." },
+                                { id: "q8", text: "I could ask my classmates for help, and they helped me." }
+                            ].map(item => {
+                                const val = (activeDetails.selfAssessments || {})[item.id] || "";
+                                return `
+                                <div class="info-item" style="border-bottom: 1px solid rgba(0,0,0,0.03); padding-bottom: 2px;">
+                                    <div class="info-label" style="font-size: 9px; line-height: 1.2;">${item.text}</div>
+                                    <div class="info-value" style="font-size: 11px;">${getVibeIcon(val)}</div>
+                                </div>
+                                `;
+                            }).join('')}
                         </div>
                     </div>
 
@@ -1667,6 +1689,207 @@ function buildHpcHtml(studentData) {
     // STAGE 3: MIDDLE ROUTE
     // ───────────────────────────────────────────────────────────
     if (stage === 3) {
+        const a2Data = studentData.a2 || {};
+        const academicGoal = a2Data.academicGoal || {};
+        const personalGoal = a2Data.personalGoal || {};
+        const schoolLearnings = a2Data.schoolLearnings || [];
+        const outsideLearnings = a2Data.outsideLearnings || [];
+
+        const a3Data = studentData.assessments?.a3_s3 || {};
+        const skillsList = a3Data.skills || [];
+        const subjectsList = a3Data.subjects || [];
+        const habitsList = a3Data.habits || [];
+
+        // Part A2: Student Voice (Page 3)
+        htmlContent += `
+        <div class="page">
+            <div class="page-bg ${getBg()}"></div>
+            <div class="glow-overlay"></div>
+            <div class="matte-shield"></div>
+            <div class="page-border"></div>
+            <div class="content-container">
+                <div class="section-title">Part A2: Student Voice - About Me</div>
+                
+                <div style="display: flex; gap: 15px; margin-bottom: 10px; align-items: stretch;">
+                    <div class="polaroid-card" style="transform: none; margin: 0; width: 140px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: center; height: 175px;">
+                        ${studentPhotoBase64 ? `<img src="${studentPhotoBase64}" class="polaroid-img" style="width: 122px; height: 122px;" />` : `<div class="polaroid-img" style="display:flex;align-items:center;justify-content:center;font-size:10px;color:#aaa;width: 122px; height: 122px;">No Photo</div>`}
+                        <div class="polaroid-caption" style="font-size: 13px; margin-top: 4px;">${escapeHtml(studentData.profile?.name)}</div>
+                    </div>
+                    
+                    <div class="glass-card" style="flex-grow: 1; margin-bottom: 0; padding: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px;">
+                        <div class="info-item" style="border-bottom:none; padding-bottom:0;">
+                            <div class="info-label">I live with</div>
+                            <div class="info-value" style="font-size: 11px;">${escapeHtml(a2Data.liveWith || "NA")}</div>
+                        </div>
+                        <div class="info-item" style="border-bottom:none; padding-bottom:0;">
+                            <div class="info-label">I stay at</div>
+                            <div class="info-value" style="font-size: 11px;">${escapeHtml(a2Data.stayAt || "NA")}</div>
+                        </div>
+                        <div class="info-item" style="border-bottom:none; padding-bottom:0;">
+                            <div class="info-label">In my free time, I like to</div>
+                            <div class="info-value" style="font-size: 11px;">${escapeHtml(a2Data.freeTime || "NA")}</div>
+                        </div>
+                        <div class="info-item" style="border-bottom:none; padding-bottom:0;">
+                            <div class="info-label">I do well in</div>
+                            <div class="info-value" style="font-size: 11px;">${escapeHtml(a2Data.doWell || "NA")}</div>
+                        </div>
+                        <div class="info-item" style="border-bottom:none; padding-bottom:0;">
+                            <div class="info-label">I am responsible</div>
+                            <div class="info-value" style="font-size: 11px; text-transform: capitalize;">${escapeHtml(a2Data.responsible || "sometimes")}</div>
+                        </div>
+                        <div class="info-item" style="border-bottom:none; padding-bottom:0;">
+                            <div class="info-label">I want to do better in</div>
+                            <div class="info-value" style="font-size: 11px;">${escapeHtml(a2Data.doBetter || "NA")}</div>
+                        </div>
+                        <div class="info-item" style="grid-column: span 2; border-bottom:none; padding-bottom:0;">
+                            <div class="info-label">I show care for others by</div>
+                            <div class="info-value" style="font-size: 11px;">${escapeHtml(a2Data.careOthers || "NA")}</div>
+                        </div>
+                        <div class="info-item" style="grid-column: span 2; border-bottom:none; padding-bottom:0;">
+                            <div class="info-label">I feel proud of myself when</div>
+                            <div class="info-value" style="font-size: 11px;">${escapeHtml(a2Data.proudOf || "NA")}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 10px;">
+                    <div class="glass-card" style="margin-bottom: 0; padding: 12px; border: 1.5px solid rgba(46, 88, 148, 0.35);">
+                        <div style="font-size: 10px; font-weight:700; color:#2E5894; margin-bottom: 6px; text-transform: uppercase;">🎯 My Academic Goal</div>
+                        <div class="info-label">Goal</div>
+                        <div class="info-value" style="font-size: 11px; font-weight: 600; margin-bottom: 4px;">${escapeHtml(academicGoal.goal || "NA")}</div>
+                        <div class="info-label">Why it matters</div>
+                        <div class="info-value" style="font-size: 11px; margin-bottom: 4px;">${escapeHtml(academicGoal.why || "NA")}</div>
+                        <div class="info-label">Steps I will take</div>
+                        <div style="font-size: 10.5px; color:#555;">
+                            1. ${escapeHtml(academicGoal.step1 || "NA")}<br/>
+                            2. ${escapeHtml(academicGoal.step2 || "NA")}
+                        </div>
+                    </div>
+                    <div class="glass-card" style="margin-bottom: 0; padding: 12px; border: 1.5px solid rgba(184, 151, 46, 0.35);">
+                        <div style="font-size: 10px; font-weight:700; color:#B8972E; margin-bottom: 6px; text-transform: uppercase;">🌟 My Personal Goal</div>
+                        <div class="info-label">Goal</div>
+                        <div class="info-value" style="font-size: 11px; font-weight: 600; margin-bottom: 4px;">${escapeHtml(personalGoal.goal || "NA")}</div>
+                        <div class="info-label">Why it matters</div>
+                        <div class="info-value" style="font-size: 11px; margin-bottom: 4px;">${escapeHtml(personalGoal.why || "NA")}</div>
+                        <div class="info-label">Steps I will take</div>
+                        <div style="font-size: 10.5px; color:#555;">
+                            1. ${escapeHtml(personalGoal.step1 || "NA")}<br/>
+                            2. ${escapeHtml(personalGoal.step2 || "NA")}
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 10px;">
+                    <div class="glass-card" style="margin-bottom: 0; padding: 12px;">
+                        <div style="font-size: 10px; font-weight:700; color:#2E5894; margin-bottom: 6px; text-transform: uppercase;">📖 My Learnings in School</div>
+                        <ul class="progress-list" style="margin: 0;">
+                            ${schoolLearnings.filter(l => l && l.trim()).map(l => `<li class="progress-item" style="font-size:10.5px; margin-bottom: 4px;">${escapeHtml(l)}</li>`).join('') || '<span style="font-size:10.5px; color:#aaa;">No school learnings logged.</span>'}
+                        </ul>
+                    </div>
+                    <div class="glass-card" style="margin-bottom: 0; padding: 12px;">
+                        <div style="font-size: 10px; font-weight:700; color:#B8972E; margin-bottom: 6px; text-transform: uppercase;">🍀 My Learnings Outside School</div>
+                        <ul class="progress-list" style="margin: 0;">
+                            ${outsideLearnings.filter(l => l && l.trim()).map(l => `<li class="progress-item" style="font-size:10.5px; margin-bottom: 4px;">${escapeHtml(l)}</li>`).join('') || '<span style="font-size:10.5px; color:#aaa;">No outside learnings logged.</span>'}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="glass-card" style="margin-bottom: 0; padding: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                        <div class="info-label" style="color: #2E5894;">What I would like my teacher to help me with</div>
+                        <blockquote style="font-size: 11px; padding: 6px 12px; margin-top: 4px; height: 50px; overflow: hidden; margin-bottom: 0;">
+                            "${escapeHtml(a2Data.teacherHelp || "No specific request logged.")}"
+                        </blockquote>
+                    </div>
+                    <div>
+                        <div class="info-label" style="color: #B8972E;">What I would like my teacher to know about me</div>
+                        <blockquote style="font-size: 11px; padding: 6px 12px; margin-top: 4px; height: 50px; overflow: hidden; margin-bottom: 0;">
+                            "${escapeHtml(a2Data.teacherKnow || "No specific notes logged.")}"
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+
+        // Part A3: Ambition Timeline (Page 4)
+        htmlContent += `
+        <div class="page">
+            <div class="page-bg ${getBg()}"></div>
+            <div class="glow-overlay"></div>
+            <div class="matte-shield"></div>
+            <div class="page-border"></div>
+            <div class="content-container">
+                <div class="section-title">Part A3: Student Ambition Timeline</div>
+
+                <div class="glass-card" style="border: 2px solid rgba(184, 151, 46, 0.45); padding: 15px; margin-bottom: 12px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 28px;">🏆</span>
+                        <div>
+                            <div class="info-label" style="font-size: 10px; color: #B8972E;">My Ambition</div>
+                            <div class="info-value" style="font-size: 18px; font-weight: 700; color: #2E5894;">${escapeHtml(a3Data.ambition || "To be defined")}</div>
+                        </div>
+                    </div>
+                    <div class="flourish-divider" style="margin: 8px 0; width: 80px; height: 10px;"></div>
+                    <div class="info-label" style="font-size: 9px;">How I plan to achieve this ambition & why</div>
+                    <div style="font-size: 12px; color: #444; line-height: 1.4; font-style: italic;">
+                        "${escapeHtml(a3Data.achieveAmbition || "No details submitted yet.")}"
+                    </div>
+                </div>
+
+                <!-- Timeline Nodes Grid -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
+                    <div class="glass-card" style="margin-bottom: 0; padding: 12px;">
+                        <div style="font-size: 10px; font-weight: 700; color: #2E5894; margin-bottom: 6px; text-transform: uppercase;">🛠️ Skills I Need to Build</div>
+                        <ul class="progress-list" style="margin: 0;">
+                            ${skillsList.filter(s => s && s.trim()).map(s => `<li class="progress-item" style="font-size: 11px; margin-bottom: 4px;">${escapeHtml(s)}</li>`).join('') || '<span style="font-size:11px; color:#aaa;">No skills specified.</span>'}
+                        </ul>
+                    </div>
+                    <div class="glass-card" style="margin-bottom: 0; padding: 12px;">
+                        <div style="font-size: 10px; font-weight: 700; color: #B8972E; margin-bottom: 6px; text-transform: uppercase;">📖 Subjects I Need to Study</div>
+                        <ul class="progress-list" style="margin: 0;">
+                            ${subjectsList.filter(s => s && s.trim()).map(s => `<li class="progress-item" style="font-size: 11px; margin-bottom: 4px;">${escapeHtml(s)}</li>`).join('') || '<span style="font-size:11px; color:#aaa;">No subjects specified.</span>'}
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
+                    <div class="glass-card" style="margin-bottom: 0; padding: 12px;">
+                        <div style="font-size: 10px; font-weight: 700; color: #B8972E; margin-bottom: 6px; text-transform: uppercase;">⚡ Habits I Need to Form</div>
+                        <ul class="progress-list" style="margin: 0;">
+                            ${habitsList.filter(h => h && h.trim()).map(h => `<li class="progress-item" style="font-size: 11px; margin-bottom: 4px;">${escapeHtml(h)}</li>`).join('') || '<span style="font-size:11px; color:#aaa;">No habits specified.</span>'}
+                        </ul>
+                    </div>
+                    <div class="glass-card" style="margin-bottom: 0; padding: 12px; border: 1.5px solid rgba(46, 88, 148, 0.25);">
+                        <div style="font-size: 10px; font-weight: 700; color: #2E5894; margin-bottom: 6px; text-transform: uppercase;">👥 Guidance & Help Needed</div>
+                        <div class="info-label">Guidance type</div>
+                        <div class="info-value" style="font-size: 11px; margin-bottom: 4px;">${escapeHtml(a3Data.guidance || "NA")}</div>
+                        <div class="info-label">Who can help me</div>
+                        <div class="info-value" style="font-size: 11px; margin-bottom: 4px;">${escapeHtml(a3Data.guidanceHelp || "NA")}</div>
+                        <div class="info-label">What I will learn from them</div>
+                        <div class="info-value" style="font-size: 11px;">${escapeHtml(a3Data.guidanceLearn || "NA")}</div>
+                    </div>
+                </div>
+
+                <!-- Feelings / Emotional Outlook -->
+                <div class="glass-card" style="margin-bottom: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <div class="info-label" style="color: #2E5894; font-weight: 700;">How I will feel when I achieve my ambition</div>
+                        <blockquote style="font-size: 11.5px; padding: 8px 12px; margin-top: 4px; height: 55px; overflow: hidden; border-left-color: #2E5894; margin-bottom: 0;">
+                            "${escapeHtml(a3Data.feelingsAchieve || "No remarks logged.")}"
+                        </blockquote>
+                    </div>
+                    <div>
+                        <div class="info-label" style="color: #B8972E; font-weight: 700;">How my parents / family will feel</div>
+                        <blockquote style="font-size: 11.5px; padding: 8px 12px; margin-top: 4px; height: 55px; overflow: hidden; border-left-color: #B8972E; margin-bottom: 0;">
+                            "${escapeHtml(a3Data.feelingsParents || "No remarks logged.")}"
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+
         // Stage 3 Parent observations A4 page first
         const parentObs = studentData.assessments?.a4_s3 || {};
         const pResources = parentObs.resources || [];
@@ -1748,17 +1971,43 @@ function buildHpcHtml(studentData) {
         // If domainsData is empty, use the standard list of 14 Middle Stage Subjects
         if (subjectKeys.length === 0) {
             subjectKeys = [
-                "Language 1", "Language 2", "Language 3",
-                "Mathematics", "Science", "Social Science",
-                "Art Education (Visual Arts)", "Art Education (Music)", "Art Education (Dance)",
-                "Art Education (Drama)", "Art Education (Puppetry)",
-                "Physical Education & Health (Yoga)", "Physical Education (Games)",
-                "Vocational Education"
+                "Language 1",
+                "Language 2",
+                "Language 3",
+                "Mathematics",
+                "Science",
+                "Social Science",
+                "Art Education (Visual Arts)",
+                "Art Education (Theatre)",
+                "Art Education (Music)",
+                "Art Education (Dance & Movement)",
+                "Art Education (LS2)",
+                "Physical Education (Learning Standard 1)",
+                "Physical Education (Learning Standard 2)",
+                "Vocational/Skill Education"
             ];
         }
 
-        subjectKeys.forEach((subjName) => {
-            const activeSubj = dsData[subjName] || {};
+        const s3DomainTitles = {
+            "Language 1": "Language Education (Language 1 - R1)",
+            "Language 2": "Language Education (Language 2 - R2)",
+            "Language 3": "Language Education (Language 3 - R3)",
+            "Mathematics": "Mathematics",
+            "Science": "Science",
+            "Social Science": "Social Science",
+            "Art Education (Visual Arts)": "Art Education (Visual Arts)",
+            "Art Education (Theatre)": "Art Education (Theatre)",
+            "Art Education (Music)": "Art Education (Music)",
+            "Art Education (Dance & Movement)": "Art Education (Dance & Movement)",
+            "Art Education (LS2)": "Art Education (Learning Standard 2)",
+            "Physical Education (Learning Standard 1)": "Physical Education (Learning Standard 1)",
+            "Physical Education (Learning Standard 2)": "Physical Education (Learning Standard 2)",
+            "Vocational/Skill Education": "Vocational/Skill Education"
+        };
+
+        subjectKeys.forEach((subjKey) => {
+            const subjName = s3DomainTitles[subjKey] || subjKey;
+            const activeSubj = dsData[subjKey] || {};
             const goals = activeSubj.goals || [];
             const competencies = activeSubj.competencies || [];
             const activityApproach = activeSubj.activityApproach || [];
@@ -1914,9 +2163,39 @@ function buildHpcHtml(studentData) {
 
         // Stage 3 Grand consolidated Teacher Summary
         const sAssess = studentData.assessments || {};
-        const strengths = sAssess.strengths || [];
-        const barriers = sAssess.barriers || [];
+        let strengths = sAssess.strengths || [];
+        let barriers = sAssess.barriers || [];
         const remarks = sAssess.remarks || "";
+
+        // Aggregate strengths and barriers across all subjects dynamically
+        let consolidatedStrengths = [];
+        let consolidatedBarriers = [];
+        if (sAssess.domainsData) {
+            Object.keys(sAssess.domainsData).forEach(subjKey => {
+                const subjObj = sAssess.domainsData[subjKey] || {};
+                if (Array.isArray(subjObj.strengths)) {
+                    subjObj.strengths.forEach(s => {
+                        if (s && !consolidatedStrengths.includes(s)) {
+                            consolidatedStrengths.push(s);
+                        }
+                    });
+                }
+                if (Array.isArray(subjObj.barriers)) {
+                    subjObj.barriers.forEach(b => {
+                        if (b && !consolidatedBarriers.includes(b)) {
+                            consolidatedBarriers.push(b);
+                        }
+                    });
+                }
+            });
+        }
+        // Fallback to top-level if consolidated arrays are empty
+        if (consolidatedStrengths.length > 0) {
+            strengths = consolidatedStrengths;
+        }
+        if (consolidatedBarriers.length > 0) {
+            barriers = consolidatedBarriers;
+        }
 
         htmlContent += `
         <div class="page">

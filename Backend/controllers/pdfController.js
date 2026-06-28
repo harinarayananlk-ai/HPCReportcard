@@ -8,15 +8,18 @@ const getProfileData = (targetId) => {
   return new Promise((resolve, reject) => {
     db.get(`
       SELECT s.*, u.username, t.full_name as teacher_name, t.teacher_code,
-             c.grade as class_name, c.section, c.academic_year,
+             COALESCE(c.grade, s.class_name) as class_name,
+             COALESCE(c.section, s.section) as section,
+             c.academic_year,
              sch.name as school_name, sch.address_line1 as school_address1,
              sch.address_line2 as school_address2, sch.pincode as school_pincode,
              sch.udise_code, sch.board, sch.principal_name,
-             se.registration_number, se.roll_number
+             COALESCE(se.registration_number, s.registration_number) as registration_number,
+             se.roll_number
       FROM students s
       JOIN users u ON s.user_id = u.id
       LEFT JOIN student_enrollments se ON s.id = se.student_id
-      LEFT JOIN classes c ON se.class_id = c.id
+      LEFT JOIN classes c ON (COALESCE(se.class_id, (SELECT id FROM classes WHERE grade = s.class_name AND section = s.section LIMIT 1)) = c.id)
       LEFT JOIN teachers t ON c.teacher_id = t.id
       LEFT JOIN schools sch ON c.school_id = sch.id
       WHERE s.user_id = ?
@@ -53,6 +56,9 @@ const exportReport = async (req, res) => {
     } catch(e) {}
     try {
       a2 = typeof profile.a2_data === 'string' ? JSON.parse(profile.a2_data || '{}') : (profile.a2_data || {});
+      if (!a2 || Object.keys(a2).length === 0) {
+        a2 = family.a2_middle || family.a2_preparatory || family.a2_foundational || {};
+      }
     } catch(e) {}
     try {
       preferences = typeof profile.preferences === 'string' ? JSON.parse(profile.preferences || '{}') : (profile.preferences || {});

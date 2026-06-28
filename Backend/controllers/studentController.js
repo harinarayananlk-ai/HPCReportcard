@@ -46,7 +46,7 @@ const getProfile = (req, res) => {
 const updateProfile = (req, res) => {
   const { 
     userId, registrationNumber, fullName, className, section, dob, school, points = 0,
-    familyDetails, preferences, assessments, role = 'student'
+    familyDetails, preferences, assessments, a2Data, a2_data, role = 'student'
   } = req.body;
 
   if (!userId) {
@@ -67,11 +67,17 @@ const updateProfile = (req, res) => {
     let finalFd = existing ? (typeof existing.family_details === 'string' ? JSON.parse(existing.family_details) : (existing.family_details || {})) : {};
     let finalPref = existing ? (typeof existing.preferences === 'string' ? JSON.parse(existing.preferences) : (existing.preferences || {})) : {};
     let finalAssess = existing ? (typeof existing.assessments === 'string' ? JSON.parse(existing.assessments) : (existing.assessments || {})) : {};
+    let finalA2 = existing ? (typeof existing.a2_data === 'string' ? JSON.parse(existing.a2_data || '{}') : (existing.a2_data || {})) : {};
 
     try {
       if (familyDetails) finalFd = { ...finalFd, ...familyDetails };
       if (preferences) finalPref = { ...finalPref, ...preferences };
       
+      const inputA2 = a2Data || a2_data;
+      if (inputA2 && typeof inputA2 === 'object') {
+        finalA2 = { ...finalA2, ...inputA2 };
+      }
+
       if (assessments && typeof assessments === 'object') {
         if (role === 'student') {
            // THE WALL: Student/Parent can ONLY update specific assessments
@@ -80,6 +86,9 @@ const updateProfile = (req, res) => {
            }
            if (assessments.a3_s2 !== undefined) {
                finalAssess.a3_s2 = assessments.a3_s2;
+           }
+           if (assessments.a3_s3 !== undefined) {
+               finalAssess.a3_s3 = assessments.a3_s3;
            }
            if (assessments.a4_s3 !== undefined) {
                finalAssess.a4_s3 = assessments.a4_s3;
@@ -105,6 +114,7 @@ const updateProfile = (req, res) => {
     const fdStr = JSON.stringify(finalFd);
     const prefStr = JSON.stringify(finalPref);
     const assessStr = JSON.stringify(finalAssess);
+    const a2Str = JSON.stringify(finalA2);
 
     const finalPoints = points || 0;
     const finalDob = (existing ? existing.dob : null) || dob;
@@ -122,17 +132,18 @@ const updateProfile = (req, res) => {
             points = points + ?,
             family_details = ?,
             preferences = ?,
-            assessments = ?
+            assessments = ?,
+            a2_data = ?
           WHERE user_id = ?
-       `, [finalRegNo, fullName, className, section, finalDob, school, finalPoints, fdStr, prefStr, assessStr, userId], function(err) {
+       `, [finalRegNo, fullName, className, section, finalDob, school, finalPoints, fdStr, prefStr, assessStr, a2Str, userId], function(err) {
            if (err) return res.status(500).json({ message: "Error updating profile", error: err.message });
            res.json({ message: "Profile updated safely (UPDATE)", awardedPoints: finalPoints });
        });
     } else {
        db.run(`
-          INSERT INTO students (user_id, registration_number, full_name, class_name, section, dob, school, points, family_details, preferences, assessments)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-       `, [userId, finalRegNo, fullName, className, section, finalDob, school, finalPoints, fdStr, prefStr, assessStr], function(err) {
+          INSERT INTO students (user_id, registration_number, full_name, class_name, section, dob, school, points, family_details, preferences, assessments, a2_data)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+       `, [userId, finalRegNo, fullName, className, section, finalDob, school, finalPoints, fdStr, prefStr, assessStr, a2Str], function(err) {
            if (err) return res.status(500).json({ message: "Error inserting profile", error: err.message });
            res.json({ message: "Profile updated safely (INSERT)", awardedPoints: finalPoints });
        });
@@ -162,15 +173,18 @@ const renderPartB = (req, res) => {
   
   db.get(`
     SELECT s.*, u.username, t.full_name as teacher_name, t.teacher_code,
-           c.grade as class_name, c.section, c.academic_year,
+           COALESCE(c.grade, s.class_name) as class_name,
+           COALESCE(c.section, s.section) as section,
+           c.academic_year,
            sch.name as school_name, sch.address_line1 as school_address1,
            sch.address_line2 as school_address2, sch.pincode as school_pincode,
            sch.udise_code, sch.board, sch.principal_name,
-           se.registration_number, se.roll_number
+           COALESCE(se.registration_number, s.registration_number) as registration_number,
+           se.roll_number
     FROM students s
     JOIN users u ON s.user_id = u.id
     LEFT JOIN student_enrollments se ON s.id = se.student_id
-    LEFT JOIN classes c ON se.class_id = c.id
+    LEFT JOIN classes c ON (COALESCE(se.class_id, (SELECT id FROM classes WHERE grade = s.class_name AND section = s.section LIMIT 1)) = c.id)
     LEFT JOIN teachers t ON c.teacher_id = t.id
     LEFT JOIN schools sch ON c.school_id = sch.id
     WHERE s.user_id = ?
@@ -188,6 +202,9 @@ const renderPartB = (req, res) => {
     } catch(e) {}
     try {
       a2 = typeof profile.a2_data === 'string' ? JSON.parse(profile.a2_data || '{}') : (profile.a2_data || {});
+      if (!a2 || Object.keys(a2).length === 0) {
+        a2 = family.a2_middle || family.a2_preparatory || family.a2_foundational || {};
+      }
     } catch(e) {}
     try {
       preferences = typeof profile.preferences === 'string' ? JSON.parse(profile.preferences || '{}') : (profile.preferences || {});

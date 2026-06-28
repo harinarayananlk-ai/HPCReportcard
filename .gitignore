@@ -44,4 +44,6 @@ app-example
 
 temp_venv/
 query.py
-
+.venv/
+Backend/exports/*.pdf
+Backend/exports/Report_Card_*.pdf

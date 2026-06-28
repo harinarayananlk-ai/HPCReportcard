@@ -420,6 +420,8 @@ async def render_part_b(user_id: int, db: sqlite3.Connection = Depends(get_db)):
 
     try:
         a2 = json.loads(sd.get("a2_data") or "{}")
+        if not a2:
+            a2 = family.get("a2_middle") or family.get("a2_preparatory") or family.get("a2_foundational") or {}
     except Exception:
         a2 = {}
 
@@ -447,9 +449,9 @@ async def render_part_b(user_id: int, db: sqlite3.Connection = Depends(get_db)):
             "name": sd.get("full_name") or "NA",
             "dob": sd.get("dob") or "NA",
             "roll": enroll.get("roll_number") or "NA",
-            "reg": enroll.get("registration_number") or "NA",
-            "class": enroll.get("class_name") or "NA",
-            "sec": enroll.get("section") or "NA",
+            "reg": enroll.get("registration_number") or sd.get("registration_number") or "NA",
+            "class": enroll.get("class_name") or sd.get("class_name") or "NA",
+            "sec": enroll.get("section") or sd.get("section") or "NA",
             "teacherName": enroll.get("teacher_name") or "NA",
             "teacherCode": enroll.get("teacher_code") or "NA",
             "gender": sd.get("gender") or "NA",
@@ -517,6 +519,8 @@ async def export_pdf(data: dict, db: sqlite3.Connection = Depends(get_db)):
 
     try:
         a2 = json.loads(sd.get("a2_data") or "{}")
+        if not a2:
+            a2 = family.get("a2_middle") or family.get("a2_preparatory") or family.get("a2_foundational") or {}
     except Exception:
         a2 = {}
 
@@ -544,9 +548,9 @@ async def export_pdf(data: dict, db: sqlite3.Connection = Depends(get_db)):
             "name": sd.get("full_name") or "NA",
             "dob": sd.get("dob") or "NA",
             "roll": enroll.get("roll_number") or "NA",
-            "reg": enroll.get("registration_number") or "NA",
-            "class": enroll.get("class_name") or "NA",
-            "sec": enroll.get("section") or "NA",
+            "reg": enroll.get("registration_number") or sd.get("registration_number") or "NA",
+            "class": enroll.get("class_name") or sd.get("class_name") or "NA",
+            "sec": enroll.get("section") or sd.get("section") or "NA",
             "teacherName": enroll.get("teacher_name") or "NA",
             "teacherCode": enroll.get("teacher_code") or "NA",
             "gender": sd.get("gender") or "NA",
