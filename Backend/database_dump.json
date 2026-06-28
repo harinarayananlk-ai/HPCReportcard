@@ -1,0 +1,538 @@
+{
+  "users": [
+    {
+      "id": 94,
+      "username": "t_murugan",
+      "password": "$2b$10$Ijd76ecuIhqvy3kZ7J1j5OpMzEQZttqw90i1Y9SYsbNrCmTXi7bpG",
+      "role": "teacher",
+      "created_at": "2026-04-25 04:58:46"
+    },
+    {
+      "id": 95,
+      "username": "t_chutney",
+      "password": "$2b$10$Ijd76ecuIhqvy3kZ7J1j5OpMzEQZttqw90i1Y9SYsbNrCmTXi7bpG",
+      "role": "teacher",
+      "created_at": "2026-04-25 04:58:46"
+    },
+    {
+      "id": 96,
+      "username": "t_curry",
+      "password": "$2b$10$Ijd76ecuIhqvy3kZ7J1j5OpMzEQZttqw90i1Y9SYsbNrCmTXi7bpG",
+      "role": "teacher",
+      "created_at": "2026-04-25 04:58:46"
+    },
+    {
+      "id": 97,
+      "username": "t_idli",
+      "password": "$2b$10$Ijd76ecuIhqvy3kZ7J1j5OpMzEQZttqw90i1Y9SYsbNrCmTXi7bpG",
+      "role": "teacher",
+      "created_at": "2026-04-25 04:58:46"
+    },
+    {
+      "id": 98,
+      "username": "t_dosa",
+      "password": "$2b$10$Ijd76ecuIhqvy3kZ7J1j5OpMzEQZttqw90i1Y9SYsbNrCmTXi7bpG",
+      "role": "teacher",
+      "created_at": "2026-04-25 04:58:46"
+    },
+    {
+      "id": 99,
+      "username": "s_ladoo",
+      "password": "$2b$10$Ijd76ecuIhqvy3kZ7J1j5OpMzEQZttqw90i1Y9SYsbNrCmTXi7bpG",
+      "role": "student",
+      "created_at": "2026-04-25 04:58:46"
+    },
+    {
+      "id": 100,
+      "username": "s_paplu",
+      "password": "$2b$10$Ijd76ecuIhqvy3kZ7J1j5OpMzEQZttqw90i1Y9SYsbNrCmTXi7bpG",
+      "role": "student",
+      "created_at": "2026-04-25 04:58:47"
+    },
+    {
+      "id": 101,
+      "username": "s_golgappa",
+      "password": "$2b$10$Ijd76ecuIhqvy3kZ7J1j5OpMzEQZttqw90i1Y9SYsbNrCmTXi7bpG",
+      "role": "student",
+      "created_at": "2026-04-25 04:58:47"
+    },
+    {
+      "id": 102,
+      "username": "s_bunty",
+      "password": "$2b$10$Ijd76ecuIhqvy3kZ7J1j5OpMzEQZttqw90i1Y9SYsbNrCmTXi7bpG",
+      "role": "student",
+      "created_at": "2026-04-25 04:58:47"
+    },
+    {
+      "id": 103,
+      "username": "s_bablu",
+      "password": "$2b$10$Ijd76ecuIhqvy3kZ7J1j5OpMzEQZttqw90i1Y9SYsbNrCmTXi7bpG",
+      "role": "student",
+      "created_at": "2026-04-25 04:58:47"
+    },
+    {
+      "id": 104,
+      "username": "s_pinky",
+      "password": "$2b$10$Ijd76ecuIhqvy3kZ7J1j5OpMzEQZttqw90i1Y9SYsbNrCmTXi7bpG",
+      "role": "student",
+      "created_at": "2026-04-25 04:58:47"
+    },
+    {
+      "id": 105,
+      "username": "s_chintu",
+      "password": "$2b$10$Ijd76ecuIhqvy3kZ7J1j5OpMzEQZttqw90i1Y9SYsbNrCmTXi7bpG",
+      "role": "student",
+      "created_at": "2026-04-25 04:58:47"
+    },
+    {
+      "id": 106,
+      "username": "s_guddu",
+      "password": "$2b$10$Ijd76ecuIhqvy3kZ7J1j5OpMzEQZttqw90i1Y9SYsbNrCmTXi7bpG",
+      "role": "student",
+      "created_at": "2026-04-25 04:58:47"
+    },
+    {
+      "id": 107,
+      "username": "s_munna",
+      "password": "$2b$10$Ijd76ecuIhqvy3kZ7J1j5OpMzEQZttqw90i1Y9SYsbNrCmTXi7bpG",
+      "role": "student",
+      "created_at": "2026-04-25 04:58:47"
+    },
+    {
+      "id": 108,
+      "username": "s_pappu",
+      "password": "$2b$10$Ijd76ecuIhqvy3kZ7J1j5OpMzEQZttqw90i1Y9SYsbNrCmTXi7bpG",
+      "role": "student",
+      "created_at": "2026-04-25 04:58:47"
+    },
+    {
+      "id": 109,
+      "username": "superadmin",
+      "password": "$2b$10$r1v3hzpqELuVtdp478TqYOLrsemZgsxnK5SyNXxLAN6O8UQIDWzjC",
+      "role": "superadmin",
+      "created_at": "2026-04-25 04:58:47"
+    }
+  ],
+  "students": [
+    {
+      "id": 45,
+      "user_id": 99,
+      "registration_number": "REG-MITHAI-101",
+      "class_name": "Bal Vatika 1",
+      "section": "A",
+      "dob": "15/08/2018",
+      "school": "Samosa High International",
+      "family_details": {
+        "studentName": "Ladoo Lal",
+        "studentAddress": "House No. 42, Mithai Gali, Halwai Chowk, Delhi - 110001",
+        "motherTongue": "Bhojpuri-Hindi",
+        "motherName": "Meera Devi",
+        "fatherName": "Rajesh Prasad",
+        "guardianContact": "9812345678",
+        "bloodGroup": "O+",
+        "weight": "32kg",
+        "height": "128cm",
+        "mediumOfInstruction": "English",
+        "attendance": [
+          {
+            "month": "Apr",
+            "working": "22",
+            "attended": "21"
+          },
+          {
+            "month": "May",
+            "working": "20",
+            "attended": "18"
+          },
+          {
+            "month": "Jun",
+            "working": "15",
+            "attended": "15"
+          },
+          {
+            "month": "Jul",
+            "working": "21",
+            "attended": "20"
+          },
+          {
+            "month": "Aug",
+            "working": "22",
+            "attended": "22"
+          },
+          {
+            "month": "Sep",
+            "working": "20",
+            "attended": "19"
+          },
+          {
+            "month": "Oct",
+            "working": "18",
+            "attended": "17"
+          },
+          {
+            "month": "Nov",
+            "working": "21",
+            "attended": "20"
+          },
+          {
+            "month": "Dec",
+            "working": "20",
+            "attended": "19"
+          },
+          {
+            "month": "Jan",
+            "working": "22",
+            "attended": "21"
+          },
+          {
+            "month": "Feb",
+            "working": "19",
+            "attended": "18"
+          },
+          {
+            "month": "Mar",
+            "working": "22",
+            "attended": "21"
+          }
+        ],
+        "familyTree": {
+          "siblings": [
+            {
+              "name": "Jalebi Kumari",
+              "age": 4,
+              "relation": "Sister"
+            }
+          ],
+          "grandparents": [
+            {
+              "name": "Ram Prasad",
+              "side": "Paternal",
+              "relation": "Grandfather"
+            }
+          ]
+        }
+      },
+      "preferences": {
+        "color": "Saffron Orange",
+        "food": "Ladoo & Samosa",
+        "animal": "Bengal Tiger",
+        "sport": "Cricket & Kabaddi",
+        "hobby": "Singing Folk Songs"
+      },
+      "last_updated": "2026-04-25 04:58:47",
+      "full_name": "Ladoo Lal",
+      "assessments": {
+        "rubricLevel": "Developing",
+        "teacherFeedback": "Ladoo is a very bright student with a keen interest in traditional arts. He is regular and postive in his approach.",
+        "selfAssessment": "I like coming to school and playing with my friends."
+      },
+      "points": 850
+    },
+    {
+      "id": 46,
+      "user_id": 101,
+      "registration_number": "REG-SNACK-103",
+      "class_name": "Bal Vatika 2",
+      "section": "B",
+      "dob": "15/08/2018",
+      "school": "Samosa High International",
+      "family_details": {
+        "studentName": "Golgappa Gupta",
+        "studentAddress": "123 Gali Number, Delhi",
+        "motherTongue": "Hinglish",
+        "motherName": "Sunita Devi",
+        "fatherName": "Kumar Prasad",
+        "guardianContact": "9000000000",
+        "bloodGroup": "B+",
+        "weight": "30kg",
+        "height": "125cm",
+        "mediumOfInstruction": "English",
+        "attendance": [],
+        "familyTree": {}
+      },
+      "preferences": {
+        "color": "Orange",
+        "food": "Samosa",
+        "animal": "Tiger",
+        "sport": "Cricket",
+        "hobby": "General"
+      },
+      "last_updated": "2026-04-25 04:58:47",
+      "full_name": "Golgappa Gupta",
+      "assessments": null,
+      "points": 200
+    },
+    {
+      "id": 47,
+      "user_id": 102,
+      "registration_number": "REG-POP-104",
+      "class_name": "Bal Vatika 2",
+      "section": "B",
+      "dob": "15/08/2018",
+      "school": "Samosa High International",
+      "family_details": {
+        "studentName": "Bunty Bubble",
+        "studentAddress": "123 Gali Number, Delhi",
+        "motherTongue": "Hinglish",
+        "motherName": "Sunita Devi",
+        "fatherName": "Kumar Prasad",
+        "guardianContact": "9000000000",
+        "bloodGroup": "B+",
+        "weight": "30kg",
+        "height": "125cm",
+        "mediumOfInstruction": "English",
+        "attendance": [],
+        "familyTree": {}
+      },
+      "preferences": {
+        "color": "Orange",
+        "food": "Samosa",
+        "animal": "Tiger",
+        "sport": "Cricket",
+        "hobby": "General"
+      },
+      "last_updated": "2026-04-25 04:58:47",
+      "full_name": "Bunty Bubble",
+      "assessments": null,
+      "points": 200
+    },
+    {
+      "id": 48,
+      "user_id": 103,
+      "registration_number": "REG-RICE-105",
+      "class_name": "Bal Vatika 3",
+      "section": "C",
+      "dob": "15/08/2018",
+      "school": "Samosa High International",
+      "family_details": {
+        "studentName": "Bablu Biryani",
+        "studentAddress": "123 Gali Number, Delhi",
+        "motherTongue": "Hinglish",
+        "motherName": "Sunita Devi",
+        "fatherName": "Kumar Prasad",
+        "guardianContact": "9000000000",
+        "bloodGroup": "B+",
+        "weight": "30kg",
+        "height": "125cm",
+        "mediumOfInstruction": "English",
+        "attendance": [],
+        "familyTree": {}
+      },
+      "preferences": {
+        "color": "Orange",
+        "food": "Samosa",
+        "animal": "Tiger",
+        "sport": "Cricket",
+        "hobby": "General"
+      },
+      "last_updated": "2026-04-25 04:58:47",
+      "full_name": "Bablu Biryani",
+      "assessments": null,
+      "points": 200
+    },
+    {
+      "id": 49,
+      "user_id": 104,
+      "registration_number": "REG-FLAT-106",
+      "class_name": "Grade 1",
+      "section": "A",
+      "dob": "15/08/2018",
+      "school": "Samosa High International",
+      "family_details": {
+        "studentName": "Pinky Paratha",
+        "studentAddress": "123 Gali Number, Delhi",
+        "motherTongue": "Hinglish",
+        "motherName": "Sunita Devi",
+        "fatherName": "Kumar Prasad",
+        "guardianContact": "9000000000",
+        "bloodGroup": "B+",
+        "weight": "30kg",
+        "height": "125cm",
+        "mediumOfInstruction": "English",
+        "attendance": [],
+        "familyTree": {}
+      },
+      "preferences": {
+        "color": "Orange",
+        "food": "Samosa",
+        "animal": "Tiger",
+        "sport": "Cricket",
+        "hobby": "General"
+      },
+      "last_updated": "2026-04-25 04:58:47",
+      "full_name": "Pinky Paratha",
+      "assessments": null,
+      "points": 200
+    },
+    {
+      "id": 50,
+      "user_id": 106,
+      "registration_number": "REG-SWEET-108",
+      "class_name": "Grade 2",
+      "section": "B",
+      "dob": "15/08/2018",
+      "school": "Samosa High International",
+      "family_details": {
+        "studentName": "Guddu Gulabjamun",
+        "studentAddress": "123 Gali Number, Delhi",
+        "motherTongue": "Hinglish",
+        "motherName": "Sunita Devi",
+        "fatherName": "Kumar Prasad",
+        "guardianContact": "9000000000",
+        "bloodGroup": "B+",
+        "weight": "30kg",
+        "height": "125cm",
+        "mediumOfInstruction": "English",
+        "attendance": [],
+        "familyTree": {}
+      },
+      "preferences": {
+        "color": "Orange",
+        "food": "Samosa",
+        "animal": "Tiger",
+        "sport": "Cricket",
+        "hobby": "General"
+      },
+      "last_updated": "2026-04-25 04:58:47",
+      "full_name": "Guddu Gulabjamun",
+      "assessments": null,
+      "points": 200
+    },
+    {
+      "id": 51,
+      "user_id": 107,
+      "registration_number": "REG-NOODLE-109",
+      "class_name": "Grade 2",
+      "section": "B",
+      "dob": "15/08/2018",
+      "school": "Samosa High International",
+      "family_details": {
+        "studentName": "Munna Maggi",
+        "studentAddress": "123 Gali Number, Delhi",
+        "motherTongue": "Hinglish",
+        "motherName": "Sunita Devi",
+        "fatherName": "Kumar Prasad",
+        "guardianContact": "9000000000",
+        "bloodGroup": "B+",
+        "weight": "30kg",
+        "height": "125cm",
+        "mediumOfInstruction": "English",
+        "attendance": [],
+        "familyTree": {}
+      },
+      "preferences": {
+        "color": "Orange",
+        "food": "Samosa",
+        "animal": "Tiger",
+        "sport": "Cricket",
+        "hobby": "General"
+      },
+      "last_updated": "2026-04-25 04:58:47",
+      "full_name": "Munna Maggi",
+      "assessments": null,
+      "points": 200
+    },
+    {
+      "id": 52,
+      "user_id": 108,
+      "registration_number": "REG-DAIRY-110",
+      "class_name": "Grade 2",
+      "section": "B",
+      "dob": "15/08/2018",
+      "school": "Samosa High International",
+      "family_details": {
+        "studentName": "Pappu Paneer",
+        "studentAddress": "123 Gali Number, Delhi",
+        "motherTongue": "Hinglish",
+        "motherName": "Sunita Devi",
+        "fatherName": "Kumar Prasad",
+        "guardianContact": "9000000000",
+        "bloodGroup": "B+",
+        "weight": "30kg",
+        "height": "125cm",
+        "mediumOfInstruction": "English",
+        "attendance": [],
+        "familyTree": {}
+      },
+      "preferences": {
+        "color": "Orange",
+        "food": "Samosa",
+        "animal": "Tiger",
+        "sport": "Cricket",
+        "hobby": "General"
+      },
+      "last_updated": "2026-04-25 04:58:47",
+      "full_name": "Pappu Paneer",
+      "assessments": null,
+      "points": 200
+    },
+    {
+      "id": 53,
+      "user_id": 100,
+      "registration_number": "REG-GOLU-102",
+      "class_name": "Bal Vatika 1",
+      "section": "A",
+      "dob": "15/08/2018",
+      "school": "Samosa High International",
+      "family_details": {
+        "studentName": "Paplu Poddar",
+        "studentAddress": "123 Gali Number, Delhi",
+        "motherTongue": "Hinglish",
+        "motherName": "Sunita Devi",
+        "fatherName": "Kumar Prasad",
+        "guardianContact": "9000000000",
+        "bloodGroup": "B+",
+        "weight": "30kg",
+        "height": "125cm",
+        "mediumOfInstruction": "English",
+        "attendance": [],
+        "familyTree": {}
+      },
+      "preferences": {
+        "color": "Orange",
+        "food": "Samosa",
+        "animal": "Tiger",
+        "sport": "Cricket",
+        "hobby": "General"
+      },
+      "last_updated": "2026-04-25 04:58:47",
+      "full_name": "Paplu Poddar",
+      "assessments": null,
+      "points": 200
+    },
+    {
+      "id": 54,
+      "user_id": 105,
+      "registration_number": "REG-BREW-107",
+      "class_name": "Grade 1",
+      "section": "A",
+      "dob": "15/08/2018",
+      "school": "Samosa High International",
+      "family_details": {
+        "studentName": "Chintu Chai",
+        "studentAddress": "123 Gali Number, Delhi",
+        "motherTongue": "Hinglish",
+        "motherName": "Sunita Devi",
+        "fatherName": "Kumar Prasad",
+        "guardianContact": "9000000000",
+        "bloodGroup": "B+",
+        "weight": "30kg",
+        "height": "125cm",
+        "mediumOfInstruction": "English",
+        "attendance": [],
+        "familyTree": {}
+      },
+      "preferences": {
+        "color": "Orange",
+        "food": "Samosa",
+        "animal": "Tiger",
+        "sport": "Cricket",
+        "hobby": "General"
+      },
+      "last_updated": "2026-04-25 04:58:47",
+      "full_name": "Chintu Chai",
+      "assessments": null,
+      "points": 200
+    }
+  ]
+}

@@ -1,0 +1,2065 @@
+ 
+  
+ 
+ 
+ 
+ 
+HOLISTIC PROGRESS  
+CARD (HPC) 
+Foundational Stage  
+ 
+Understanding the HPC 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ISBN   978-93-5292-973-3 
+ 
+Understanding the HPC 
+(Foundational Stage) 
+ 
+ 
+ 
+© National Council of Educational Research and Training, 2023 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Unpriced — Printed Digitally 
+Published at the PARAKH by National Council of Educational Research and Training,  
+Sri Aurobindo Marg, New Delhi 110016.   
+ 
+FOREWORD 
+he HPC prepared by PARAKH for the foundational stage is a remarkable tool designed 
+to revolutionize the education system. In an era where traditional methods of 
+assessment fall short of capturing the multifaceted growth of students, this innovative 
+approach takes a holistic view, ensuring that every aspect of a student's development is duly 
+recognized and nurtured. 
+Education is not solely about academic achievement; it encompasses the holistic development 
+of a child's cognitive, emotional, social , and physical domains. The HPC acknowledges this 
+fundamental truth, offering a comprehensive assessment framework that goes beyond 
+conventional assessment methods. It provides a nuanced understanding of a student's 
+progress, enabling educators, parents, and students themselves to gain valuable insights into 
+their strengths, areas for improvement, and overall growth. 
+The HPC is a meticulously designed system that captures a wide range of competencies. It 
+encompasses academic performance, critical thinking s kills, problem -solving abilities, 
+creativity, emotional intelligence, communication skills, social engagement, and physical well -
+being. By considering these diverse dimensions, the HPC creates a balanced assessment that 
+encourages students to develop holistically and become well-rounded individuals. 
+PARAKH's commitment to ensuring a fair and inclusive education system is commendable. The 
+HPC eliminates biases inherent in traditional grading systems, focusing on individual growth 
+rather than comparing students. It acknowledges that each student has unique talents and 
+potential and fosters an environment where their strengths can flourish. 
+This forward -thinking approach paves the way for a future where education transcends the 
+boundaries of rote learning and rigid evaluation. The HPC is a guiding light for educators, 
+empowering them to tailor their teaching methods to cater to individual needs, fostering a love 
+for learning and personal development. 
+I applaud PARAKH's efforts in developing the HPC at the foundational stage. It is a significant 
+stride towards creating an education system that values every aspect of a student's growth.  
+I thank the Chairperson, Central Board of Secondary Education (CBSE) , Ms. Nidhi Chibbar and 
+her entire team for their active participation and  collaboration to develop the HPC. I also thank 
+Directors, SCERTs and Principals, SIEs for their sincere efforts in supporting the pilot of the 
+HPC.   
+T 
+ 
+4 
+With the HPC, we embark on a journey where education becomes a transformative experience, 
+nurturing not only academic excellence but also the well -being and holistic development of our 
+children, preparing them to thrive in a rapidly evolving world. 
+Let us embrace the HPC as a catalyst for positive change and as a testament to our co llective 
+dedication to nurturing the holistic development of our students. 
+ 
+Prof. Dinesh Prasad Saklani 
+Director, NCERT 
+   
+5 
+ 
+ 
+PREFACE 
+ducation plays a pivotal role in shaping young minds and preparing them for a future 
+full of possibilities. In order to ensure holistic development and progress, it is crucial to 
+have a comprehensive system in place that assesses students' growth across various 
+domains and goals. It is with this vision in mind that HPC  has been developed for the 
+foundational stage. The HPC embraces a multidimensional approach to education. It recognizes 
+that learning goes beyond textbooks and examinations, incorporating div erse pedagogical 
+methods to foster a well-rounded educational experience. 
+The HPC emphasizes the importance of Toy -Based Pedagogy, Art -Integrated Learning, Sports -
+Integrated Learning, Experiential Learning, Community Involvement, and the use of Local 
+Resources for Education. By integrating these approaches, the HPC promotes a dynamic and 
+engaging learning environment that nurtures students' cognitive, emotional, and physical 
+growth. 
+Furthermore, the HPC aligns with the rich heritage of the Indian Knowledge System. It 
+recognizes the significance of a holistic approach to education, where students' abilities - 
+awareness, sensitivity, and creativity are nurtured in a comprehensive manner. The HPC 
+incorporates key performance descriptors based on the National Cur riculum Framework for 
+Foundational Stage (NCFFS) to provide detailed and descriptive reporting of students' 
+progress. 
+By monitoring students' progress through domain- based assessments and overall ability 
+assessments, the HPC ensures a comprehensive understanding of each student's growth. The 
+inclusion of self -assessment, peer -assessment, teacher s’ and caregivers’ feedback empowers 
+students to reflect on their own learning and encourages collaborative learning environments. 
+The HPC serves as a tool to bridge the gap between traditional assessment methods and the 
+evolving needs of education. It enables educators, parents, and students to celebrate individual 
+progress, identify areas for improvement, and cultivate a lifelong love for learning. 
+We believe that the HPC will contribute significantly to the educational landscape of India, 
+fostering a generation of well -rounded individuals equipped with the knowledge, skills, and 
+values necessary to navigate the challenges of the future. We invite all stakeholders in 
+education to embrace this comprehensive approach and embark on a transformative journey 
+towards holistic progress. 
+ 
+Prof. Indrani Bhaduri 
+Head & CEO, PARAKH
+ 
+E  
+6 
+   
+7 
+Background  
+The National Education Policy (NEP) 2020 aims to revitalize the Indian education system by 
+focusing on the overall development of learners. It emphasizes the need to nurture the unique 
+capabilities of each child and promote a multidisciplinary approach to education. Th e policy 
+advocated for the integration of vocational skills, critical thinking, and creativity into the 
+curriculum. 
+The NEP 2020 has also paved the way for the development of a groundbreaking initiative 
+called NIPUN (National Initiative for Proficiency in Reading with Understanding and 
+Numeracy) Bharat initiative. The NIPUN B harat initiative aims to address the foundational 
+learning gaps in numeracy and literacy among students. It focuses on early childhood 
+education and primary school years, recognizing th e importance of a strong foundation in 
+these formative years. NIPUN seeks to enhance the quality of education by providing training 
+programs for teachers, creating engaging and interactive learning materials, and leveraging 
+technology for personalized lear ning experiences. The initiative also encourages parental 
+involvement and community participation in order to promote and create a conducive learning 
+environment for children. 
+As the benefits of NEP 2020 and NIPUN are beginning to unfold, a new chapter in the journey 
+of holistic progress—the National Curriculum Framework for Foundational Stage (NCFFS) has 
+begun. This framework builds upon the principles of NEP 2020 and NIPUN, aiming to ensure 
+that all students acquire essential foundational skills for lifelong learning. 
+The NCFFS provides a roadmap for the development of curricul um, assessment tools, and 
+teaching methodologies that cater to the diverse needs of learners  at the foundational stage. It 
+emphasizes the integration of knowledge, skills, values, and attitudes into the curriculum, 
+fostering a well -rounded educational experience. The framework also promotes inclusivity, 
+recognizing and addressing the learning needs of students with disabilities and marginalized 
+communities. (Excerpts enclosed as Annexure) 
+A National Assessment Centre, PARAKH (Performance Assessment, Review, and Analysis of 
+Knowledge for Holistic Development) has been set up  to oversee the assessments relating to 
+holistic development and progress of the students. As a part of PARAKH initiative, a  progress 
+card to capture the holistic development of the students has been conceptualized. The HPC 
+(HPC) is an integrative document. It encompasses not only the academic achievements of a 
+student but also captures their social-emotional growth, creativity, and vocational proficiency.  
+8 
+The progress card proposes the use of integrative pedagogy in order to track students’ 
+performance. It distils the various academic domains, associated goals and competencies 
+thereof in the form of academic activities and use these activities to track progress.  
+HPC (HPC) urges schools and educators  to embrace an innovative approach to teaching and 
+learning at the foundational stage. It encourages the use of Toy -Based Pedagogy, Art-Integrated 
+Learning, Sports-Integrated Learning, experiential learning, critical thinking, and problem-solving 
+skills, enabling students to become active participants in their own education. 
+Thus, the activities may involve the use of the following integrative pedagogical tools:  
+A. Toy-Based Pedagogy 
+B. Art-Integrated Learning 
+C. Sports-Integrated Learning 
+D. Experiential Learning  
+E. Community Involvement 
+F. Using Local Resources for Education  
+A. TOY-BASED PEDAGOGY 
+Toys often give children emotional satisfaction, keep them occupied and prevent b oredom. 
+They help children learn, practice and develop new skills all the time. Toys help children to 
+explore, investigate, and experiment. They teach them about how things are made, how they 
+work and how to take care of their possessions. At the same time, they teach them to cooperate 
+with others, make friends and work in harmony. 
+Parents, guardians, caregivers, curriculum developers, and teachers can do so through Toy -
+Based Pedagogy. The word ‘Toy’ used with pedagogy here refers to local, indigenous, popu lar 
+toys and puppets which children love to play with, create, listen to and watch, such as tops, 
+dolls, racing cars, rattles, airplane, kites, dancing and singing puppets, etc. Here, it also refers to 
+street games such as lukka -chuppi, satapu, marbles, etc., and board games such as Chess, Ludo 
+as well as electronic and constructive games. The word ‘Play’ used here refers to the child’s 
+engagement with toys or games. Using toys and games, one can create a conducive 
+environment for learning in which a child learns without any fear and with much interest and 
+curiosity. 
+Toy-Based Pedagogy  holds significant importance for the development of a HPC due to the 
+following reasons:  
+   
+9 
+Playful and Experiential Learning:  Toy-Based Pedagogy  allows children to learn through 
+play, exploration, and hands -on experiences. It creates an environment where learning 
+becomes engaging, interactive, and enjoyable. Toys can be used to introduce concepts, foster 
+creativity, develop problem -solving skills, and encourage social interactions. Such experiential 
+learning enhances cognitive, emotional, social, and physical development, contributing to the 
+holistic progress of a child. 
+Multidimensional Skill Development: Toys provide a platform for the development of 
+various skills. They stimulate sensory experiences, promote fine and gross motor skills, 
+enhance cognitive abilities, encourage language development, and facilitate social interactions. 
+By incorporating Toy -Based Pedagogy, the HPC can assess and recog nize the growth of these 
+multidimensional skills, going beyond traditional academic measurements. 
+Individualized and Differentiated Assessment: Toy -based assessment allows educators to 
+observe and evaluate a child's progress in a personalized and differentiated manner. Rather 
+than relying solely on standardized tests, the HPC can include observations of a child's 
+interactions with toys, problem -solving abilities, creativity, and critical thinking skills. This 
+form of assessment provides a comprehensive view  of a child's strengths, weaknesses, and 
+progress, contributing to a more holistic evaluation of their development. 
+Inclusivity and Accessibility: Toy -Based Pedagogy  and assessment have the potential to be 
+inclusive and accessible for all children, regardl ess of their learning abilities or backgrounds. 
+Toys can be adapted to accommodate diverse needs and learning styles. They can also provide 
+a means of expression and engagement for children with disabilities, allowing them to 
+participate in learning experiences and be assessed based on their unique capabilities. This 
+inclusive approach ensures that the HPC captures the progress of all children, promoting 
+equity and diversity in education. 
+Parental Involvement and Engagement: Toy -Based Pedagogy  encourages parental 
+involvement in a child's education. Parents can actively participate in play -based activities, 
+fostering a stronger bond with their child and gaining insights into their development. Through 
+toy-based assessments, parents can also contribute to the HPC by sharing their observations 
+and experiences. This collaboration between parents, educators, and the HPC helps create a 
+more comprehensive picture of a child's progress and promotes a holistic approach to 
+education. By  embracing Toy-Based Pedagogy , th e HPC can capture a child's holistic 
+development, going beyond academic achievements to recognize their cognitive, social, 
+emotional, and physical growth. It fosters a learner -centric approach that celebrates individual 
+strengths, encourages creativity, and nurtures the overall well-being of children.  
+10 
+B. ART-INTEGRATED LEARNING 
+Art-integrated pedagogy combines various art forms with academic subjects, promoting 
+creative expression, critical thinking, and self -confidence. The HPC  can include indicators that 
+evaluate a learner's participation in art activities, their ability to exp ress ideas through artistic 
+mediums, and their artistic growth in areas such as music, dance, drama, and visual arts. 
+Art-Integrated Learning plays a crucial role in the development of HPC  because of its following 
+characteristics:  
+Creative Expression: Art -Integrated Learning  allows students to express themselves 
+creatively and explore their imagination. Through various art forms such as painting, drawing, 
+music, dance, and drama, children can communicate their thoughts, emotions, and ideas in 
+unique and personal ways. Including art in the HPC acknowledges and celebrates a child's 
+creative development, fostering a holistic approach to their growth. 
+Multiple Intelligence:  Art-Integrated Learning  recognizes and addresses the diverse 
+intelligence and learning s tyles of students. While traditional education often focuses on 
+linguistic and logical -mathematical intelligence, art allows for the development of other 
+intelligence such as visual-spatial, kinesthetic, musical, and interpersonal. By incorporating art 
+in the HPC, the assessment can encompass a broader range of skills and talents, providing a 
+more comprehensive understanding of a child's abilities. 
+Critical Thinking and Problem-Solving Skills: Art encourages critical thinking and problem -
+solving skills as students experiment, make decisions, and find innovative solutions. Art -
+Integrated Learning  promotes observation, analysis, and interpretation of visual and sensory 
+information, enhancing a child's ability to think critically  and approach challenges from 
+different perspectives. The HPC can assess a child's creative problem -solving abilities, 
+recognizing their capacity to think outside the box. 
+Emotional and Social Development:  Art allows children to explore and express their 
+emotions, helping them develop emotional intelligence and empathy. It also facilitates social 
+interactions and collaboration as students engage in group projects, performances, and 
+exhibitions. By including  art-based assessments in the HPC, a child's emotional and social 
+growth can be documented, providing a holistic view of their overall development. 
+Inclusion and Equity:  Art-Integrated Learning provides an inclusive and accessible platform 
+for all students , regardless of their academic abilities or backgrounds. Art allows for multiple 
+entry points and encourages diverse perspectives, making it a valuable tool for inclusion in 
+education. The HPC can capture the progress and achievements of students from diverse 
+backgrounds, recognizing their unique talents and contributions.  
+11 
+Well-being and Mindfulness: Engaging in art activities promotes well-being and mindfulness. 
+It offers a form of self -expression, relaxation, and stress reduction. Art-Integrated Learning  
+encourages self-reflection, boosts self-esteem, and promotes mental health and emotional well-
+being. By incorporating art- based assessments in the HPC, a child's holistic development in 
+terms of well-being and mindfulness can be acknowledged and valued. 
+By embracing Art-Integrated Learning , the HPC can provide a comprehensive evaluation of a 
+child's growth, capturing their creative, emotional, social, and cognitive development. It 
+recognizes the importance of nurturing well -rounded individuals and promotes an education 
+system that values the arts as integral components of a holistic education. 
+C. SPORTS-INTEGRATED LEARNING 
+Sports-integrated pedagogy emphasizes physical fitness, teamwork, discipline, and 
+perseverance. The HPC can incorporate indicators to track a learner's participation in sports 
+activities, their motor skills development, their understanding of sportsmanship, and their 
+ability to collaborate effectively in team sports. 
+Sports-Integrated Learning holds immense importance for the development of the child: 
+Physical Development:  Sports-Integrated Learning  promotes physical activity and 
+development among students. Engaging in sports helps improve motor skills, coordination, 
+strength, and overall physical fitness. Including sports -based activities in the HPC ensures that 
+a child's physical growth and well -being are recognized and valued alongside academic 
+achievements. 
+Teamwork and Collaboration:  Sports foster teamwork, collaboration, and effective 
+communication skills. Through team sports, students learn to work together, respect each 
+other's strengths and weaknesses, and achieve common goals. Sports -Integrated Learning  
+encourages cooperation, leadership, and sportsmanship, contributing to the development of 
+essential social skills. The HPC can assess a child's ability to collaborate, exhibit leadership 
+qualities, and demonstrate fair play within a sports context. 
+Discipline and Resilience:  Sports require discipline, perseverance, and resilience. By 
+engaging in sports, students learn the value of hard wo rk, dedication, and overcoming 
+challenges. They develop a growth mindset, learning from failures and setbacks. Assessing a 
+child's sports performance and participation in the HPC acknowledges their discipline, 
+resilience, and ability to face adversity, which are essential life skills.  
+12 
+Health and Well -being: Regular participation in sports promotes physical health and overall 
+well-being. It helps prevent lifestyle- related diseases, enhances mental health, and improves 
+concentration and focus. Including sports-related assessments in the HPC encourages a holistic 
+approach to a child's well-being, emphasizing the importance of a healthy lifestyle. 
+Character Development: Sports have the power to shape a child's character and instill values 
+such as perseverance, r espect, fairness, and integrity. Students learn about ethics, 
+sportsmanship, and the importance of following rules. Assessing a child's character traits and 
+values demonstrated through sports in the HPC acknowledges the role of sports in their 
+holistic development. 
+Inclusivity and Equity: Sports -Integrated Learning  can be inclusive and accessible for 
+students of all abilities. Adaptations and modifications can be made to ensure that all students 
+can participate and benefit from sports activities. Including sports -based assessments in the 
+HPC provides an opportunity to recognize the achievements and progress of students with 
+diverse physical abilities, promoting inclusivity and equity. 
+By incorporating Sports -Integrated Learning , the HPC can capture a child's holistic 
+development, beyond academic achievements. It recognizes the significance of physical fitness, 
+sportsmanship, teamwork, discipline, and character -building, fostering a well -rounded 
+education system. This holistic approach ensures that stud ents' physical, social, emotional, and 
+cognitive growth are equally valued and celebrated. 
+   
+13 
+ 
+D. EXPERIENTIAL LEARNING 
+Experiential learning promotes hands -on experiences, problem -solving, and critical thinking. 
+The HPC can include indicators that assess a learner's engagement in experiential learning 
+activities, their ability to apply knowledge in practical situations, and their reflective thinking 
+skills developed through real-life experiences and projects. 
+Experiential learning is of great importance for the development of the Child: 
+Active Engagement:  Experiential learning encourages active participation and engagement 
+from students. It involves hands -on experiences, real-world applications, and learning through 
+reflection. By integrating experiential learning into the curriculum and assessing it in the HPC, 
+students become active participants in their education, leading  to deeper understanding, 
+higher retention, and a more comprehensive view of their progress. 
+Practical Skills Development:  Experiential learning focuses on the development of practical 
+skills that are valuable in real -life situations. It provides opportunities for students to apply 
+knowledge, solve problems, make decisions, and develop critical thinking and problem -solving 
+abilities. By including experiential learning assessments in the HPC, a child's practical skills, 
+adaptability, and decision- making capabilities can be evaluated, ensuring a more holistic 
+understanding of their abilities. 
+Emotional and Social Growth:  Experiential learning often involves collaborative activities, 
+teamwork, and interactions with peers and the community. This fosters the development of 
+emotional intelligence, empathy, and social skills. Through experiential learning assessments 
+in the HPC, a child's emotional and social growth can be documented and acknowledged, 
+highlighting their ability to work in teams, communicate effectiv ely, and navigate social 
+situations. 
+Real-World Relevance: Experiential learning bridges the gap between theoretical knowledge 
+and real-world applications. It helps students see the relevance and practicality of what they 
+are learning, fostering a deeper u nderstanding and appreciation for the subject matter. 
+Including experiential learning assessments in the HPC recognizes a child's ability to transfer 
+knowledge and skills to real -life situations, promoting a well -rounded education that prepares 
+them for future challenges.  
+14 
+Personalized Learning: Experiential learning allows personalized and individualized learning 
+experiences. Students can explore their interests, strengths, and passions through experiential 
+activities, tailoring their learning to their unique needs. 
+Lifelong Learning Mindset:  Experiential learning nurtures a lifelong learning mindset by 
+fostering curiosity, self -directed learning, and a love for learning. It encourages students to be 
+active seekers of knowledge, to ask questions, and to expl ore the world around them. By 
+assessing experiential learning in the HPC, a child's enthusiasm for learning and their ability to 
+take ownership of their education can be acknowledged and encouraged. 
+By embracing experiential learning, the HPC can capture a  child's holistic development, 
+emphasizing their practical skills, emotional intelligence, social growth, and lifelong learning 
+mindset. It ensures that education goes beyond theoretical knowledge and embraces the 
+importance of real -world applications, personalization, and active engagement in the learning 
+process. 
+E. COMMUNITY INVOLVEMENT 
+Community-based pedagogy encourages students to engage with the local community, 
+fostering active citizenship and social responsibility. The HPC  can incorporate indicators that 
+measure a learner's involvement in community service projects, their understanding of social 
+issues, their ability to collaborate with diverse groups, and their contributions to community 
+development. 
+Community involvement plays a crucial role in the development of HPC: 
+Comprehensive Development:  Community involvement recognizes that education extends 
+beyond the confines of the classroom. The community plays a vital role in a child's holistic 
+development by providing a rich environment for learning and growth. Involving the 
+community in the assessment process for the HPC ensures that the child's progress in various 
+dimensions, including social, cultural, and ethical aspects, is recognized and valued. 
+Real-World Application:  Community involvement provides  opportunities for students to 
+apply their knowledge and skills in real -world contexts. It bridges the gap between theoretical 
+learning and practical application, allowing students to see the relevance and impact of their 
+education on their community. Assessing the child's contributions and engagement in 
+community-based activities in the HPC acknowledges their ability to transfer knowledge and 
+make a positive difference beyond academic achievements.  
+15 
+Social Responsibility and Citizenship:  Community involvement fosters a sense of social 
+responsibility and active citizenship among students. By engaging with the community, 
+students develop empathy, understanding, and a commitment to addressing social issues. 
+Assessing the child's involvement in community service, volunteer work, and initiatives 
+promoting social change in the HPC recognizes their social consciousness and their ability to 
+contribute positively to society. 
+Cultural Awareness and Diversity:  Community involvement exposes students to diverse 
+cultures, traditions, and perspectives. It helps them develop cultural awareness, respect for 
+diversity, and intercultural competence. By assessing a child's participation in community 
+events, cultural programs, and intercommunity collaborations in the HPC, their un derstanding 
+and appreciation of different cultures can be recognized, promoting inclusivity and celebrating 
+diversity. 
+Partnership and Collaboration:  Community involvement creates partnerships between 
+schools, families, and community organizations. It enco urages collaboration and collective 
+efforts towards education and development. Assessing a child's engagement in collaborative 
+community projects and their ability to work effectively with diverse stakeholders in the HPC 
+highlights their teamwork, leadership, and partnership skills. 
+Support and Enrichment:  The community can provide additional support and enrichment 
+opportunities for students' holistic development. Community members, mentors, and experts 
+can contribute to the child's learning journey by shar ing their knowledge, skills, and 
+experiences. Assessing the child's participation in community -based workshops, mentoring 
+programs, and enrichment activities in the HPC acknowledges the additional learning 
+opportunities they have accessed outside of the formal curriculum. 
+By involving the community and assessing community -based activities, the HPC can capture a 
+child's holistic development, recognizing their social awareness, cultural understanding, 
+citizenship skills, and their ability to engage with and contribute to the community. It promotes 
+a broader definition of education that extends beyond academic achievements and nurtures 
+responsible and active members of society. 
+   
+16 
+ 
+F. USING LOCAL RESOURCES FOR EDUCATION  
+In the Indian education system, the concept of using local resources for assessment aligns with 
+the aim of promoting a holistic approach to education. By incorporating local resources, such 
+as cultural artefacts, community knowledge, and indigenous practic es, into the learning 
+process, educators can provide a more contextual and meaningful learning experience for 
+students. This approach not only enhances students' understanding of their local environment 
+but also fosters a sense of pride in their cultural heritage. 
+In the context of the foundational and preparatory stages of education in India, using local 
+resources for education can greatly enhance the learning experience and promote a deeper 
+understanding of the local culture, environment, and community. H ere are some ways local 
+resources can be incorporated into the holistic progress card: 
+Local Language and Literature:  Emphasize the development of language skills by 
+incorporating local languages and literature into the curriculum. Assess students' proficiency 
+in reading, writing, and oral communication in their mother tongue or the regional language. 
+Include assessments  that require students to engage with local literature, folklore, and 
+traditional stories. 
+Mathematics and Numeracy: Assessments can incorporate local examples, such as using 
+traditional measurement systems, local patterns, or daily life scenarios for prob lem-solving 
+tasks. This helps students relate mathematical concepts to their immediate surroundings and 
+enhances their critical thinking and application skills. 
+Environmental Studies: Assessments can involve exploring local ecosystems, natural 
+resources, and environmental issues specific to the region. Students can be assessed on their 
+understanding of local flora and fauna, conservation practices, and their ability to analyze and 
+propose solutions to local environmental challenges. 
+Cultural and Historical Heritage:  Encourage students to explore and appreciate their local 
+cultural and historical heritage. Include assessments that involve visits to local heritage sites, 
+museums, and cultural events. Assess students' knowledge and understanding of local 
+traditions, customs, festivals, and historical events. 
+   
+17 
+Art, Craft, and Performing Arts:  Encourage students to explore and express their creativity 
+through local art forms, crafts, and performing arts. Include assessments that involve learning 
+and showcasing lo cal art techniques, traditional crafts, music, dance, or theatre. Assess their 
+skills, creativity, and understanding of local artistic traditions. 
+Local Resources as Teaching Aids:  Utilize local resources such as maps, photographs, 
+artefacts, and audio -visual materials specific to the region to enhance teaching , learning and 
+assessment. Assess students' ability to interpret and analyse local resources to gain knowledge 
+and understanding. 
+Integrating local resources into assessment practices fosters a deeper  connection between 
+students and their immediate surroundings, promotes cultural appreciation, and encourages 
+students to take pride in their local heritage. By considering the rich diversity of resources 
+available within their communities, educators can c reate a more inclusive and meaningful 
+assessment process, which can be reflected in the holistic progress card. 
+HOLISTIC PROGRESS AND THE INDIAN KNOWLEDGE SYSTEM 
+The Indian Knowledge system is rooted in ancient Indian philosophy and encompasses a 
+holistic approach to education. It focuses on the development of the physical, intellectual, 
+emotional, and spiritual aspects of an individual. The Indian Knowledge System delves into 
+tracking holistic progress of the students by taking the following key elements o f progress into 
+account:  
+Physical Development: The Indian Knowledge system recognizes the importance of physical 
+well-being. It emphasizes the need for physical activities, yoga, and sports to develop strength, 
+coordination, and overall health. 
+Intellectual Development:  The Indian Knowledge system pro motes a comprehensive 
+intellectual development by fostering curiosity, critical thinking, problem -solving skills, and 
+creativity. It encourages experiential learning and the exploration of various subjects. 
+Emotional Development:  The Indian Knowledge system emphasizes the development of 
+emotional intelligence and empathy. It promotes values like compassion, respect, and self -
+awareness. Students are encouraged to understand and manage their emotions effectively. 
+Spiritual Development: The Indian Knowledge sy stem recognizes the significance of spiritual 
+growth and self-realization. It encourages students to explore their inner selves, develop moral 
+values, and understand the interconnectedness of all beings.  
+18 
+Moral and Ethical Development:  The Indian Knowledge system places a strong emphasis on 
+moral and ethical values. It instils a sense of integrity, honesty, and social responsibility in 
+students. They are encouraged to act ethically and make responsible decisions. 
+Cultural and Artistic Development: The Indian Knowledge system celebrates the rich 
+cultural heritage of India. It promotes the understanding and appreciation of various art forms 
+such as music, dance, drama, and visual arts. Students are exposed to diverse cultural 
+traditions. 
+Environmental Awareness : The Indian Knowledge system fosters environmental 
+consciousness and sustainability. It educates students about the importance of preserving 
+nature, ecological balance, and the impact of human activities on the environment. 
+The Indian Knowledge system aim s to nurture individuals who are not only academically 
+competent but also well -rounded, ethical, and compassionate human beings. It seeks to create 
+an education system that prepares students for life by integrating various dimensions of their 
+development. 
+The HPC in alignment with the Indian Knowledge system focuses on a well -rounded 
+assessment of a student's development. It goes beyond academic performance and includes 
+evaluations of physical fitness, emotional intelligence, creativity, moral values, and o verall 
+character development.
+ 
+   
+19   
+ 
+20 
+   
+21 
+How to fill the HPC 
+The HPC seeks to provide a comprehensive descriptive system for reporting students’ progress 
+in relation to the domains, curricular goals and competencies described in the National 
+Curriculum Framework (NCF) to assess the students’ progress across three abilities -
+Awareness, Sensitivity and Creativity. 
+It is reiterated that the HPC urges schools and educators  to embrace an innovative approach to 
+teaching and learning at the foundational stage. It encourages the use of Toy-Based Pedagogy, Art-
+Integrated Learning, Sports-Integrated Learning, Experiential L earning, critical thinking, and 
+problem-solving skills, thus  enabling the students to become active participants in their own 
+education. 
+The current PARAKH -NCERT version of the progress card, developed for the Foundational 
+Stage, includes three parts.  
+Part A (1) Consists of General Information about the student (e.g ., name, class, date of birth, 
+mother tongue, medium  of instruction, geographical area, etc. ), attendance information and 
+hobbies and interests. This section will be filled by the teacher.  
+   
+22 
+PART-A (1) 
+Name and Address of the School ………………………………………………………………………………………………………… 
+Village ……………………………………  BRC ……………………………………  CRC ……………………………………………………  
+State …………………………………………………………………………………………    Pin Code        
+UDISE Code                 Teacher Code ______________________ 
+APAAR ID …………………………………………………………………………………………………………………………………………  
+GENERAL INFORMATION 
+(To be filled by the teacher in consultation with caregiver/parent)  
+Student Name:  _____________________________________________________________________ 
+Roll No.: ________________________ Registration No.: ________________________ 
+Grade: BV1  BV2  BV3  Grade 1  Grade 2  
+Section:  __________________ Date of Birth:  ___________________ Age: _________ 
+Address: _____________________________________________________________________ 
+ ____________________________________ Phone: ________________________ 
+Mother/Guardian Name: _____________________________________________________________ 
+Mother/Guardian Education: _______________________ Mother/Guardian Occupation: __________________________ 
+Father/Guardian Name: ___________________________________________________________________________________________ 
+Father/Guardian Education: _________________________ Father/Guardian Occupation: __________________________ 
+Number of siblings: ____________________________________________________________ Siblings’ age: __________________ 
+Mother Tongue: ____________________________________ Medium of Instruction: ______________________________ 
+Rural/Urban: ______________________________________________________________________________________________ 
+How many times the student has fallen ill? ______________________________________________________________________ 
+ATTENDANCE 
+MONTHS APR MAY JUNE JUL AUG SEP OCT NOV DEC JAN FEB MAR 
+No. of Working Days              
+No. of Days Attended             
+% of Attendance              
+If attendance is low 
+then reasons there of  
+ 
+INTEREST (I (the student) am interested in) *: 
+Reading  Dancing or Singing or Playing a musical instrument  Sport or Games  
+ 
+Creative writing  Gardening  Yoga  Art  Craft  Cooking  
+  
+Regular chores at home with significant others (father, mother, guardian, sibling, etc.)    
+ 
+Other  Please specify …………………………………………….……………………………………………………… ……… … ……… … ………  
+ 
+………………………….……………………………………………..…………………………………………………………………………………………………
+…………………….……………………………………………..…………………………………………………………………………………………… 
+* May choose more than one option  
+ 
+ 
+ 
+ 
+Photograph  
+23 
+Part A (2) Consists of a section called ‘Me and My Surroundings.’ This section is interactive in 
+nature and will be filled with the students.  
+ 
+ 
+ 
+24 
+ Part B Consists of a Progress Summary, divided into four major components:  
+1. The Activity Component 
+•  The Activity component consists of four  parts, Domain, Activity , Assessment 
+Questions and Assessment Rubric . For each domain, the corresponding Curricular 
+Goals are provided.  Within the domain part: 
+Competency/Competencies 
+ The teacher will be required to enter the competency/competencies  being 
+evidenced through the activity described.  
+Activity 
+ In the Activity part, the teacher will enter that activity that they develop to assess the 
+students on each individual domain, associated curricular goal/s  and 
+competency/competencies thereof.  
+Assessment Questions 
+ The teacher will frame assessment questions to map the abilities outlined in the 
+rubric. These questions can be asked directly to students and also serve as 
+observation points during the activity. 
+ 
+ 
+25 
+Assessment Rubric 
+• This component also consists of an Assessment Rubric  part. Within the assessment 
+rubric part, the teacher will make two entries:  
+ The The teacher will develop performance descriptors for all three abilities —
+Awareness, Sensitivity, and Creativity (as defined on page 27) —across all three 
+performance levels: Stream, Mountain, and Sky (as defined on pages 28–31). 
+ Encircle the performance lev el descriptors for each ability based on individual 
+student’s performance. 
+ 
+2. The Teacher’s Feedback Component 
+• This Teacher’s feedback component is designed to provide a graphical representation of 
+the student’s performance in this domain in the whole term. The teacher will mark the 
+student’s ability level on the Performance levels’ illustration and write their spe cific 
+observations in the space provided. The observations may include general behavior, 
+attitudes and any other remarks that the teachers would want to make with regards to 
+the student.  
+ 
+ 
+26 
+3. The Self/Peer Assessment Component  
+• In the Self -Assessment part, the students will be asked  to provide their overall 
+impression of a particular activity. They will rate both their own level of enjoyment of 
+the activity and the level of difficulty of the work needed to complete the activity using a 
+three-level rating scale. The learners will be asked to select the resources they needed 
+to complete the activity.  
+ 
+• Similarly, in the Peer-Assessment part, a student’s peer will be asked to  provide their 
+overall impressions similar to those described in the column on self -assessment and for 
+the same activity. 
+ 
+4. The Parent/Caregiver/Guardian’s Observation Component  
+• In this component, the parent/caregiver/guardian will find a column on learning -
+teaching resources at home . In this column they will be asked to encircle the 
+resources related to each individual activity that the student has access to at home.  
+Additionally, they can also substantiate this information with any additional 
+observations in the Comments/Remarks  column. This component will be filled by the 
+teacher in consultation with the parents during the SMCs/PTA meetings. (Annexure 2) 
+  
+ 
+ 
+27 
+Part C  provides a summary of the academic year. It outlines the Key Performance Level 
+Descriptors for the three core abilities—awareness, sensitivity, and creativity —which form the 
+basis for descriptive reporting in the Holistic Progress Card (HPC). These descriptors are 
+detailed across each of the five domains outlined in the National Curriculum Framework (NCF).
+ 
+ 
+28 
+Abilities-Awareness, Sensitivity and Creativity  
+ Awareness: H aving knowledge related to and understanding of the activity to be 
+conducted; being informed about the activity and its various factors; being able to 
+understand the activity requirements; and being attentive, perceptive, cognizant of 
+surroundings and fully engaged in the process of conducting the activity. 
+ 
+ Sensitivity: Managing and expressing emotions, thoughts, and behaviors in line 
+with social norms and relevant to the activity; being attuned to the emotions and needs 
+of others during the activity, when applicable; perceiving or understanding a problem 
+beyond logical or analyt ical reasoning; approaching conflicts with empathy, 
+understanding and open mindedness.  
+ 
+ Creativity: G enerating innovative, original, and valuable solutions to problems; 
+demonstrating inventiveness and original thinking; thinking flexibly and exploring 
+diverse possibilities; possessing a sense of curiosity and a desire to explore; looking at 
+situations from different angles, questioning and challenging assumptions; and 
+combining ideas, concepts, or domains. 
+   
+29 
+Performance Level Descriptors  
+(These abilities are to be mapped specifically based on the student's performance during the activity, not in general) 
+Awareness 
+Stream: 
+A Stream Level  student follows instructions/directions for two - or three- step tasks; 
+occasionally identifies aspects of the task that are related to previously learned materials, only 
+rarely understand the full set of requirements for the task;  and has limited knowledge about 
+properties/factors needed to complete the activity. The Stream Level  student applies simple 
+learned procedures and exhibits limited fluency but lacks conceptual understanding; solves 
+problems with assistance and uses others’ ideas based on observations; and recounts only a 
+few important ideas or details of the task. 
+Mountain: 
+A Mountain Level  student follows instructions/directions for four - to five- step tasks and 
+gives instructions to peers for completing a simple task; describes  aspects of task that are 
+related to previously learned materials and sometimes understands the requirements of the 
+task; and has some knowledge about properties/factors needed to complete the task. The 
+Mountain Level  student asks general questions about the task; applies some logical 
+organizational strategies to complete the task; is familiar with simple learned procedures, 
+exhibits some fluency, and applies conceptual understanding for simple cases ; solves problems 
+with prompting; and retells major points of the task using simple sentences. 
+Sky: 
+A S
+ky Level student follows instructions/directions for tasks with more than five steps and/or 
+tasks that require conditional branching (e.g., If it is raining, do not water the plants) and gives 
+clear and precise instructions to peers for completing the tasks; summarizes ideas  of tasks that 
+are related to previously learned materials; most times understands the requirements of the 
+task; and has knowledge about properties/factors needed to complete the task. The Sky Level  
+student asks specific question about the task; consistently applies logical organizational 
+strategies to complete the task; uses different strategies to perform learned procedures, 
+exhibits fluency, applies conceptual understanding when formulating and so lving problems; 
+identifies and explain ideas based on different factors; and retells major points of the task using 
+elaborated descriptions, incorporating key details and using appropriate terminology.   
+30 
+Sensitivity 
+Stream: 
+A Stream Level  student demonstrates some interest in participating in the task, provides a 
+general reason for such interest and participates in teacher -led activities related to the task; 
+enjoys qualities of familiar tasks (e.g., rhyming words in poems, rhythm in songs,  playing 
+games); and expresses an overall reaction to the task (e.g., “I like it”). The Stream Level  is 
+receptive to help, asks peers for help while completing a task and enjoys listening to simple 
+products (e.g., songs or poems) created by peers; when prompted listens to peers’ ideas, 
+recognizes and tries to understand the value of simple ideas expressed by others; and observes 
+and appreciates others’ work on the task. With help from others, the Stream Level  student 
+attempts to keep composure while performing tasks that require patience but must be 
+encouraged to attempt to complete complex parts of the task, to learn new things and to 
+formulate ideas to complete simple parts of the task. 
+Mountain: 
+A Mountain Level student demonstrates interest and willingness to participate in the task and 
+describes with some detail one or more reasons for interest in the task; expresses a reason for 
+an emotional reaction to the task or to specific parts of the task (e.g., “I like it because it makes 
+me laugh”), an opinion, sometimes in writing, about the task or part of the task (e.g., “I think 
+the instructions were easy to follow”) and responds with some detail to questions about 
+feelings about the task. The Mountain Level student agrees to and enjoys working with others; 
+can explain the practical values of simple ideas expressed by others; mimics others in their 
+work on the task; both helps peers and receives help in completing a task and explains to 
+others how to complete simple parts of the task; contributes to a short conversation about the 
+task, waiting for a turn to speak and mostly staying on topic and listening attentively and 
+asking simple questions. The Mountain Level  student keeps composure while performing 
+tasks that require patience; appreciates the usefulness of previously acquired knowledge and 
+skills for helping to complete the task (e.g., the usefulness of the relationship between addition 
+and multiplication when working on task that require multiplying numbers); is willing to learn 
+new things; and proposes ideas to complete simple parts of the task.  
+   
+31 
+Sky: 
+A Sky Level  student demonstrates a high level of interest and enthusiasm for working on 
+increasingly challenging tasks; explains one or more detailed, thoughtful r easons for interest 
+for the task; gives a specific detail to support an emotional response to one or more parts of the 
+tasks or to the whole task (for example, “My favorite character in the story is Mr. Patel because 
+…”  or “This is a good ad because it ex plains why ABC dish soap cleans best.” or “I’d like to try 
+this recipe because ...”);  responds with detail and thoughtfulness to sensitivity -related 
+questions about the task (e.g., favorite books or stories, feelings about books or reading; 
+characters feelings in a story); uses generally appropriate phrasing and expression to 
+communicate emotions or meaning related to the task; and regularly expresses personal 
+opinions and feelings. The Sky Level  student offers to help other students and uses  
+explanation to help peers; leads peers initiating work for the task; explains a peer’s ideas if 
+different from their own and explains why they may have chosen that particular idea; enjoys 
+working revising own ideas when confronted with ideas of others; and asks and/or surmise 
+about the feelings of others involved in the task; contributes to a long conversation; and during 
+a discussion, raises two or more complex, on -topic questions. The Sky Level  student enjoys 
+using previously acquired knowledge and skill s to solve problems; and enjoys learning and 
+seeks opportunities to learn. 
+Creativity 
+Stream: 
+The Stream Level  student observes and uses previous knowledge to understand innovative 
+ways to work on the task; names a part of the task for which they would like instructions (for 
+example, how to plant flowers in a pot or a recipe for making a cake) and can follow 
+predetermined steps or new steps created by others; recognizes that there is more than one 
+way work on the task; accepts that tools and technology can be used in more than one way to 
+complete the task; and understands that the surrounding world contains ideas r elated to the 
+task. The Stream Level student can work on a new strategy when it is presented to the student 
+but cannot fully understand its purpose; identifies and combines, when needed, 
+artifacts/elements that can be used to create a given object (e.g., c ombining given shape to 
+make a new shape); writes  two sentences on a self -selected topic or theme related to the task; 
+makes inferences on what might happen next and recognizes when initial hypothesis and 
+predictions might not work; and identifies other perspectives related to the task.  
+32 
+Mountain: 
+The Mountain Level  student, when prompted,  uses previous knowledge to create strategies 
+and devise novel approaches to familiar tasks;  expresses curiosity about taking different steps 
+than those provided in a set o f instructions; understands that there are novel ways to work on 
+the task; uses tools and technology in more than one way; uses manipulative, with support, to 
+complete parts of the task and sometimes  uses self-determined rules for the use of the tools 
+and manipulative; makes connections between the task and the student’s own life experiences 
+and provide some detail about the connection; and when prompted, can look at the 
+environment in unique ways to get ideas solve parts of the task. The Mountain Level student, 
+when prompted, works following different new strategies for different functional purposes; 
+spontaneously combines artifacts/elements to make their own object; with assistance, writes 
+new ideas related to the task; when presented with unique phenomena, critiques the 
+hypotheses and predictions of others; when prompted, describes how the task can be seen 
+from a different perspective and names parts of the task that they would like to change. 
+Sky: 
+The Sky Level  student devises strategies and novel approaches to the task on their own; 
+expresses interest in changing the steps in a set of instructions, skipping/adding steps 
+appropriately, or creating their own version of the set of instructions; uses tools, manipulatives 
+and technology in novels ways; most or all of the times, accurately uses self -determined rules 
+for the use of the tools and manipulatives; explains in detail how an aspect of  the task relates 
+to one’s own experiences, describes with some detail connections and/or differences they see 
+between the task and their own lives and experiences and describes a situation (either real or 
+imagined) that is similar to the task. The Sky Level  student, proposes and implements 
+innovative and original approaches/sol utions, creates  novel categories for organizing the 
+objects or the parts of the task, demonstrates curiosity by independently asking questions 
+about the intent of the task; when presented with unique phenomena, makes multiple 
+observations towards novel hyp otheses and critiques the hypotheses of others; explains why 
+the task can be approach from different perspectives; identifies and explains with some detail a 
+part of the task they wish they could change; expresses interest in writing their own version of 
+the task; and initiate and maintain a long conversation with a peer or adult about the task. 
+ 
+  
+33 
+Monitoring Students’ Progress  
+The progress of the learners will be tracked at two levels, namely,  by domain at the end of each 
+activity and by overall Ability (awareness, sensitivity, creativity) at the end of academic year.  
+Feedback by Domain:  
+• For each activity the teacher will create a rubric by Ability and performance levels. 
+ASSESSMENT RUBRIC (Template) 
+ Stream Mountain Sky 
+Awareness    
+Sensitivity    
+Creativity    
+• At the end of each activity, the teacher will rate the students’ progress into any of the 
+three performance levels (Stream, mountain, and Sky) by encircling the relevant column   
+based on performance for each Ability.  
+Feedback by Ability:  
+• At the end of each academic year, the teacher will rate the students’ progress into three 
+performance levels for each Ability.  
+• On the basis of observations made during the activities conducted for each domain, the 
+teacher will write their description of observed progress for each domain by the year -
+end summary.  
+• This will be followed by identifying students’ performance levels for the three abilities 
+and filling them in the rubrics respectively.  
+ 
+ 
+   
+34 
+Opportunities for Improved Learning and Teaching Provided by the HPC 
+ The HPC places a strong emphasis on the teaching, learning and development of 
+competencies, by focusing on student progression in relation to the curricular goals in the 
+NCF, and by describing performance-based, observable behaviors associated with three key 
+abilities—awareness, sensitivity and creativity.  This use of a competency -based model, 
+rather than a knowledge- acquisition model, has the potential to significantly improve 
+Learning and Teaching and is consistent with current global trends in educational reform. 
+ The HPC indicates activities that can provide rich opportunities to develop and 
+assess competencies both separately and in an integrated manner. These activities, 
+and others to be developed, will allow fo r holistic evaluation of students’ progress in all 
+domains specified by the NCF. 
+ The HPC reflects the importance of students being active participants in their own 
+learning by requiring self-evaluation and emphasizing the importance of situating learning 
+in a social environment by including caregiver/parent and peer feedback.  
+ The HPC bases holistic  reporting on three performance levels with short and memorable 
+names (Sky/Mountain/Stream) that clearly reflect the progressive nature of the levels 
+and provide visuals that illustrate their hierarchical meaning. 
+ The HPC is a tool for monitoring student progression on all competencies in the NCF  
+by providing opportunity for reporting at two different times of the year. These progress 
+cards can be used for implementing teaching interventions for individual progress during 
+the school year.  
+   
+35 
+EXEMPLAR-Learning Activities for Foundational 
+Stage 
+This section provides Examples of Suggested Activities  that teachers might choose to elicit 
+performance-based, observable behaviors to assess a particular competency pertaining to any 
+one goal in a term. In the exemplar, the following information is provided to teachers. 
+a. An example of a domain and its associated curricular goals. 
+b. A chosen goal from the list of all goals associated with the domain, a suggested activity 
+that is aligned to the goal and elicits student performance of the targeted goal, and 
+descriptors related to the goal for three performance levels (Stream, Mountain and 
+Sky) for each of three abilities (Awareness, Sensitivity, and Creativity). 
+c. Caregiver/parent feedback on the student’s perceived performance level on the 
+activity for each of the three ability levels. The caregiver/parent is expected to use the 
+descriptors provided and their knowledge of the student’s performance to provide a 
+judgment about where the student stands on each of these abilities as they relate to 
+the activity provided. 
+d. Teacher feedback on the performance level of the student across all activities 
+conducted throughout the term, related to the targeted goal, for each of the three 
+ability levels. 
+e. Pedagogy points, which are additional notes the teacher can make about pedagogical 
+approaches the teacher might take to facilitate the student progression on achiev ing 
+the curricular goal based on student performance, and feedback from the 
+caregiver/parent and teacher.  
+ 
+   
+36 
+ 
+ 
+   
+37 
+ 
+   
+38 
+Exemplar for Foundational Stage (Grade-I) 
+DOMAIN 1: Physical Development 
+Curricular Goals: 
+•  Develops habits that keep them healthy and safe 
+•  Develops sharpness in sensorial perceptions 
+• Develops a fit and flexible body 
+Competency/Competencies:  
+C.2.1 Differentiates between 
+shapes, colours and their 
+shades 
+ 
+ACTIVITY  
+Learning Outcome: 
+ 
+ Predicts resulting colour when two colours are mixed. 
+ 
+Suggested Activity: 
+Tinka-Tinka Rang (Bit by Bit, We Colour) 
+ 
+In this fun group activity, children explore colours by mixing two or more  colours. The teacher begins 
+by showing colourful traditional Indian toys like clay animals, wooden birds, or spinning tops. Children 
+talk about the colours they see and interact with on a daily basis  and share their stories, like the colour 
+of milk, tree leaves, animals, soil or flowers (e.g., rose, marigold etc). Here is a step-by-step process: 
+1.Each group of 4 students gets two basic colours — red, yellow, or blue — and some white paper or 
+simple clay toys.  
+2. Children have to guess what the outcome of mixing colour A will be + colour B.  
+3. They then mix the colours using safe paints (or natural colour options like turmeric and beetroot 
+water) and paint their toys.  
+4. After that, they give a special name to their colour — inspired by things they know,  like "Mango 
+Magic" or "Rose Pink." 
+5. At the end, children sit together to talk about what they did, what colour they made, and how it felt to 
+work as a team. 
+Note (for including CWSN): 
+In an inclusive classroom, visually impaired children can explore the  toys by touching and feeling their 
+shapes and textures. The teacher can use scented natural colours like haldi, rose water, or coffee so that 
+children can enjoy the activity through smell and touch. The teacher may also help them mix the colours 
+and feel the texture. She can guide them to think of a new name based on how the colour smells or feels. 
+ASSESSMENT QUESTIONS 
+1.Was the colour the same as what you thought?  
+2. How did the paint feel on your brush or fingers? 
+3. Which colour did your teammates use to paint? 
+4. What special name can you imagine for your new colour, and why did you choose it? 
+5. The teacher shows the student a faded painted toy. Then, the teacher took one of the students' toys 
+and compared it with the faded ones.  The teachers asked, “What do you think about these toys?” 
+  
+39 
+ASSESSMENT RUBRIC* 
+ Stream Mountain Sky 
+Awareness 
+The child can say 
+some colour names 
+when someone helps 
+them. The child is 
+trying to see what 
+happens when two 
+colours are mixed. 
+The child is also 
+struggling to identify 
+the colours. 
+The child can mix two 
+colours and say what 
+colour they have made. 
+The child can tell if it looks 
+like what they guessed. 
+Mixed the paint and  
+started painting. 
+The child can mix colours on 
+their own, guess the result  
+correctly, and explain why 
+the colour changed. The child 
+can also say what real thing 
+(like an animal or object) 
+reminds them of. The child is 
+helping the peers with 
+mixing the colours. 
+Sensitivity 
+The child is trying to 
+work in a group. The 
+child may need 
+reminders to take 
+turns or talk about 
+the paint. The child 
+is waiting for the 
+peers to start 
+working and 
+constantly following 
+the peers 
+The child takes turns, 
+listens to friends, and talks 
+about th
+e colours others 
+have used. The child can 
+say a little about how the 
+paint felt. The child is 
+discussing which colour 
+he/she should paint. 
+The child joins the group 
+happily, helps others, and 
+talks clearly about how the 
+paint felt on their brush or 
+fingers. The child makes 
+sure everyone feels 
+included. The child is also 
+looking carefully at each of 
+his/her group members 
+Creativity 
+The child chooses a 
+name like "Blue 2" or 
+"Dark Red" without 
+thinking much about 
+it. 
+The child gives their 
+colour a fun or nice name, 
+maybe something they 
+know, like "Peacock Blue" 
+or "Princess Pink." 
+The child thinks of a special 
+and creative name, like 
+"Gulab Jal Pink" or "Mehendi 
+Green." The name connects to 
+Indian festivals, food, nature, 
+or stories and the child 
+explains why they chose it. 
+* Note: Circle the relevant performance level based on the individual student’s performance for each 
+ability for this activity. 
+   
+40 
+ 
+TEACHER’S FEEDBACK 
+NOTE: For each ability, mark the 
+appropriate level Observational Notes 
+ 
+The child understood the colours well and was able to 
+guess the result correctly. S he worked nicely with her 
+group, listened carefully, and took turns. However, the 
+name she gave for the colour (“Light Orange”) was 
+simple and could have shown mor e creativity or 
+cultural thinking. 
+ 
+ 
+Parents/Caregiver/Guardian’s Observation  Comments/Remarks 
+ 
+ 
+ 
+ 
+ 
+ 
+A S    
+ 
+C  
+41 
+DOMAIN 2: Socio-Emotional Development 
+Curricular Goals: 
+•  Develops emotional intelligence, i.e., the ability to 
+understand and manage their own emotions, and 
+respond positively to social norms 
+• Develops a positive attitude towards productive work 
+and service or Seva 
+• Develops a positive regard for the natural environment 
+around them 
+Competency/Competencies: 
+C.4.2 Recognises different emotions 
+and makes deliberate efforts to 
+regulate them appropriately 
+ACTIVITY 
+Learning Outcome: 
+ Recognises basic emotions and understand that people react differently to different situations. 
+ 
+Suggested Activity: 
+Feel & Act! 
+In this activity, children will listen to a simple story about Mina and her missing shoe. After each part of the 
+story, the teacher will pause and ask one child to act out how Mina is feeling using only their face and 
+body—no words. For example, when Mina wakes up excited, the child will enact the expression by smiling 
+and jumping to show how happy she feels. Then, the teacher will show two cards with different emotions, 
+like excited or sad, and the child will pick the one that matches the feeling they acted out. This continues 
+with other emotions like when Mina is worried about losing her sho e or when she feels happy after 
+hugging her dog, Tofu. The other children will guess what the emotion is and where it fits in the story. The 
+activity ends in short talk where the teacher asks a few questions to the children. 
+Story: Mina’s Missing Shoe 
+Mina woke up early one morning, excited because it was her  fun day at school. She was getting 
+ready quickly when she realized— one of her shoes was missing! Mina looked under the bed, 
+behind the door, and even in her toy box, but she couldn’t find it. She felt worried and sad. 
+Then, Mina saw her puppy, Tofu, running into the room with her missing shoe in his mouth! At 
+first, Mina felt angry and shouted at Tofu, but when she saw him wagging his tail, she couldn’t 
+stay mad. She gave him a big hug and laughed, feeling happy again. 
+When her mother walked in and smiled, Mina was ready to go. She grabbed her shoe and 
+ran off to school, still laughing. 
+ 
+Note (for including CWSN): 
+Teachers can help CWSN by showing emotions with pictures or using actions first. They can also let the 
+child copy simple movements or join a small group to act together. This makes it easier and more fun for 
+them to join in. 
+   
+42 
+ASSESSMENT QUESTIONS 
+ 
+1. Think about a time when you felt angry. How did you react? 
+2. Can you show me what surprise looks like on your face? 
+3. How can you tell if your friend is feeling happy or sad?  
+4. How can you show someone -you are sorry without using words? 
+5. Can you think of something that makes you feel both happy and a little scared at the same time? 
+ 
+ 
+ 
+ASSESSMENT RUBRIC* 
+ Stream Mountain Sky 
+Awareness 
+The child can say a few 
+feelings like happy or 
+sad, but they need help 
+to show them. 
+The child can show 
+feelings like happy, sad, 
+angry, or surprised and 
+can talk about them with 
+some help. 
+The child can easily show 
+many different feelings 
+using their facial 
+expression and body 
+movement. They can also 
+talk about how they feel in 
+real life. 
+Sensitivity 
+The child need s help to 
+join in and show care for 
+others. They are learning 
+to show they care, like 
+saying sorry without 
+words. 
+The child can join in and 
+show they care, like 
+saying sorry by giving a 
+hug or using their actions. 
+They might need a little 
+help to stay focused. 
+The child joins in happily 
+and shows they care 
+without being asked. They 
+can say sorry or show 
+kindness in many ways, 
+without needing help. 
+Creativity 
+The child finds it hard to 
+talk about their feelings 
+and needs help. 
+The child can talk about 
+some m ixed feelings, like 
+happy and scared, with a 
+little help. 
+The child can easily talk 
+about mixed feelings, like 
+being happy and scared at 
+once, and share examples 
+from their own life. 
+ 
+* Note: Circle the relevant performance level based on the individual student’s performance for each 
+ability for this activity. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+   
+43 
+ 
+TEACHER’S FEEDBACK 
+NOTE: For each ability, mark the 
+appropriate level Observational Notes 
+ 
+The child could recognise and act out different 
+emotions well and matched them correctly to the 
+story. However, they needed support to stay focused 
+during the activity and found it difficult to talk about 
+similar feelings from their own life. 
+ 
+ 
+ 
+Parents/Caregiver/Guardian’s Observation  Comments/Remarks 
+ 
+ 
+ 
+ 
+ 
+ 
+C 
+A 
+S  
+44 
+DOMAIN 3: Cognitive Development 
+Curricular Goals: 
+•  Makes sense of the world around through 
+observation and logical thinking 
+•  Develops mathematical understanding and 
+abilities to recognize the world through 
+quantities, shapes, and measures 
+Competency/Competencies: 
+C-8.8 Recognises makes and classifies 
+basic geometry shapes and their 
+observable properties and understands 
+and explains the relative relations of 
+objects in space 
+ACTIVITY* 
+Learning Outcome: 
+ Recognises basic geometric shapes and their observable properties using familiar objects from t heir 
+surroundings  
+Suggested Activity: 
+Shape Detectives 
+In this fun activity, the teacher will first introduce 4 shapes to the children: circle, square, rectangle, 
+and triangle. The teacher will show pictures of these shapes and talk about them. For example: 
+● "This is a circle. It’s round like a clock." 
+● "This is a square. It has 4 equal sides, like a piece of paper." 
+● "This is a rectangle. It’s longer than it is wide, like a book." 
+● "This is a triangle. It has 3 sides, like a roof." 
+Then, the children will look around the classroom  to find things that match these s hapes. They will 
+name objects they see, like: 
+● "I see a round clock! It’s a circle!" 
+● "The window is like a rectangle!" 
+● "The table is a square!" 
+After that, each child will get a chance to look in their own bag and take out items. The teacher will help 
+the children sort these items into the correct shape baskets: 
+● One basket for circles 
+● One basket for squares 
+● One basket for rectangles 
+● One basket for triangles 
+The teacher will ask questions like: 
+● "Can you find something round like a circle in your bag?" 
+● "Do you have something shaped like a square?" 
+● "Is there something shaped like a triangle in your bag?" 
+At the end of the activity, the children will talk about  the shapes they recognised and answer the 
+assessment questions orally. 
+Note (for including CWSN): 
+To engage a visually challenged child in this activity, the teacher can use touchable shapes made from 
+cardboard or foam. The child can feel each shape while the teacher explains it using simple words, like 
+“This is a circle. It feels roun d, like a coin.” Instead of looking around, the child can touch real objects in 
+the classroom with the teacher’s help to find matching shapes. During the sorting activity, the child can 
+take out items from their bag and feel them to guess the shape. The teacher can guide the child to put 
+each item into the correct basket by touch. This way, the child learns about shapes through feeling and 
+listening.  
+45 
+ASSESSMENT QUESTIONS 
+1. How many different types of shapes did you see in the classroom? Can you name in which shape they    
+are? 
+2. Think of something yummy that is often round or rectangle. What is it? 
+3. Can you tell me the shapes of the items you have in your bag? 
+4. Which shape did you find the most in your bag? 
+5. Can you name something outside the classroom that has the same shape as one of your objects? 
+ 
+ASSESSMENT RUBRIC* 
+ Stream Mountain Sky 
+Awareness 
+The child needs help to 
+identify shapes and may 
+not know how to sort 
+them. Example: When 
+asked, “Can you tell me 
+the shapes of the items 
+you have in your bag?” 
+the child struggles to 
+identify if the object is a 
+circle, square, or 
+rectangle. 
+The child can identify and 
+name some shapes but 
+may need help with some. 
+Example: When asked, 
+“Can you tell me the 
+shapes of the items you 
+have in your bag?” the 
+child might correctly 
+identify a circle but need 
+help identifying a 
+rectangle. 
+The child can easily name 
+and recognize all shapes. 
+Example: When asked, 
+“Can you tell me the 
+shapes of the items you 
+have in your bag?” the 
+child quickly names all the 
+shapes correctly, such as 
+"My notebook is a 
+rectangle, my coin is a 
+circle." 
+Sensitivity 
+The child needs help 
+staying focused and may 
+not participate fully. 
+Example: When asked, 
+“Which shape did you 
+find the most in your 
+bag?” the child might 
+need help to answer or 
+may not participate. 
+The child participates but 
+needs some 
+encouragement. Example: 
+When asked, “Which 
+shape did you find the 
+most in your bag?” they 
+can answer, "I found a lot 
+of circles," but cannot 
+mention the number. The 
+child also needs support 
+in staying focused or 
+explaining more. 
+The child participates 
+actively without help. 
+Example: When asked, 
+“Which shape did you find 
+the most in your bag?” the 
+child can confidently 
+answer, “I found four 
+squares and two circles.” 
+Creativity 
+The child needs help 
+thinking of real-life 
+examples. Example: 
+When asked, “Can you 
+name something yummy 
+that is often round or 
+rectangle?” the child may 
+not answer or might say 
+something too vague. 
+The child can think of a 
+few real -life examples of 
+shapes. Example: When 
+asked, “Can you name 
+something yummy that is 
+often round or 
+rectangle?” they may say 
+“pizza” for round or 
+“chocolate bar” for 
+rectangle. 
+The child can think of 
+many real -life examples 
+and use imagination. 
+Example: When asked, 
+“Can you name something 
+yummy that is often round 
+or rectangle?” they can say 
+“Pizza is round” (whole 
+pizza), “Pizza slice is 
+triangle,” “Cookies are 
+round,” and “Chocolate 
+bars are rectangles. 
+ 
+* Note: Circle the relevant performance level based on the individual student’s performance for each 
+ability for this activity. 
+ 
+  
+46 
+TEACHER’S FEEDBACK 
+NOTE: For each ability, mark the 
+appropriate level Observational Notes 
+ 
+The child needed continuous support to identify 
+shapes and stay focused. S/he showed limited 
+engagement and struggled to sort objects and relate 
+shapes to real-life examples. 
+ 
+ 
+ 
+ 
+Parents/Caregiver/Guardian’s Observation  Comments/Remarks 
+ 
+ 
+ 
+  
+C S 
+A  
+47 
+DOMAIN 4: Language and Literacy Development 
+Curricular Goals: 
+•  Develops effective communication skills for day -to-
+day interactions in two languages 
+•  Develops fluency in reading and writing in Language 
+1  
+•  Begins to read and write in Language 2  
+Competency/Competencies: 
+C-9.3 Converses fluently and can 
+hold a meaningful conversation 
+ACTIVITY 
+Learning Outcome: 
+ Holds a meaningful conversation by listening, connecting and sharing ideas in the language they are 
+most familiar with. 
+ 
+Suggested Activity: 
+Story Circle Time! 
+ 
+In this activity 4 -5 children sit in a small circle and build a story together. They take turns tell ing short 
+stories—something they saw, did, or imagined. The teacher starts with a fun idea like, “What if your pet 
+could talk?” or “What if you find a magic shoe in your garden?” One child begins the story, and the others 
+add to it, one by one, like buildi ng a train. They can speak in the language they use at home or the one 
+they use in school —whichever they feel comfortable with. While talking, they listen to each other, ask 
+simple questions like, “And then what happened?” or “How did you feel?” This makes the story more fun 
+and helps them learn to talk clearly, take turns, and enjoy speaking and listening with friends. 
+Note (for including CWSN):  
+Children with special needs can join the Story Circle too. The teacher can use pictures, actions, or toys to 
+help them understand. They can tell their part by talking, showing a picture, or using signs. The teacher 
+can give them more time and help if needed. Friends and teachers should listen kindly and ask simple 
+questions. This helps everyone enjoy the story together. 
+ASSESSMENT QUESTIONS 
+1. Is the child able to speak freely or do they need help to tell their story? 
+2. Does the story make sense? Are they able to connect with and share ideas? 
+3. Does the child add fun or creative ideas to make the story interesting? 
+4. Does the child maintain eye contact with the speaker? Do they show signs of engagement (nooding, 
+leaning in)? 
+5. Does the child sometimes ask simple questions to understand better? Like how, why, etc 
+6. Does the child use their hands or face to help show what they mean? 
+ 
+  
+48 
+ASSESSMENT RUBRIC* 
+ Stream Mountain Sky 
+Awareness 
+The child struggles to 
+speak and needs a lot 
+of help to share their 
+ideas. Their story is 
+unclear, and ideas are 
+not connected. They do 
+not ask questions 
+unless prompted. For 
+example, the child 
+says, “Umm… I don’t 
+know,” and needs the 
+teacher to suggest 
+ideas like “Did 
+something happen at 
+home?” 
+The child needs some 
+help to speak  but is 
+able to share most of 
+their ideas. Their story 
+has some flow, though 
+they may lose track at 
+times. They ask simple 
+questions like "how" or 
+"why" with some 
+support. For example,  
+the child says, “One 
+time I went to the zoo,” 
+but pauses often and 
+looks to the teacher for 
+help. 
+The child speaks freely and 
+shares their ideas with ease. 
+Their story is clear, connected, 
+and meaningful. They ask 
+questions naturally to 
+understand or continue the story. 
+For example, the child confidently 
+says, “One day, my ca t followed 
+me to school and sat on my 
+chair!” and continues without 
+help. 
+Sensitivity 
+The child finds it hard 
+to stay focused during 
+the activity. They 
+rarely make eye 
+contact or show 
+interest in others’ 
+stories. For example, 
+the child seems lost 
+and says something 
+unrelated like, “I like 
+chocolates,” while 
+others are talking 
+about a magic tree. 
+The child tries to stay 
+focused but sometimes 
+gets distracted or loses 
+track. They look at the 
+speaker and show some 
+signs of interest. For 
+example, the child adds 
+a line that is loosely 
+connected, like, “Then I 
+saw a bird,” when the 
+story was about a magic 
+tree in the garden. 
+The child listens with full 
+attention, stays focused, and 
+follows the story well. They make 
+eye contact and show interest by 
+nodding or l
+eaning in. For 
+example, the child listens closely 
+and adds, “Then the tree gave us 
+a ladder to climb into the sky!” 
+Creativity 
+The child uses very 
+simple or repetitive 
+lines. There are no 
+creative ideas, 
+surprises, or twists in 
+their story. For 
+example, the child 
+speaks in a flat tone 
+without moving hands 
+or showing expression. 
+The child includes a 
+few creative or fun 
+ideas, but most parts of 
+the story are 
+predictable. For 
+example, the child 
+sometimes uses 
+gestures, like showing 
+“big” with hands or 
+making a face for 
+“surprised.” 
+The child builds an imaginative 
+and engaging story with unique 
+and surprising details. For 
+example, the child waves their 
+arms to show flying, widens eyes 
+for excitement, and acts out parts 
+of their story. 
+ 
+* Note: Circle the relevant performance level based on the individual student’s performance for each 
+ability for this activity. 
+   
+49 
+ 
+TEACHER’S FEEDBACK 
+NOTE: For each ability, mark the 
+appropriate level Observational Notes 
+ 
+The child was confident and stayed focused during 
+the story circle. He listened to others and joined at 
+the right time. His ideas added fun and surprising 
+twist to the group story. 
+ 
+ 
+ 
+Parents/Caregiver/Guardian’s Observation  Comments/Remarks 
+ 
+ 
+ 
+  
+ 
+C 
+A  S  
+50 
+DOMAIN 5: Aesthetic and Cultural Development 
+Curricular Goals: 
+• Develops abilities and sensibilities in visual and 
+performing arts and express their emotions 
+through art in meaningful and joyful ways 
+Competency/Competencies: 
+C-12.5 Communicates and 
+appreciates a variety of responses 
+while creating and experiencing 
+different fo rms of art, local 
+culture and heritage 
+ 
+ACTIVITY 
+Learning Outcome:  
+ Nurtures creativity, observation and appreciation of nature’s beauty through art. 
+ 
+Suggested Activity: 
+Nature-Collage Making 
+In this fun activity, children take a short walk in the school garden  with their teacher and collect things 
+from nature—like dry leaves, flowers, twigs, and small stones. They learn to look carefully and pick only 
+things that have fallen on the ground. 
+After the walk, each child gets a paper or cardboard and makes a collage using glue and the items they 
+find. They can also decorate their collage with crayons, paints, or markers to make it colourful and 
+special. In the end, children show their collages to the class and talk about what they found, how they 
+used it, and what they liked the most. 
+Note (for including CWSN):  
+In this activity, teachers can support CWSN by giving clear, simple steps and showing them what to do. 
+They can let the child collect items at their own pace and help with gluing if needed. Using big, easy -to-
+hold things like large leaves or flowers makes it easier. Teachers can also involve them with other 
+children in a small group to complete the collage together. The child can point, smile, or say a few words 
+to share their work. Praising their effort will help them feel happy and included. 
+ASSESSMENT QUESTIONS 
+1. Did they collect different kinds of things like leaves, flowers, or stones of different colours or shapes? 
+2. Did the child use glue and colours properly? Is the collage tidy and nicely arranged? 
+3. Is the collage design creative and different from others? 
+4. Can the child talk about their collage confidently? Are they using simple sentences to share what        
+they made and why? 
+ 
+   
+51 
+ASSESSMENT RUBRIC* 
+ Stream Mountain Sky 
+Awareness 
+The child collects only a 
+few leaves and flowers, 
+like two or three, without 
+much variety. For 
+example, they pick only 
+small yellow leaves 
+without noticing the 
+different shapes or colors 
+around them. When 
+explaining their artwork, 
+they say, “This is a tree,” 
+without giving any more 
+detail. 
+The child collects a few 
+more leaves and flowers 
+but misses smaller details, 
+like not noticing the 
+texture or variety in the 
+colors. For instance, they 
+might pick several green 
+leaves but forget to add 
+flowers that would make 
+the artwork more 
+colorful. They explain 
+their work with a  basic 
+sentence, such as, “These 
+are leaves,” but hesitate 
+when asked about why 
+they picked certain items. 
+The child collects a 
+variety of leaves and 
+flowers, noticing details 
+like the shape of the 
+leaves, the color, and the 
+texture. For example, they 
+pick large, small, round, 
+and pointy leaves and 
+bright flowers in different 
+colors. They explain their 
+artwork clearly, saying 
+something like, “I picked 
+these leaves because 
+they’re all different sizes 
+and colors. The big ones 
+are smooth, and the small 
+ones have rough edges.” 
+Sensitivity 
+The child picks live leaves 
+or flowers instead of 
+fallen ones. For example, 
+they might grab a flower 
+from a garden and try to 
+use it in their artwork, 
+not understanding it may 
+damage the plant. They 
+might get frustrated when 
+gluing or arranging the 
+materials, rushing and 
+mishandling the glue or 
+flowers. 
+The child uses the 
+materials with some care 
+but may still need 
+reminders to avoid 
+picking live flowers. They 
+might collect a few fallen 
+leaves but accidentally 
+tear them while handling. 
+When gluing, they may 
+spill glue or need help to 
+arrange the items 
+carefully. For instance, 
+they may forget to wait 
+for the glue to dry before 
+moving on to the next 
+step. 
+ 
+The child shows great 
+care in picking only fallen 
+leaves and flowers , 
+making sure not to 
+damage living plants. 
+They use the materials 
+gently, arranging them 
+patiently, and often help 
+peers by showing them 
+how to arrange the items 
+carefully. For example, 
+they carefully pick leaves 
+from the ground and 
+gently press them onto 
+the paper without tearing, 
+making sure the glue 
+sticks properly. 
+Creativity 
+The child arranges the 
+leaves and flowers in a 
+very simple or repetitive 
+pattern, with minimal 
+effort to make it 
+interesting. For example, 
+they might just place the 
+leaves in a st raight line 
+or repeat the same type 
+of leaf without 
+considering how to make 
+the design more unique.  
+The child shows some 
+creativity but the design 
+could be more thoughtful 
+or unique. For example, 
+they might create a simple 
+flower shape with a few 
+leaves, but the pattern is 
+predictable, like a circle or 
+square. While they are 
+trying, the arrangement 
+lacks originality, and the 
+materials could be used in 
+more interesting ways. 
+The child creates a unique 
+and imaginative design, 
+arranging the leaves and  
+flowers thoughtfully. For 
+example, they might create 
+a flower with different 
+colored petals, using a 
+variety of textures and 
+shapes, or even add layers 
+to make the artwork more 
+intricate. The arrangement 
+is creative and carefully 
+planned, showing their 
+interest in experimenting 
+with patterns and details. 
+* Note: Circle the relevant performance level based on the individual student’s performance for each 
+ability for this activity.  
+52 
+TEACHER’S FEEDBACK 
+NOTE: For each ability, mark the 
+appropriate level Observational Notes 
+ 
+The child chose and arranged the flowers nicely and 
+used good ideas  but often needed reminders to avoid 
+plucking.  
+ 
+ 
+ 
+Parents/Caregiver/Guardian’s Observation  Comments/Remarks 
+ 
+ 
+ 
+ 
+ 
+  S 
+C A  
+53 
+DOMAIN 5.1: Positive Learning Habits 
+Curricular Goals: 
+• Develops habits of learning that allow them to 
+engage actively in formal learning environments 
+like a school classroom 
+Competency/Competencies: 
+C-13.4 Classroom norms: Adopts 
+and follows norms with agency 
+and understanding  
+ 
+ 
+ACTIVITY 
+Learning Outcome: 
+ Thinks about their behaviour in class and write or draw how they followed classroom rules like helping 
+others, sharing, or keeping the classroom clean. 
+Suggested Activity: 
+My Learning Journal 
+ 
+The activity will start with a 10 -minute talk about classroom rules l ike sharing, listening, and helping. 
+The teacher will ask, “What did you do today that made the class happy?” After that, each child will get a 
+journal page or a half sheet of paper to write 1–2 sentences about something good they did, like helping 
+a friend or following a rule. They can also draw a picture to express it. At the end, the children will share 
+what they wrote or drew with the class, and the teacher will give them positive feedback. 
+Note (for including CWSN): 
+ 
+Teachers can help CWSN by giving clear examples and allowing them to draw instead of writing. Picture 
+cards or sentence starters can also support them. They can share their work with help or in pairs or 
+small groups. This will help them build confidence. 
+ASSESSMENT QUESTIONS 
+ 
+1. Did the child draw or write about something good they did today? 
+2. Did the child talk about their picture or sentence with the class? 
+3. Did the child listen to others and wait for their turn to speak? 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+54 
+ASSESSMENT RUBRIC* 
+ Stream Mountain Sky 
+Awareness 
+The child struggles to 
+think about what they 
+did or why it was 
+important. 
+For example, the child 
+says, “I don’t know 
+what I did,” or just says, 
+“I played,” without 
+saying more. They need 
+help to remember and 
+talk about the activity. 
+The child talks a little 
+about what they did, 
+but it’s not clear why 
+it mattered.  
+For example, the child 
+says, “I made a 
+picture,” but when 
+asked why, they just 
+say, “Because the 
+teacher told me,” And 
+don’t explain further. 
+The child clearly says  what 
+they did and why it was 
+good. 
+For example, The child 
+says, “I helped my friend 
+pick up her crayons because 
+she dropped them. It made 
+her happy.” 
+ 
+Sensitivity 
+The child finds it hard to 
+join in and needs a lot of 
+help. For example, they 
+wait without starting or 
+don’t follow instructions 
+unless they are reminded. 
+The child joins in with 
+some help and tries to 
+follow instructions. 
+For example, they ask, 
+“What do I do next?” 
+and start after a little 
+support. 
+The child joins the activity 
+happily a nd follows 
+instructions on their own. 
+For example, they pick up 
+their journal and begin 
+writing or drawing without 
+being told. 
+Creativity 
+The child finds it hard to 
+draw or write and needs 
+a lot of help to show 
+their idea.  
+For example, the child 
+writes only a few words 
+like “I helped,” with no 
+picture or detail. 
+The child draws or 
+writes something 
+simple, but the idea is 
+not very clear or 
+detailed. 
+For example, they 
+draw a stick figure 
+helping but don’t 
+explain much in 
+writing. 
+The child draws or writes 
+with clear meaning and 
+some creativity.  
+For example, the child 
+draws themselves giving a 
+pencil to a classmate and 
+writes, “I shared my pencil 
+because my friend forgot 
+theirs.” 
+* Note: Circle the relevant performance level based on the individual student’s performance for each 
+ability for this activity. 
+   
+55 
+ 
+TEACHER’S FEEDBACK 
+NOTE: For each ability, mark the 
+appropriate level Observational Notes 
+ 
+The child clearly shared how they helped others and 
+followed the class rules. They participated well in the 
+activity, expressed their thoughts with detail, and 
+needed little help throughout.  
+ 
+ 
+ 
+Parents/Caregiver/Guardian’s Observation  Comments/Remarks 
+ 
+ 
+ 
+  
+S 
+C A  
+56 
+Annexure 1 
+Alignment of the Holistic Progress Card (HPC) with the National Credit Framework (NCrF) 
+The Holistic Progress Card (HPC) is aligned with the National Credit Framework (NCrF) and serves 
+as the sole mode of assessment at the Foundational Stage. It focuses on capturing children’s overall 
+growth through continuous  and play -based observations in real learning situations. The credit 
+distribution follows NCrF guidelines, with 100% of the credit weightage assigned to the HPC. 
+The tables below provide a detailed view of how credits are distributed across different domains of 
+learning during the foundational years, ensuring that each child’s progress is recognised and recorded 
+in a meaningful and developmentally appropriate manner. 
+ 
+ 
+57 
+  
+ 
+58 
+ 
+                                                                                                                                    Annexure 2 
+Parent-Teacher Interaction Card 
+1. Basic Information 
+Student Name ____________________________________________________________ Grade__________ 
+School Name_____________________________________________________________________________ 
+Date of Interaction________________________________________________________________________ 
+Parent/Guardian/Caregiver Name ____________________________________________________________ 
+Parent/Guardian/Caregiver Contact __________________________________________________________ 
+Teacher Name _______________________________________ Subject_______________________________ 
+2. Summary of Interaction 
+2.1 From Parents 
+ 
+ 
+2.2 From Teacher 
+ 
+ 
+ 
+Suggestions: 
+Areas of Concern (and/or) Strengths: 
+Suggestions: 
+Areas of Concern (and/or) Strengths:  
+59 
+3. Feedback (To be filled by Parent/Guardian/Caregiver) 
+Please rate each area using the scale:  
+VS - Very Satisfied | S - Satisfied | N - Neutral | NS - Not Satisfied | VDS - Very Dissatisfied 
+Feedback Area VS S N NS VDS 
+Scheduling of the meeting      
+Structure & organization of interaction      
+Teacher preparedness      
+Availability of relevant documents      
+Understanding of student’s needs/difficulties      
+Communication of academic progress      
+Clarity in explaining strengths & areas of improvement      
+Collaboration in setting goals and action plan      
+Responsiveness and engagement during the meeting      
+Overall experience of the interaction      
+ 
+ 
+ 
+4. Action Plan/Follow-Up 
+Area of Focus Planned Action Responsible Timeline Parent Teacher Student 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+   
+ 
+ 
+ 
+ 
+ 
+ 
+   
+ 
+ 
+ 
+ 
+ 
+ 
+   
+ 
+ 
+ 
+5. Signatures 
+Parent/Guardian/Caregiver: _____________________________________ 
+Teacher: _____________________________________ 
+Evaluator (if applicable): _____________________________________ 
+Coordinator: _____________________________________ 
+Principal:  _____________________________________ 
+  
+Comments (if any):  
+60 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+ 
+   
+61 
+  
+62 
+ 
+ 
+63 
+ 
+64 
+ 
+65 
+ 
+66 
+ 
+67 
+ 
+68 
+ 
+69 
+ 
+70 
+ 
+71 
+ 
+72 
+ 
+ 
+ 
+Development  Team 
+National Council for Educational Research and Training (NCERT)  
+Prof. (Dr.) Dinesh Prasad Saklani, Director, NCERT 
+Prof. (Dr.) Sridhar Srivastava, Joint Director, NCERT 
+Prof. (Dr.) Indrani Bhaduri, HoD, PARAKH and HoD, ESD, NCERT 
+Prof. (Dr.) Suniti Sanwal, HoD, DEE, NCERT 
+Prof. (Dr.) Ranjana Arora, HoD, DCSD, NCERT 
+ 
+Central Board of Secondary Education (CBSE) 
+Smt. Nidhi Chibber, Chairperson 
+Dr. Joseph Emmanuel, Director (Academics) 
+Dr. Praggya M. Singh, Director (Academics-Assessment) 
+Dr. Sweta Singh, Joint Secretary (Academics) 
+ 
+Kendriya Vidyalaya Sangathan (KVS) 
+Ms. Nidhi Pandey, IIS, Commissioner 
+Shri N.R. Murali, Joint Commissioner 
+ 
+Navodaya Vidyalaya Samiti (NVS) 
+Shri Vinayak Garg, IRSEE, Commissioner 
+Shri Gyanendra Kumar, Assistant Commissioner 
+ 
+Other Institutes/Organizations 
+SCERT/SIEs, Samagra Shiksha, All States/UTs of India 
+UNICEF 
+ 
+PRINCIPAL COORDINATOR 
+Prof. (Dr.) Indrani Bhaduri 
+CEO & Head, PARAKH and Head, Educational Survey Division, NCERT  
+  
+PARAKH Technical Team 
+Ms. Bhaswati De, Sr. Psychometrician  
+Mr. Puneet Bhola, Sr. Psychometrician 
+Dr. Meena Yadav, Sr. Manager-Assessment Designing  
+Ms. Alankita Upadhyaya, Sr. Reviewer-Subject Matter  
+Mr. Sajid Khalil, Manager-Designing Report,  
+ Presentations and Publications  
+Ms. Alka Singh, State Liaisoning Officer  
+Ms. Tanya, State Liaisoning Officer 
+Mr. Madhusudan, State Liaisoning Officer 
+Ms. Bidisha Majumder, State Liaisoning Officer 
+Ms. Aarti, IT Support and Helpdesk  
+Ms. Dipika, IT Support and Helpdesk 
+Technical Agency 
+Education Testing Service (ETS), Princeton, USA 
+Dr. Jonas Bertling, Programme Lead, ETS 
+Dr. Luis Saldivia, Sr. Director, ETS 
+Mr. Neeraj Venkataraman Murali, SME, ETS 
+Ms. Priyanka Singh, SME, ETS 
+Mr. Vivek Gupta, SME, ETS 
+ 
+ 
+  
+ 
+ 
+ 
+ 
