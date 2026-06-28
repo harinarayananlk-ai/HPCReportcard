@@ -1,8 +1,6 @@
-:
-
 🎓 HPC Tracker: The Ultimate Glow-Up 💎
 
-This full-stack app is built for school administrators, teachers, and students to track, manage, and generate Holistic Progress Cards (HPC) without losing their minds in paperwork.
+This full-stack app is built for school administrators, teachers, and students to track, manage, and generate Holistic Progress Cards (HPC) without losing their minds in paperwork. (Skip to the bottom of readme for a more professional explanation, in case you dont understand)
 
 🎨 The Vibe Check (UI/UX Design)
 
@@ -98,3 +96,22 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+
+# 🎓 HPC Tracker: The Ultimate Glow-Up 💎
+
+This full-stack app is built for school administrators, teachers, and students to track, manage, and generate Holistic Progress Cards (HPC) without losing their minds in paperwork.
+
+---
+
+## 👔 Professional Architecture Summary (For Reviewers & Devs)
+
+**Project Overview:** 
+An open-source, localized institutional ERP platform engineered to streamline multi-tier data entry and automate the generation of **NCERT / NEP 2020 compliant Holistic Progress Cards (HPC)** for Indian schools. 
+
+**Core Engineering Implementations:**
+- **Local Split-Database Modeling:** Designed using an isolated database approach (`SQLite`) to securely separate long-term student identity structures from seasonal/academic evaluation timelines.
+- **Dynamic On-Demand PDF Pipeline:** Implements an asynchronous headless compiler pipeline (**Python FastAPI + Puppeteer**) that generates production-grade, print-ready A4 PDF layouts on the fly from dynamic HTML/CSS templates, minimizing physical storage footprint.
+- **Role-Based Access Control (RBAC):** Three distinct authentication routing tiers restricting read/write scopes dynamically based on user identity (Student, Teacher, and Superadmin/Principal).
+
+---
