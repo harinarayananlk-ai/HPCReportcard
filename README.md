@@ -2,6 +2,9 @@
 
 This full-stack app is built for school administrators, teachers, and students to track, manage, and generate Holistic Progress Cards (HPC) without losing their minds in paperwork. (Skip to the bottom of readme for a more professional explanation, in case you dont understand)
 
+https://youtu.be/f1f4H-3XIb0
+this is the video link for a top-down explanation of the app and all of its features as of the 1st of June. Features added in later updates will not be visible in this video.
+
 🎨 The Vibe Check (UI/UX Design)
 
 We refused to build another mid, crusty school portal from 2008. The UI/UX is designed to look clean, aesthetic, and premium, fr. Here's how we did it:
