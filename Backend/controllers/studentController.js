@@ -102,6 +102,9 @@ const updateProfile = (req, res) => {
            if (assessments.domainMatricesV2 !== undefined) {
                finalAssess.domainMatricesV2 = assessments.domainMatricesV2;
            }
+           if (assessments.stage4 !== undefined) {
+               finalAssess.stage4 = assessments.stage4;
+           }
         } else {
            // Teachers (or superadmins) override everything passed in the payload
            finalAssess = { ...finalAssess, ...assessments };

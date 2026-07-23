@@ -463,8 +463,13 @@ export default function CompletePage() {
                   await triggerSave();
                 }
                 const cls = (targetProfile?.class_name || '').toLowerCase().trim();
+                const isSec = cls.includes('grade 9') || cls.includes('grade 10') || cls.includes('grade 11') || cls.includes('grade 12') ||
+                              cls.includes('class 9') || cls.includes('class 10') || cls.includes('class 11') || cls.includes('class 12') ||
+                              cls.includes('secondary');
                 let route = '/part_a2_s34/LayoutBuilder'; // fallback
-                if (cls.includes('bal vatika') || cls === 'kg' || cls === 'kindergarten' || cls === 'grade 1' || cls === 'grade 2') {
+                if (isSec) {
+                  route = '/stage4/Dashboard';
+                } else if (cls.includes('bal vatika') || cls === 'kg' || cls === 'kindergarten' || cls === 'grade 1' || cls === 'grade 2') {
                   route = '/part_a2_s1/AboutMe';
                 } else if (cls === 'grade 3' || cls === 'grade 4' || cls === 'grade 5') {
                   route = '/part_a2_s2/AboutMe';
@@ -474,7 +479,15 @@ export default function CompletePage() {
               }}
               gemType="sapphire"
             >
-              <Text style={styles.btnText}>{"PROCEED TO\nPART A2\n➔"}</Text>
+              <Text style={styles.btnText}>
+                {((targetProfile?.class_name || '').toLowerCase().includes('9') || 
+                  (targetProfile?.class_name || '').toLowerCase().includes('10') || 
+                  (targetProfile?.class_name || '').toLowerCase().includes('11') || 
+                  (targetProfile?.class_name || '').toLowerCase().includes('12') || 
+                  (targetProfile?.class_name || '').toLowerCase().includes('secondary')) 
+                  ? "PROCEED TO\nSTAGE 4\n➔" 
+                  : "PROCEED TO\nPART A2\n➔"}
+              </Text>
             </GemButton>
           </View>
 

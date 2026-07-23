@@ -63,6 +63,8 @@ function buildHpcHtml(studentData) {
         stage = 2; // Preparatory
     } else if (className.includes('grade 6') || className.includes('grade 7') || className.includes('grade 8') || className.includes('class 6') || className.includes('class 7') || className.includes('class 8') || className.includes('middle')) {
         stage = 3; // Middle Stage
+    } else if (className.includes('grade 9') || className.includes('grade 10') || className.includes('grade 11') || className.includes('grade 12') || className.includes('class 9') || className.includes('class 10') || className.includes('class 11') || className.includes('class 12') || className.includes('secondary')) {
+        stage = 4; // Secondary Stage
     }
 
     // Set up background list cycle (returns CSS class names to minimize duplicate base64 string overhead)
@@ -2325,6 +2327,729 @@ function buildHpcHtml(studentData) {
             </div>
             `;
         });
+    }
+
+    // ───────────────────────────────────────────────────────────
+    // STAGE 4: SECONDARY STAGE (GRADES 9-12)
+    // ───────────────────────────────────────────────────────────
+    if (stage === 4) {
+        const stage4 = studentData.assessments?.stage4 || {};
+        const partB = stage4.partB || {};
+        const partC = stage4.partC || {};
+        const partD = stage4.partD || {};
+        const timeInventories = stage4.timeInventories || {};
+        const competencyProfile = stage4.competencyProfile || {};
+
+        const a2 = studentData.a2 || {};
+        const academicGoal = a2.academicGoal || {};
+        const personalGoal = a2.personalGoal || {};
+        const schoolLearnings = a2.schoolLearnings || [];
+        const outsideLearnings = a2.outsideLearnings || [];
+
+        const renderChips = (list) => {
+            if (!list || list.length === 0) return '<span style="color:#aaa;font-size:10px;">None entered</span>';
+            return list.map(item => `<span class="chip gold-chip" style="margin: 2px;">${escapeHtml(item)}</span>`).join('');
+        };
+
+        const renderPedagogies = (p) => {
+            if (!p) return '<span style="color:#aaa;font-size:10px;">None selected</span>';
+            const list = [];
+            if (p.art) list.push('Art-integrated');
+            if (p.toy) list.push('Toy-based');
+            if (p.skill) list.push('Skill-based learning');
+            if (p.iks) list.push('Indian Knowledge Systems');
+            if (p.sports) list.push('Sports-integrated');
+            if (p.tech) list.push('Technology-integrated');
+            if (p.drama) list.push('Drama/Theatre-integrated');
+            if (p.other && p.otherSpecify) list.push(`Other: ${p.otherSpecify}`);
+            return list.map(item => `<span class="chip gold-chip" style="background:rgba(46,88,148,0.06);color:#2E5894;border-color:rgba(46,88,148,0.15);margin: 2px;">&#x2713; ${escapeHtml(item)}</span>`).join('');
+        };
+
+        const getCpBadge = (skillId, grade) => {
+            const val = competencyProfile[`${skillId}_g${grade}`] || '';
+            if (val === 'B') return `<span style="background: rgba(100,116,139,0.08); border: 1px solid rgba(100,116,139,0.25); color:#475569; padding: 2px 6px; border-radius: 4px; font-weight:700; font-size:9px; display:inline-block;">B</span>`;
+            if (val === 'P') return `<span style="background: rgba(184,151,46,0.08); border: 1px solid rgba(184,151,46,0.25); color:#8a6d1a; padding: 2px 6px; border-radius: 4px; font-weight:700; font-size:9px; display:inline-block;">P</span>`;
+            if (val === 'A') return `<span style="background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25); color:#15803d; padding: 2px 6px; border-radius: 4px; font-weight:700; font-size:9px; display:inline-block;">A</span>`;
+            return `<span style="color:#aaa;">-</span>`;
+        };
+
+        // --- PAGE 3: PART A SELF-REFLECTION ---
+        htmlContent += `
+        <div class="page">
+            <div class="page-bg ${getBg()}"></div>
+            <div class="glow-overlay"></div>
+            <div class="matte-shield"></div>
+            <div class="page-border"></div>
+            <div class="content-container">
+                <div class="section-title">Part A: Student voice - Self-Reflection & Planning</div>
+                
+                <div class="glass-card" style="padding: 12px; margin-bottom: 12px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">1. ABOUT ME</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; font-size: 11px;">
+                        <div><strong>I live with:</strong> ${escapeHtml(a2.liveWith || '-')}</div>
+                        <div><strong>I stay at:</strong> ${escapeHtml(a2.stayAt || '-')}</div>
+                        <div><strong>In my free time, I like:</strong> ${escapeHtml(a2.freeTime || '-')}</div>
+                        <div><strong>Things I do well:</strong> ${escapeHtml(a2.doWell || '-')}</div>
+                        <div><strong>My responsibilities are:</strong> ${escapeHtml(a2.responsibility || '-')}</div>
+                        <div><strong>Things I want to do better:</strong> ${escapeHtml(a2.doBetter || '-')}</div>
+                        <div><strong>I care for others by:</strong> ${escapeHtml(a2.careOthers || '-')}</div>
+                        <div><strong>Things I am proud of:</strong> ${escapeHtml(a2.proudOf || '-')}</div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
+                    <div class="glass-card" style="padding: 12px; margin-bottom: 0;">
+                        <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">2. ACADEMIC GOAL</div>
+                        <div style="font-size: 11.5px; line-height: 1.4;">
+                            <strong>Goal:</strong> ${escapeHtml(academicGoal.goal || '-')}<br/>
+                            <strong>Importance:</strong> ${escapeHtml(academicGoal.importance || '-')}<br/>
+                            <strong>Steps:</strong> ${escapeHtml(Array.isArray(academicGoal.steps) ? academicGoal.steps.join(', ') : (academicGoal.steps || '-'))}
+                        </div>
+                    </div>
+                    <div class="glass-card" style="padding: 12px; margin-bottom: 0;">
+                        <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">3. PERSONAL GOAL</div>
+                        <div style="font-size: 11.5px; line-height: 1.4;">
+                            <strong>Goal:</strong> ${escapeHtml(personalGoal.goal || '-')}<br/>
+                            <strong>Importance:</strong> ${escapeHtml(personalGoal.importance || '-')}<br/>
+                            <strong>Steps:</strong> ${escapeHtml(Array.isArray(personalGoal.steps) ? personalGoal.steps.join(', ') : (personalGoal.steps || '-'))}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card" style="padding: 12px; margin-bottom: 12px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">4. LEARNING DETAILS</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <div style="font-weight: 600; font-size: 10px; color:#555; text-transform: uppercase;">Learnt at school</div>
+                            <ul style="margin: 4px 0; padding-left: 16px; font-size: 11px;">
+                                ${(schoolLearnings || []).map(l => `<li>${escapeHtml(l)}</li>`).join('') || '<li>None recorded</li>'}
+                            </ul>
+                        </div>
+                        <div>
+                            <div style="font-weight: 600; font-size: 10px; color:#555; text-transform: uppercase;">Learnt outside school</div>
+                            <ul style="margin: 4px 0; padding-left: 16px; font-size: 11px;">
+                                ${(outsideLearnings || []).map(l => `<li>${escapeHtml(l)}</li>`).join('') || '<li>None recorded</li>'}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card" style="padding: 12px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">5. HELP & CONCERNS FROM TEACHER</div>
+                    <div style="font-size: 11.5px; line-height: 1.4;">
+                        <strong>What I would like my teacher to help with:</strong> ${escapeHtml(a2.whatTeacherHelp || '-')}<br/>
+                        <strong>What I would like my teacher to know:</strong> ${escapeHtml(a2.whatTeacherKnow || '-')}
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+
+        // --- PAGE 4: PART B GROUP PROJECT SETUP & SCHEDULE ---
+        const bSch = partB.schedule || {};
+        htmlContent += `
+        <div class="page">
+            <div class="page-bg ${getBg()}"></div>
+            <div class="glow-overlay"></div>
+            <div class="matte-shield"></div>
+            <div class="page-border"></div>
+            <div class="content-container">
+                <div class="section-title">Part B: Group Project Work - Setup & Schedule</div>
+                
+                <div class="glass-card" style="padding: 12px; margin-bottom: 12px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">1. PROJECT DOSSIER</div>
+                    <div style="font-size: 11.5px; line-height: 1.4;">
+                        <strong>Subjects Involved:</strong> ${renderChips(partB.subjects)}<br/><br/>
+                        <strong>Curricular Goals:</strong> ${renderChips(partB.goals)}<br/><br/>
+                        <strong>Competencies:</strong> ${renderChips(partB.competencies)}<br/><br/>
+                        <strong>Pedagogies:</strong> ${renderPedagogies(partB.pedagogies)}
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
+                    <div class="glass-card" style="padding: 12px; margin-bottom: 0;">
+                        <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">2. PROMPT & CHALLENGE</div>
+                        <div style="font-size: 11.5px; line-height: 1.4;">
+                            <strong>Challenge Prompt:</strong> ${escapeHtml(partB.projectPrompt || '-')}<br/>
+                            <strong>Guiding Questions:</strong> ${escapeHtml(partB.guidingQuestions || '-')}
+                        </div>
+                    </div>
+                    <div class="glass-card" style="padding: 12px; margin-bottom: 0;">
+                        <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">3. INITIAL IDEATION</div>
+                        <div style="font-size: 11.5px; line-height: 1.4;">
+                            <strong>What do I know?</strong> ${escapeHtml(partB.whatIKnow || '-')}<br/>
+                            <strong>What do I need to find out?</strong> ${escapeHtml(partB.whatINeedToFind || '-')}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card" style="padding: 12px; margin-bottom: 12px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">4. PROJECT SCHEDULE (DAY 1 - DAY 10)</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; font-size: 11px;">
+                        ${[1,2,3,4,5,6,7,8,9,10].map(day => `
+                            <div><strong>Day ${day}:</strong> ${escapeHtml(bSch[`day${day}`] || '-')}</div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="glass-card" style="padding: 12px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">5. LOGISTICS PLANNING</div>
+                    <div style="font-size: 11.5px; line-height: 1.4;">
+                        <strong>Resources Needed:</strong> ${escapeHtml(partB.resourcesNeeded || '-')}<br/>
+                        <strong>Roles of Members:</strong> ${escapeHtml(partB.rolesMembers || '-')}<br/>
+                        <strong>Possible Barriers:</strong> ${escapeHtml(partB.barriersProject || '-')}
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+
+        // --- PAGE 5: PART B EVALUATION & REFLECTIONS ---
+        const bS1L = partB.s1Learner || {};
+        const bS1T = partB.s1Teacher || {};
+        const bS2T = partB.s2Teacher || {};
+        const bS3L = partB.s3Learner || {};
+        const bS3P = partB.s3Peer || {};
+        const bRub = partB.s3RubricGrid || {};
+        const bSel = partB.s3TeacherSelection || {};
+        const bLvT = partB.levelOverviewTeacher || {};
+        const bLvL = partB.levelOverviewLearner || {};
+        const bLvP = partB.levelOverviewPeer || {};
+        const bRefT = partB.postReflectionsTeacher || {};
+        const bRefL = partB.postReflectionsLearner || {};
+
+        // Helper calculations
+        const bS1LSum = Object.values(bS1L).slice(0, 15).filter(Boolean).length;
+        const bS1TSum = Object.values(bS1T).slice(0, 15).filter(Boolean).length;
+        const bS2TSum = Object.values(bS2T).slice(0, 18).filter(Boolean).length;
+        const bS3LSum = Object.values(bS3L).slice(0, 9).filter(Boolean).length;
+        const bS3PSum = Object.values(bS3P).slice(0, 9).filter(Boolean).length;
+
+        htmlContent += `
+        <div class="page">
+            <div class="page-bg ${getBg()}"></div>
+            <div class="glow-overlay"></div>
+            <div class="matte-shield"></div>
+            <div class="page-border"></div>
+            <div class="content-container">
+                <div class="section-title">Part B: Group Project Work - Evaluation & Reflections</div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
+                    <div class="glass-card" style="padding: 12px; margin-bottom: 0;">
+                        <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">1. SUMMARY CHECKLIST TICKS</div>
+                        <div style="font-size: 11.5px; line-height: 1.4;">
+                            <strong>Stage 1 (Brainstorming) Ticks:</strong> Student (${bS1LSum}/15), Teacher (${bS1TSum}/15)<br/>
+                            <strong>Stage 2 (Drafting) Ticks:</strong> Teacher (${bS2TSum}/18)<br/>
+                            <strong>Stage 3 (Submission) Ticks:</strong> Student (${bS3LSum}/9), Peer (${bS3PSum}/9)
+                        </div>
+                    </div>
+                    <div class="glass-card" style="padding: 12px; margin-bottom: 0;">
+                        <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">2. PERFORMANCE LEVELS OVERVIEW</div>
+                        <div style="font-size: 11px; line-height: 1.4;">
+                            <strong>Teacher Evaluated:</strong> Awr (${escapeHtml(bLvT.awr || '-')}), Sen (${escapeHtml(bLvT.sen || '-')}), Cre (${escapeHtml(bLvT.cre || '-')})<br/>
+                            <strong>Learner Reflection:</strong> Awr (${escapeHtml(bLvL.awr || '-')}), Sen (${escapeHtml(bLvL.sen || '-')}), Cre (${escapeHtml(bLvL.cre || '-')})<br/>
+                            <strong>Peer Assessed:</strong> Awr (${escapeHtml(bLvP.awr || '-')}), Sen (${escapeHtml(bLvP.sen || '-')}), Cre (${escapeHtml(bLvP.cre || '-')})
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card" style="padding: 12px; margin-bottom: 12px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">3. TEACHER CUSTOM RUBRIC MATRIX</div>
+                    <table class="rubric-table" style="width: 100%; border-collapse: collapse; font-size: 8.5px;">
+                        <thead>
+                            <tr style="background:#2E5894; color:#FFF;">
+                                <th style="padding:4px; width:20%;">Ability</th>
+                                <th style="padding:4px; width:26%;">Beginner</th>
+                                <th style="padding:4px; width:27%;">Proficient</th>
+                                <th style="padding:4px; width:27%;">Advanced</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight:700; background:rgba(0,0,0,0.02); padding:4px;">Awareness</td>
+                                <td style="padding:4px; border: ${bSel.awr === 'Beginner' ? '1.5px solid #d4af37' : '1px solid #ddd'}; background: ${bSel.awr === 'Beginner' ? 'rgba(212,175,55,0.05)' : 'none'};">${escapeHtml(bRub.awrBeg || '-')}</td>
+                                <td style="padding:4px; border: ${bSel.awr === 'Proficient' ? '1.5px solid #d4af37' : '1px solid #ddd'}; background: ${bSel.awr === 'Proficient' ? 'rgba(212,175,55,0.05)' : 'none'};">${escapeHtml(bRub.awrProf || '-')}</td>
+                                <td style="padding:4px; border: ${bSel.awr === 'Advanced' ? '1.5px solid #d4af37' : '1px solid #ddd'}; background: ${bSel.awr === 'Advanced' ? 'rgba(212,175,55,0.05)' : 'none'};">${escapeHtml(bRub.awrAdv || '-')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:700; background:rgba(0,0,0,0.02); padding:4px;">Sensitivity</td>
+                                <td style="padding:4px; border: ${bSel.sen === 'Beginner' ? '1.5px solid #d4af37' : '1px solid #ddd'}; background: ${bSel.sen === 'Beginner' ? 'rgba(212,175,55,0.05)' : 'none'};">${escapeHtml(bRub.senBeg || '-')}</td>
+                                <td style="padding:4px; border: ${bSel.sen === 'Proficient' ? '1.5px solid #d4af37' : '1px solid #ddd'}; background: ${bSel.sen === 'Proficient' ? 'rgba(212,175,55,0.05)' : 'none'};">${escapeHtml(bRub.senProf || '-')}</td>
+                                <td style="padding:4px; border: ${bSel.sen === 'Advanced' ? '1.5px solid #d4af37' : '1px solid #ddd'}; background: ${bSel.sen === 'Advanced' ? 'rgba(212,175,55,0.05)' : 'none'};">${escapeHtml(bRub.senAdv || '-')}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:700; background:rgba(0,0,0,0.02); padding:4px;">Creativity</td>
+                                <td style="padding:4px; border: ${bSel.cre === 'Beginner' ? '1.5px solid #d4af37' : '1px solid #ddd'}; background: ${bSel.cre === 'Beginner' ? 'rgba(212,175,55,0.05)' : 'none'};">${escapeHtml(bRub.creBeg || '-')}</td>
+                                <td style="padding:4px; border: ${bSel.cre === 'Proficient' ? '1.5px solid #d4af37' : '1px solid #ddd'}; background: ${bSel.cre === 'Proficient' ? 'rgba(212,175,55,0.05)' : 'none'};">${escapeHtml(bRub.creProf || '-')}</td>
+                                <td style="padding:4px; border: ${bSel.cre === 'Advanced' ? '1.5px solid #d4af37' : '1px solid #ddd'}; background: ${bSel.cre === 'Advanced' ? 'rgba(212,175,55,0.05)' : 'none'};">${escapeHtml(bRub.creAdv || '-')}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="glass-card" style="padding: 12px; margin-bottom: 12px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">4. POST-PROJECT REFLECTIONS</div>
+                    <div style="font-size: 11px; line-height: 1.45;">
+                        <strong>What I learned from this project:</strong> ${escapeHtml(bRefL.learnt || '-')}<br/>
+                        <strong>Most enjoyable part:</strong> ${escapeHtml(bRefL.enjoyed || '-')}<br/>
+                        <strong>My 3 main strengths:</strong> ${escapeHtml(bRefL.strengths || '-')}<br/>
+                        <strong>Roadblocks faced:</strong> ${escapeHtml(bRefL.challenges || '-')}<br/>
+                        <strong>2 areas to improve:</strong> ${escapeHtml(bRefL.improvements || '-')}<br/>
+                        <strong>Questions remaining:</strong> ${escapeHtml(bRefL.questions || '-')}<br/>
+                        <strong>Suggestions for teacher modifications:</strong> ${escapeHtml(bRefL.teacherModify || '-')}
+                    </div>
+                </div>
+
+                <div class="glass-card" style="padding: 12px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">5. APPRECIATION & FEEDBACK LOG</div>
+                    <div style="font-size: 11.5px; line-height: 1.45;">
+                        <strong>Peer Encouragement Appreciation note:</strong> "${escapeHtml(bS3P.appreciation || '-')}"<br/>
+                        <strong>Teacher pedagogical remarks:</strong> "${escapeHtml(bRefT.finalComments || '-')}"<br/>
+                        <strong>Teacher points to work on in future:</strong> "${escapeHtml(bRefT.workOn || '-')}"
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+
+        // --- PAGE 6: PART C PROBLEM-BASED INQUIRY SETUP & WORKFLOW ---
+        const cSch = partC.schedule || {};
+        const cWf = partC.workflow || {};
+        htmlContent += `
+        <div class="page">
+            <div class="page-bg ${getBg()}"></div>
+            <div class="glow-overlay"></div>
+            <div class="matte-shield"></div>
+            <div class="page-border"></div>
+            <div class="content-container">
+                <div class="section-title">Part C: Problem-Based Inquiry (Solo Mission) - Setup & Plan</div>
+                
+                <div class="glass-card" style="padding: 12px; margin-bottom: 12px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">1. INQUIRY DOSSIER</div>
+                    <div style="font-size: 11.5px; line-height: 1.4;">
+                        <strong>Subjects:</strong> ${renderChips(partC.subjects)} | 
+                        <strong>Goals:</strong> ${renderChips(partC.goals)} | 
+                        <strong>Competencies:</strong> ${renderChips(partC.competencies)}<br/><br/>
+                        <strong>Pedagogies:</strong> ${renderPedagogies(partC.pedagogies)}
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
+                    <div class="glass-card" style="padding: 12px; margin-bottom: 0;">
+                        <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">2. HYPOTHESIS & PROMPT</div>
+                        <div style="font-size: 11.5px; line-height: 1.4;">
+                            <strong>Research Prompt:</strong> ${escapeHtml(partC.researchPrompt || '-')}<br/>
+                            <strong>Hypothesis / Planned Output:</strong> ${escapeHtml(partC.hypothesis || '-')}<br/>
+                            <strong>Guiding Questions:</strong> ${escapeHtml(partC.guidingQuestions || '-')}
+                        </div>
+                    </div>
+                    <div class="glass-card" style="padding: 12px; margin-bottom: 0;">
+                        <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">3. INQUIRY TASK TIMELINE</div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 10px;">
+                            ${[1,2,3,4,5,6,7,8,9,10].map(day => `
+                                <div><strong>Day ${day}:</strong> ${escapeHtml(cSch[`day${day}`] || '-')}</div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card" style="padding: 12px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">4. INQUIRY WORKFLOW LOGS</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; font-size: 10.5px; line-height: 1.4;">
+                        <div><strong>What do I know?</strong><br/> ${escapeHtml(cWf.know || '-')}</div>
+                        <div><strong>What do I need to find out?</strong><br/> ${escapeHtml(cWf.findOut || '-')}</div>
+                        <div><strong>Evidence Collection log:</strong><br/> ${escapeHtml(cWf.evidence || '-')}</div>
+                        <div><strong>Analysis & Synthesis:</strong><br/> ${escapeHtml(cWf.analysis || '-')}</div>
+                        <div><strong>Conclusion drawn:</strong><br/> ${escapeHtml(cWf.conclusion || '-')}</div>
+                        <div><strong>Discussions & Drawbacks:</strong><br/> ${escapeHtml(cWf.discussions || '-')}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+
+        // --- PAGE 7: PART C INQUIRY ASSESSMENTS & REFLECTIONS ---
+        const cS1L = partC.s1Learner || {};
+        const cS1T = partC.s1Teacher || {};
+        const cS1TC = partC.s1TeacherCustom || {};
+        const cS2L = partC.s2Learner || {};
+        const cS2T = partC.s2Teacher || {};
+        const cS2TC = partC.s2TeacherCustom || {};
+        const cS3P = partC.s3Peer || {};
+        const cS3T = partC.s3Teacher || {};
+        const cS3TC = partC.s3TeacherCustom || {};
+        const cLvT = partC.levelOverviewTeacher || {};
+        const cLvL = partC.levelOverviewLearner || {};
+        const cLvP = partC.levelOverviewPeer || {};
+        const cRefT = partC.postReflectionsTeacher || {};
+        const cRefL = partC.postReflectionsLearner || {};
+
+        const cS1LSum = [cS1L.awr1, cS1L.awr2, cS1L.awr3, cS1L.sen1, cS1L.sen2, cS1L.sen3, cS1L.cre1, cS1L.cre2, cS1L.cre3].filter(Boolean).length;
+        const cS2LSum = [cS2L.awr1, cS2L.awr2, cS2L.awr3, cS2L.sen1, cS2L.sen2, cS2L.sen3, cS2L.cre1, cS2L.cre2, cS2L.cre3].filter(Boolean).length;
+        const cS3PSum = [cS3P.awr1, cS3P.awr2, cS3P.awr3, cS3P.sen1, cS3P.sen2, cS3P.sen3, cS3P.cre1, cS3P.cre2, cS3P.cre3].filter(Boolean).length;
+
+        const getTeacherStageSumC = (stageData) => {
+            return Object.keys(stageData).filter(k => k !== 'comments' && stageData[k] === true).length;
+        };
+        const cS1TSum = getTeacherStageSumC(cS1T);
+        const cS2TSum = getTeacherStageSumC(cS2T);
+        const cS3TSum = getTeacherStageSumC(cS3T);
+
+        htmlContent += `
+        <div class="page">
+            <div class="page-bg ${getBg()}"></div>
+            <div class="glow-overlay"></div>
+            <div class="matte-shield"></div>
+            <div class="page-border"></div>
+            <div class="content-container">
+                <div class="section-title">Part C: Problem-Based Inquiry - Assessments & Reflections</div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
+                    <div class="glass-card" style="padding: 12px; margin-bottom: 0;">
+                        <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">1. INQUIRY TICKS OVERVIEW</div>
+                        <div style="font-size: 11.5px; line-height: 1.4;">
+                            <strong>Stage 1 (Planning) Ticks:</strong> Student (${cS1LSum}/9), Teacher (${cS1TSum} / ${9 + (cS1TC.awrCustom1 ? 1 : 0) + (cS1TC.awrCustom2 ? 1 : 0) + (cS1TC.senCustom1 ? 1 : 0) + (cS1TC.senCustom2 ? 1 : 0) + (cS1TC.creCustom1 ? 1 : 0) + (cS1TC.creCustom2 ? 1 : 0)})<br/>
+                            <strong>Stage 2 (Execution) Ticks:</strong> Student (${cS2LSum}/9), Teacher (${cS2TSum} / ${9 + (cS2TC.awrCustom1 ? 1 : 0) + (cS2TC.awrCustom2 ? 1 : 0) + (cS2TC.senCustom1 ? 1 : 0) + (cS2TC.senCustom2 ? 1 : 0) + (cS2TC.creCustom1 ? 1 : 0) + (cS2TC.creCustom2 ? 1 : 0)})<br/>
+                            <strong>Stage 3 (Review) Ticks:</strong> Peer (${cS3PSum}/9), Teacher (${cS3TSum} / ${10 + (cS3TC.awrCustom1 ? 1 : 0) + (cS3TC.awrCustom2 ? 1 : 0) + (cS3TC.senCustom1 ? 1 : 0) + (cS3TC.senCustom2 ? 1 : 0) + (cS3TC.creCustom1 ? 1 : 0) + (cS3TC.creCustom2 ? 1 : 0)})
+                        </div>
+                    </div>
+                    <div class="glass-card" style="padding: 12px; margin-bottom: 0;">
+                        <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">2. PERFORMANCE LEVELS OVERVIEW</div>
+                        <div style="font-size: 11px; line-height: 1.4;">
+                            <strong>Teacher Evaluated:</strong> Awr (${escapeHtml(cLvT.awr || '-')}), Sen (${escapeHtml(cLvT.sen || '-')}), Cre (${escapeHtml(cLvT.cre || '-')})<br/>
+                            <strong>Learner Self Level:</strong> Awr (${escapeHtml(cLvL.awr || '-')}), Sen (${escapeHtml(cLvL.sen || '-')}), Cre (${escapeHtml(cLvL.cre || '-')})<br/>
+                            <strong>Peer Review Level:</strong> Awr (${escapeHtml(cLvP.awr || '-')}), Sen (${escapeHtml(cLvP.sen || '-')}), Cre (${escapeHtml(cLvP.cre || '-')})
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card" style="padding: 12px; margin-bottom: 12px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">3. DYNAMIC TEACHER PARAMETERS ADDITIONS</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px 12px; font-size: 10px; line-height: 1.45;">
+                        <div>
+                            <strong>Stage 1 Custom:</strong><br/>
+                            Awr: ${escapeHtml(cS1TC.awrCustom1 || '-')}, ${escapeHtml(cS1TC.awrCustom2 || '-')}<br/>
+                            Sen: ${escapeHtml(cS1TC.senCustom1 || '-')}, ${escapeHtml(cS1TC.senCustom2 || '-')}<br/>
+                            Cre: ${escapeHtml(cS1TC.creCustom1 || '-')}, ${escapeHtml(cS1TC.creCustom2 || '-')}
+                        </div>
+                        <div>
+                            <strong>Stage 2 Custom:</strong><br/>
+                            Awr: ${escapeHtml(cS2TC.awrCustom1 || '-')}, ${escapeHtml(cS2TC.awrCustom2 || '-')}<br/>
+                            Sen: ${escapeHtml(cS2TC.senCustom1 || '-')}, ${escapeHtml(cS2TC.senCustom2 || '-')}<br/>
+                            Cre: ${escapeHtml(cS2TC.creCustom1 || '-')}, ${escapeHtml(cS2TC.creCustom2 || '-')}
+                        </div>
+                        <div>
+                            <strong>Stage 3 Custom:</strong><br/>
+                            Awr: ${escapeHtml(cS3TC.awrCustom1 || '-')}, ${escapeHtml(cS3TC.awrCustom2 || '-')}<br/>
+                            Sen: ${escapeHtml(cS3TC.senCustom1 || '-')}, ${escapeHtml(cS3TC.senCustom2 || '-')}<br/>
+                            Cre: ${escapeHtml(cS3TC.creCustom1 || '-')}, ${escapeHtml(cS3TC.creCustom2 || '-')}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card" style="padding: 12px; margin-bottom: 12px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">4. INQUIRY PROBLEM SOLVING LOG</div>
+                    <div style="font-size: 11.5px; line-height: 1.45;">
+                        <strong>Problems Faced (Stage 1):</strong> ${escapeHtml(cS1L.problemFace || '-')}<br/>
+                        <strong>Solutions applied / help needed:</strong> ${escapeHtml(cS1L.problemSolve || '-')}
+                    </div>
+                </div>
+
+                <div class="glass-card" style="padding: 12px; margin-bottom: 12px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">5. POST-INQUIRY REFLECTIONS</div>
+                    <div style="font-size: 11px; line-height: 1.45;">
+                        <strong>What I learned from this solo mission:</strong> ${escapeHtml(cRefL.learnt || '-')}<br/>
+                        <strong>Most enjoyable part:</strong> ${escapeHtml(cRefL.enjoyed || '-')}<br/>
+                        <strong>My 3 main strengths:</strong> ${escapeHtml(cRefL.strengths || '-')}<br/>
+                        <strong>Roadblocks faced:</strong> ${escapeHtml(cRefL.challenges || '-')}<br/>
+                        <strong>2 areas to improve:</strong> ${escapeHtml(cRefL.improvements || '-')}<br/>
+                        <strong>Questions remaining:</strong> ${escapeHtml(cRefL.questions || '-')}
+                    </div>
+                </div>
+
+                <div class="glass-card" style="padding: 12px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">6. COMMENTS & DIALOGUE LOG</div>
+                    <div style="font-size: 11.5px; line-height: 1.45;">
+                        <strong>Self-Appreciation Dialogue:</strong> "${escapeHtml(cS2L.appreciation || '-')}"<br/>
+                        <strong>Peer Encouragement Appreciation note:</strong> "${escapeHtml(cS3P.appreciation || '-')}"<br/>
+                        <strong>Teacher comments:</strong> "${escapeHtml(cRefT.finalComments || '-')}"<br/>
+                        <strong>Teacher future suggestions:</strong> "${escapeHtml(cRefT.workOn || '-')}"
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+
+        // --- PAGE 8: PART D CLASSROOM INTERACTIONS ---
+        const dType = partD.interactionType || {};
+        const dPed = partD.pedagogies || {};
+        const dCust = partD.teacherCustomParams || {};
+        const dAss = partD.teacherAssessments || {};
+        const dLvT = partD.levelOverviewTeacher || {};
+        const dRefL = partD.learnerReflection || {};
+        const dLvL = partD.levelOverviewLearner || {};
+        const dRefP = partD.peerReflection || {};
+        const dLvP = partD.levelOverviewPeer || {};
+
+        const renderInteractionType = (dt) => {
+            const types = [];
+            if (dt.discussion) types.push('Classroom discussion');
+            if (dt.debate) types.push('Organised debate');
+            if (dt.roleplay) types.push('Simulation/role play');
+            if (dt.experiment) types.push('Lab experiment');
+            if (dt.digital) types.push('Digital learning');
+            if (dt.other && dt.otherSpecify) types.push(`Other: ${dt.otherSpecify}`);
+            return types.map(item => `<span class="chip gold-chip" style="background:#2E5894;color:#FFF;border-color:#2E5894;margin: 2px;">&#x2713; ${escapeHtml(item)}</span>`).join('');
+        };
+
+        const renderCheckbox = (val) => {
+            return val ? '<span style="color:#22c55e;font-weight:700;font-size:12px;">&#x2713; Ticked</span>' : '<span style="color:#aaa;font-size:10px;">[ ] Unticked</span>';
+        };
+
+        htmlContent += `
+        <div class="page">
+            <div class="page-bg ${getBg()}"></div>
+            <div class="glow-overlay"></div>
+            <div class="matte-shield"></div>
+            <div class="page-border"></div>
+            <div class="content-container">
+                <div class="section-title">Part D: Classroom Interactions (Short-Burst Activities)</div>
+                
+                <div class="glass-card" style="padding: 12px; margin-bottom: 12px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">1. DOSSIER & ACTIVITY CONFIG</div>
+                    <div style="font-size: 11px; line-height: 1.4;">
+                        <strong>Interaction Type:</strong> ${renderInteractionType(dType)}<br/><br/>
+                        <strong>Subjects Involved:</strong> ${renderChips(partD.subjects)} | 
+                        <strong>Goals:</strong> ${renderChips(partD.goals)}<br/><br/>
+                        <strong>Pedagogies:</strong> ${renderPedagogies(dPed)}<br/><br/>
+                        <strong>Topic/theme details:</strong> ${escapeHtml(partD.topic || '-')} | 
+                        <strong>Duration:</strong> ${escapeHtml(partD.duration || 'NA')} | 
+                        <strong>Competencies:</strong> ${renderChips(partD.competencies)}
+                    </div>
+                </div>
+
+                <div class="glass-card" style="padding: 12px; margin-bottom: 12px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">2. TEACHER ASSESSMENT CHECKLIST (15 PARAMETERS)</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px 15px; font-size: 9.5px; line-height: 1.4;">
+                        <div>
+                            <div style="font-weight:700;color:#2E5894;border-bottom:1px solid #eee;padding-bottom:2px;margin-bottom:4px;">AWARENESS (Level: ${escapeHtml(dLvT.awr || '-')})</div>
+                            ${[1,2,3,4,5].map(n => dCust[`awr${n}`] ? `<div>- ${escapeHtml(dCust[`awr${n}`])}: ${renderCheckbox(dAss[`awr${n}`])}</div>` : '').join('')}
+                        </div>
+                        <div>
+                            <div style="font-weight:700;color:#2E5894;border-bottom:1px solid #eee;padding-bottom:2px;margin-bottom:4px;">SENSITIVITY (Level: ${escapeHtml(dLvT.sen || '-')})</div>
+                            ${[1,2,3,4,5].map(n => dCust[`sen${n}`] ? `<div>- ${escapeHtml(dCust[`sen${n}`])}: ${renderCheckbox(dAss[`sen${n}`])}</div>` : '').join('')}
+                        </div>
+                        <div style="grid-column: span 2; margin-top: 4px;">
+                            <div style="font-weight:700;color:#2E5894;border-bottom:1px solid #eee;padding-bottom:2px;margin-bottom:4px;">CREATIVITY (Level: ${escapeHtml(dLvT.cre || '-')})</div>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:4px 15px;">
+                                ${[1,2,3,4,5].map(n => dCust[`cre${n}`] ? `<div>- ${escapeHtml(dCust[`cre${n}`])}: ${renderCheckbox(dAss[`cre${n}`])}</div>` : '').join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
+                    <div class="glass-card" style="padding: 12px; margin-bottom: 0;">
+                        <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">3. LEARNER REFLECTION</div>
+                        <div style="font-size: 11px; line-height: 1.45;">
+                            <strong>Awr Level:</strong> ${escapeHtml(dLvL.awr || '-')} | 
+                            <strong>Sen Level:</strong> ${escapeHtml(dLvL.sen || '-')} | 
+                            <strong>Cre Level:</strong> ${escapeHtml(dLvL.cre || '-')}<br/>
+                            <strong>Self-reflection comments:</strong> "${escapeHtml(dRefL.comments || '-')}"
+                        </div>
+                    </div>
+                    <div class="glass-card" style="padding: 12px; margin-bottom: 0;">
+                        <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">4. PEER FEEDBACK</div>
+                        <div style="font-size: 11px; line-height: 1.45;">
+                            <strong>Awr Level:</strong> ${escapeHtml(dLvP.awr || '-')} | 
+                            <strong>Sen Level:</strong> ${escapeHtml(dLvP.sen || '-')} | 
+                            <strong>Cre Level:</strong> ${escapeHtml(dLvP.cre || '-')}<br/>
+                            <strong>Peer encouragement notes:</strong> "${escapeHtml(dRefP.appreciation || '-')}"
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card" style="padding: 12px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">5. TEACHER FINAL COMMENTS</div>
+                    <div style="font-size: 11.5px; line-height: 1.4; font-style: italic;">
+                        "${escapeHtml(dAss.comments || 'The learner collaborated very well during the debate, expressing points clearly.')}"
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+
+        // --- PAGE 9: PART E & F TIME INVENTORIES ---
+        const eCourses = timeInventories.courses || [];
+        const fHours = timeInventories.hoursSpent || {};
+        const fSkills = timeInventories.vocationalSkills || [];
+
+        const calculateTotalOnline = () => {
+            return eCourses.reduce((sum, item) => sum + (parseFloat(item.hours) || 0), 0);
+        };
+        const calculateTotalVocational = () => {
+            return fSkills.reduce((sum, item) => sum + (parseFloat(item.hours) || 0), 0);
+        };
+        const calculateOverall = () => {
+            return (parseFloat(fHours.groupProject) || 0) +
+                   (parseFloat(fHours.problemInquiry) || 0) +
+                   (parseFloat(fHours.classroomInteractions) || 0) +
+                   calculateTotalVocational();
+        };
+
+        htmlContent += `
+        <div class="page">
+            <div class="page-bg ${getBg()}"></div>
+            <div class="glow-overlay"></div>
+            <div class="matte-shield"></div>
+            <div class="page-border"></div>
+            <div class="content-container">
+                <div class="section-title">Part E & F: Time Inventories</div>
+                
+                <div class="glass-card" style="padding: 12px; margin-bottom: 12px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">PART E: LEARNING THROUGH ONLINE COURSES</div>
+                    <table class="rubric-table" style="width: 100%; border-collapse: collapse; font-size: 9px; margin-top: 4px;">
+                        <thead>
+                            <tr style="background:#2E5894; color:#FFF;">
+                                <th style="padding:4px; width:15%; text-align:center;">Row</th>
+                                <th style="padding:4px; width:50%;">Course Name</th>
+                                <th style="padding:4px; width:20%; text-align:center;">Hours Spent</th>
+                                <th style="padding:4px; width:15%; text-align:center;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${eCourses.map(c => `
+                                <tr>
+                                    <td style="text-align:center;font-weight:700;background:rgba(0,0,0,0.01);padding:4px;">${escapeHtml(c.id?.toUpperCase())}</td>
+                                    <td style="padding:4px;">${escapeHtml(c.courseName || '-')}</td>
+                                    <td style="padding:4px; text-align:center;">${escapeHtml(c.hours || '0')}</td>
+                                    <td style="padding:4px; text-align:center;">${c.completed ? 'Completed' : 'Pursuing'}</td>
+                                </tr>
+                            `).join('') || `<tr><td colspan="4" style="text-align:center;padding:10px;color:#aaa;">No online course records entered</td></tr>`}
+                        </tbody>
+                    </table>
+                    <div style="text-align:right; font-weight:700; font-size:11px; color:#2E5894; margin-top:8px; padding-right:12px;">
+                        TOTAL ONLINE COURSE HOURS: ${calculateTotalOnline()} hrs
+                    </div>
+                </div>
+
+                <div class="glass-card" style="padding: 12px; margin-bottom: 12px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">PART F: ESTIMATED HOURS SPENT LOGS</div>
+                    <div style="font-size: 11.5px; line-height: 1.5;">
+                        <strong>1. Group Project Work:</strong> ${escapeHtml(fHours.groupProject || '0')} hours<br/>
+                        <strong>2. Problem-Based Inquiry:</strong> ${escapeHtml(fHours.problemInquiry || '0')} hours<br/>
+                        <strong>3. Classroom Interactions:</strong> ${escapeHtml(fHours.classroomInteractions || '0')} hours
+                    </div>
+                </div>
+
+                <div class="glass-card" style="padding: 12px; margin-bottom: 12px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">PART F.4: VOCATIONAL TRAINING & SKILLS INVENTORIES</div>
+                    <table class="rubric-table" style="width: 100%; border-collapse: collapse; font-size: 9px; margin-top: 4px;">
+                        <thead>
+                            <tr style="background:#2E5894; color:#FFF;">
+                                <th style="padding:4px; width:15%; text-align:center;">Row</th>
+                                <th style="padding:4px; width:50%;">Vocational Skill Training Description</th>
+                                <th style="padding:4px; width:20%; text-align:center;">Hours Log</th>
+                                <th style="padding:4px; width:15%; text-align:center;">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${fSkills.map(s => `
+                                <tr>
+                                    <td style="text-align:center;font-weight:700;background:rgba(0,0,0,0.01);padding:4px;">${escapeHtml(s.id?.toUpperCase())}</td>
+                                    <td style="padding:4px;">${escapeHtml(s.skillName || '-')}</td>
+                                    <td style="padding:4px; text-align:center;">${escapeHtml(s.hours || '0')}</td>
+                                    <td style="padding:4px; text-align:center;">${escapeHtml(s.status || '-')}</td>
+                                </tr>
+                            `).join('') || `<tr><td colspan="4" style="text-align:center;padding:10px;color:#aaa;">No skill training records entered</td></tr>`}
+                        </tbody>
+                    </table>
+                    <div style="text-align:right; font-weight:700; font-size:11px; color:#2E5894; margin-top:8px; padding-right:12px;">
+                        TOTAL SKILL TRAINING HOURS: ${calculateTotalVocational()} hrs
+                    </div>
+                </div>
+
+                <div class="glass-card" style="padding: 12px; border-left: 4px solid #2E5894;">
+                    <div style="font-size: 12px; font-weight: 700; color: #2E5894; display: flex; justify-content: space-between; align-items: center;">
+                        <span>GRAND TOTAL HOURS LOGGED SPENT:</span>
+                        <span>${calculateOverall()} hrs</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+
+        // --- PAGE 10: COMPETENCY PROFILE MATRIX ---
+        htmlContent += `
+        <div class="page" style="page-break-after: avoid;">
+            <div class="page-bg ${getBg()}"></div>
+            <div class="glow-overlay"></div>
+            <div class="matte-shield"></div>
+            <div class="page-border"></div>
+            <div class="content-container">
+                <div class="section-title">Student’s Competency Profile (Secondary Stage)</div>
+                
+                <table class="rubric-table" style="width: 100%; border-collapse: collapse; font-size: 8px; margin-top: 4px;">
+                    <thead>
+                        <tr style="background:#2E5894; color:#FFF; font-size: 8.5px;">
+                            <th style="padding:4px; width:48%;">ABILITIES & PERFORMANCE DESCRIPTORS</th>
+                            <th style="padding:4px; width:13%; text-align:center;">GRADE 9</th>
+                            <th style="padding:4px; width:13%; text-align:center;">GRADE 10</th>
+                            <th style="padding:4px; width:13%; text-align:center;">GRADE 11</th>
+                            <th style="padding:4px; width:13%; text-align:center;">GRADE 12</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 1. AWARENESS -->
+                        <tr style="background:rgba(46,88,148,0.06);"><td colspan="5" style="font-weight:700; padding:4px; font-size:9px; color:#2E5894;">1. AWARENESS SKILLS</td></tr>
+                        <tr><td style="padding:3px;">a. Proficiency in language R1, R2, R3</td><td style="text-align:center;">${getCpBadge('awr_a', 9)}</td><td style="text-align:center;">${getCpBadge('awr_a', 10)}</td><td style="text-align:center;">${getCpBadge('awr_a', 11)}</td><td style="text-align:center;">${getCpBadge('awr_a', 12)}</td></tr>
+                        <tr><td style="padding:3px;">b. Oral communication</td><td style="text-align:center;">${getCpBadge('awr_b', 9)}</td><td style="text-align:center;">${getCpBadge('awr_b', 10)}</td><td style="text-align:center;">${getCpBadge('awr_b', 11)}</td><td style="text-align:center;">${getCpBadge('awr_b', 12)}</td></tr>
+                        <tr><td style="padding:3px;">c. Written communication</td><td style="text-align:center;">${getCpBadge('awr_c', 9)}</td><td style="text-align:center;">${getCpBadge('awr_c', 10)}</td><td style="text-align:center;">${getCpBadge('awr_c', 11)}</td><td style="text-align:center;">${getCpBadge('awr_c', 12)}</td></tr>
+                        <tr><td style="padding:3px;">d. Health and nutrition literacy</td><td style="text-align:center;">${getCpBadge('awr_d', 9)}</td><td style="text-align:center;">${getCpBadge('awr_d', 10)}</td><td style="text-align:center;">${getCpBadge('awr_d', 11)}</td><td style="text-align:center;">${getCpBadge('awr_d', 12)}</td></tr>
+                        <tr><td style="padding:3px;">e. Physical education, fitness, wellness, and sports</td><td style="text-align:center;">${getCpBadge('awr_e', 9)}</td><td style="text-align:center;">${getCpBadge('awr_e', 10)}</td><td style="text-align:center;">${getCpBadge('awr_e', 11)}</td><td style="text-align:center;">${getCpBadge('awr_e', 12)}</td></tr>
+                        <tr><td style="padding:3px;">f. Digital literacy</td><td style="text-align:center;">${getCpBadge('awr_f', 9)}</td><td style="text-align:center;">${getCpBadge('awr_f', 10)}</td><td style="text-align:center;">${getCpBadge('awr_f', 11)}</td><td style="text-align:center;">${getCpBadge('awr_f', 12)}</td></tr>
+                        <tr><td style="padding:3px;">g. Knowledge of India</td><td style="text-align:center;">${getCpBadge('awr_g', 9)}</td><td style="text-align:center;">${getCpBadge('awr_g', 10)}</td><td style="text-align:center;">${getCpBadge('awr_g', 11)}</td><td style="text-align:center;">${getCpBadge('awr_g', 12)}</td></tr>
+                        <tr><td style="padding:3px;">h. Environmental literacy (conservation, sanitation)</td><td style="text-align:center;">${getCpBadge('awr_h', 9)}</td><td style="text-align:center;">${getCpBadge('awr_h', 10)}</td><td style="text-align:center;">${getCpBadge('awr_h', 11)}</td><td style="text-align:center;">${getCpBadge('awr_h', 12)}</td></tr>
+                        <tr><td style="padding:3px;">i. Knowledge of critical issues (current affairs, global)</td><td style="text-align:center;">${getCpBadge('awr_i', 9)}</td><td style="text-align:center;">${getCpBadge('awr_i', 10)}</td><td style="text-align:center;">${getCpBadge('awr_i', 11)}</td><td style="text-align:center;">${getCpBadge('awr_i', 12)}</td></tr>
+
+                        <!-- 2. SENSITIVITY -->
+                        <tr style="background:rgba(46,88,148,0.06);"><td colspan="5" style="font-weight:700; padding:4px; font-size:9px; color:#2E5894;">2. SENSITIVITY SKILLS</td></tr>
+                        <tr><td style="padding:3px;">a. Collaboration and teamwork</td><td style="text-align:center;">${getCpBadge('sen_a', 9)}</td><td style="text-align:center;">${getCpBadge('sen_a', 10)}</td><td style="text-align:center;">${getCpBadge('sen_a', 11)}</td><td style="text-align:center;">${getCpBadge('sen_a', 12)}</td></tr>
+                        <tr><td style="padding:3px;">b. Ethical and moral reasoning</td><td style="text-align:center;">${getCpBadge('sen_b', 9)}</td><td style="text-align:center;">${getCpBadge('sen_b', 10)}</td><td style="text-align:center;">${getCpBadge('sen_b', 11)}</td><td style="text-align:center;">${getCpBadge('sen_b', 12)}</td></tr>
+                        <tr><td style="padding:3px;">c. Practice of Constitutional values</td><td style="text-align:center;">${getCpBadge('sen_c', 9)}</td><td style="text-align:center;">${getCpBadge('sen_c', 10)}</td><td style="text-align:center;">${getCpBadge('sen_c', 11)}</td><td style="text-align:center;">${getCpBadge('sen_c', 12)}</td></tr>
+                        <tr><td style="padding:3px;">d. Gender sensitivity</td><td style="text-align:center;">${getCpBadge('sen_d', 9)}</td><td style="text-align:center;">${getCpBadge('sen_d', 10)}</td><td style="text-align:center;">${getCpBadge('sen_d', 11)}</td><td style="text-align:center;">${getCpBadge('sen_d', 12)}</td></tr>
+                        <tr><td style="padding:3px;">e. Citizenship skills and values</td><td style="text-align:center;">${getCpBadge('sen_e', 9)}</td><td style="text-align:center;">${getCpBadge('sen_e', 10)}</td><td style="text-align:center;">${getCpBadge('sen_e', 11)}</td><td style="text-align:center;">${getCpBadge('sen_e', 12)}</td></tr>
+                        <tr><td style="padding:3px;">f. Fundamental duties</td><td style="text-align:center;">${getCpBadge('sen_f', 9)}</td><td style="text-align:center;">${getCpBadge('sen_f', 10)}</td><td style="text-align:center;">${getCpBadge('sen_f', 11)}</td><td style="text-align:center;">${getCpBadge('sen_f', 12)}</td></tr>
+
+                        <!-- 3. CREATIVITY -->
+                        <tr style="background:rgba(46,88,148,0.06);"><td colspan="5" style="font-weight:700; padding:4px; font-size:9px; color:#2E5894;">3. CREATIVITY SKILLS</td></tr>
+                        <tr><td style="padding:3px;">a. Scientific temper and evidence-based thinking</td><td style="text-align:center;">${getCpBadge('cre_a', 9)}</td><td style="text-align:center;">${getCpBadge('cre_a', 10)}</td><td style="text-align:center;">${getCpBadge('cre_a', 11)}</td><td style="text-align:center;">${getCpBadge('cre_a', 12)}</td></tr>
+                        <tr><td style="padding:3px;">b. Creativity and innovativeness</td><td style="text-align:center;">${getCpBadge('cre_b', 9)}</td><td style="text-align:center;">${getCpBadge('cre_b', 10)}</td><td style="text-align:center;">${getCpBadge('cre_b', 11)}</td><td style="text-align:center;">${getCpBadge('cre_b', 12)}</td></tr>
+                        <tr><td style="padding:3px;">c. Sense of aesthetics and art</td><td style="text-align:center;">${getCpBadge('cre_c', 9)}</td><td style="text-align:center;">${getCpBadge('cre_c', 10)}</td><td style="text-align:center;">${getCpBadge('cre_c', 11)}</td><td style="text-align:center;">${getCpBadge('cre_c', 12)}</td></tr>
+                        <tr><td style="padding:3px;">d. Critical thinking</td><td style="text-align:center;">${getCpBadge('cre_d', 9)}</td><td style="text-align:center;">${getCpBadge('cre_d', 10)}</td><td style="text-align:center;">${getCpBadge('cre_d', 11)}</td><td style="text-align:center;">${getCpBadge('cre_d', 12)}</td></tr>
+                        <tr><td style="padding:3px;">e. Problem-solving</td><td style="text-align:center;">${getCpBadge('cre_e', 9)}</td><td style="text-align:center;">${getCpBadge('cre_e', 10)}</td><td style="text-align:center;">${getCpBadge('cre_e', 11)}</td><td style="text-align:center;">${getCpBadge('cre_e', 12)}</td></tr>
+                        <tr><td style="padding:3px;">f. Skills training (Vocational)</td><td style="text-align:center;">${getCpBadge('cre_f', 9)}</td><td style="text-align:center;">${getCpBadge('cre_f', 10)}</td><td style="text-align:center;">${getCpBadge('cre_f', 11)}</td><td style="text-align:center;">${getCpBadge('cre_f', 12)}</td></tr>
+                        <tr><td style="padding:3px;">g. Coding and computational thinking</td><td style="text-align:center;">${getCpBadge('cre_g', 9)}</td><td style="text-align:center;">${getCpBadge('cre_g', 10)}</td><td style="text-align:center;">${getCpBadge('cre_g', 11)}</td><td style="text-align:center;">${getCpBadge('cre_g', 12)}</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="sigs-row" style="margin-top: 30px;">
+                    <div class="sig-box">
+                        <div class="sig-line"></div>
+                        <div class="sig-label">Class Teacher</div>
+                    </div>
+                    <div class="sig-box">
+                        <div class="sig-line"></div>
+                        <div class="sig-label">Principal</div>
+                    </div>
+                    <div class="sig-box">
+                        <div class="sig-line"></div>
+                        <div class="sig-label">Parent Signature</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
     }
 
     htmlContent += `

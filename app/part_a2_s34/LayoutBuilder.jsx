@@ -222,7 +222,11 @@ export default function LayoutBuilder() {
 
   const handleNext = async () => {
     await handleSave();
-    router.push('/part_a3_s3/AmbitionCard');
+    if (isSecondary) {
+      router.push('/stage4/Dashboard');
+    } else {
+      router.push('/part_a3_s3/AmbitionCard');
+    }
   };
 
   const updateLearningList = (list, setter, idx, val) => {
@@ -437,23 +441,7 @@ export default function LayoutBuilder() {
           </ScrollView>
         </KeyboardAvoidingView>
 
-        {/* BLUR OVERLAY FOR SECONDARY STAGE */}
-        {isSecondary && (
-          <BlurView intensity={80} tint={theme.isDark ? "dark" : "light"} style={StyleSheet.absoluteFill}>
-            <View style={styles.maintenanceOverlay}>
-              <View style={[styles.maintenanceCard, { backgroundColor: theme.card, borderColor: theme.border }]}>
-                <Ionicons name="construct-outline" size={60} color={gems.silver} />
-                <Text style={[styles.maintenanceTitle, { color: theme.text }]}>UNDER MAINTENANCE</Text>
-                <Text style={[styles.maintenanceText, { color: theme.secondaryText }]}>
-                  The Secondary Stage (Grades 9-12) report card layout is currently undergoing updates. Please check back later!
-                </Text>
-                <GemButton gemType="sapphire" onPress={() => router.back()} style={{ marginTop: 24, width: '60%' }}>
-                  <Text style={styles.btnText}>GO BACK</Text>
-                </GemButton>
-              </View>
-            </View>
-          </BlurView>
-        )}
+        {/* BLUR OVERLAY FOR SECONDARY STAGE REMOVED */}
       </SafeAreaView>
     </View>
   );
