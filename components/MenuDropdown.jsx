@@ -258,7 +258,7 @@ export default function MenuDropdown() {
   const solidBg = isDark ? "#222222" : "#FFFFFF";
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isMenuOpen && { zIndex: 9999999, elevation: 9999999 }]}>
       <Animated.View style={[styles.threadLine, { left: 32 - 0.75 }, threadStyle]} />
       <Animated.View style={[styles.threadLine, { left: 68 - 0.75 }, threadStyle]} />
 

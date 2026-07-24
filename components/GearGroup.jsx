@@ -2,12 +2,11 @@ import React, { useEffect, useRef } from "react";
 import { View, StyleSheet, TouchableOpacity, Platform } from "react-native";
 import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
-import Svg, { Path, Circle, Defs, LinearGradient, RadialGradient, Stop, G, Rect } from "react-native-svg";
+import Svg, { Path, Circle, Defs, LinearGradient, RadialGradient, Stop } from "react-native-svg";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
-  withSequence,
   withDelay,
   Easing,
 } from "react-native-reanimated";
@@ -45,7 +44,7 @@ const generateWatchCrownPath = (cx, cy, outerR, innerR, teeth = 24) => {
   return path;
 };
 
-// Helper to generate a laser-engraved gear path
+// Helper to generate an engraved gear path
 const generateGearPath = (cx, cy, outerR, innerR, teeth = 8) => {
   let d = "";
   const step = (2 * Math.PI) / teeth;
@@ -72,17 +71,13 @@ const generateGearPath = (cx, cy, outerR, innerR, teeth = 8) => {
   return d;
 };
 
-const AnimatedG = Animated.createAnimatedComponent(G);
-
 export default function GearGroup({ style }) {
   const { theme } = useTheme();
   const router = useRouter();
 
   // Animation Shared Values
   const scale = useSharedValue(1);
-  const depthZ = useSharedValue(0);
-  const highlightOpacity = useSharedValue(0.3);
-  const shadowOpacity = useSharedValue(0.18);
+  const shadowOpacity = useSharedValue(0.15);
   const shadowRadius = useSharedValue(6);
 
   // Gear Rotation Shared Values (Degrees)
@@ -93,26 +88,25 @@ export default function GearGroup({ style }) {
   const rotMedium = useSharedValue(0);
   const rotSmall = useSharedValue(0);
 
-  const crownFluteD = useRef(generateWatchCrownPath(32, 32, 30, 26, 24)).current;
-  const largeGearD = useRef(generateGearPath(32, 32, 15, 11, 10)).current;
-  const mediumGearD = useRef(generateGearPath(20, 20, 9, 6.5, 7)).current;
-  const smallGearD = useRef(generateGearPath(44, 43, 7.5, 5, 6)).current;
+  const crownFluteD = useRef(generateWatchCrownPath(32, 32, 30, 26.5, 24)).current;
+  const largeGearD = useRef(generateGearPath(32, 32, 11.5, 8.5, 9)).current;
+  const mediumGearD = useRef(generateGearPath(16, 16, 7.5, 5.2, 7)).current;
+  const smallGearD = useRef(generateGearPath(47, 47, 6, 4.2, 6)).current;
 
-  // Trigger one 4-Phase Luxury Watch Animation Cycle (Duration: ~1.6s)
+  // Trigger one 4-Phase Mechanical Animation Cycle (~1.6 seconds)
   const runMechanicalCycle = () => {
     const mechanicalEase = Easing.bezier(0.25, 0.1, 0.25, 1.0);
 
     // Phase 1: Anticipation (150ms) -> Scale 1.00 to 1.02
     scale.value = withTiming(1.02, { duration: 150, easing: Easing.out(Easing.quad) });
 
-    // Phase 2 & 3: Depth move toward user (Scale 1.08, specular highlight, depth shadow) + Gear engagement (+24deg CW / -24deg CCW)
+    // Phase 2 & 3: Depth move toward user (Scale 1.08) + Gear engagement (+24deg CW / -24deg CCW)
     scale.value = withDelay(
       150,
       withTiming(1.08, { duration: 600, easing: mechanicalEase })
     );
-    highlightOpacity.value = withDelay(150, withTiming(0.75, { duration: 600 }));
-    shadowOpacity.value = withDelay(150, withTiming(0.4, { duration: 600 }));
-    shadowRadius.value = withDelay(150, withTiming(14, { duration: 600 }));
+    shadowOpacity.value = withDelay(150, withTiming(0.3, { duration: 600 }));
+    shadowRadius.value = withDelay(150, withTiming(12, { duration: 600 }));
 
     rotLarge.value = withDelay(150, withTiming(24, { duration: 600, easing: mechanicalEase }));
     rotMedium.value = withDelay(150, withTiming(-24, { duration: 600, easing: mechanicalEase }));
@@ -124,8 +118,7 @@ export default function GearGroup({ style }) {
       returnDelay,
       withTiming(1.0, { duration: 750, easing: Easing.inOut(Easing.quad) })
     );
-    highlightOpacity.value = withDelay(returnDelay, withTiming(0.3, { duration: 750 }));
-    shadowOpacity.value = withDelay(returnDelay, withTiming(0.18, { duration: 750 }));
+    shadowOpacity.value = withDelay(returnDelay, withTiming(0.15, { duration: 750 }));
     shadowRadius.value = withDelay(returnDelay, withTiming(6, { duration: 750 }));
 
     rotLarge.value = withDelay(returnDelay, withTiming(0, { duration: 750, easing: Easing.inOut(Easing.quad) }));
@@ -133,9 +126,14 @@ export default function GearGroup({ style }) {
     rotSmall.value = withDelay(returnDelay, withTiming(0, { duration: 750, easing: Easing.inOut(Easing.quad) }));
   };
 
-  // Idle Loop: Every 10 to 16 seconds (randomized)
+  // Idle Loop: Runs initial cycle 1.5s after mount, then every 10 to 16 seconds
   useEffect(() => {
     let timer;
+    const initialTimer = setTimeout(() => {
+      runMechanicalCycle();
+      scheduleNextCycle();
+    }, 1500);
+
     const scheduleNextCycle = () => {
       const randomInterval = 10000 + Math.random() * 6000; // 10s - 16s
       timer = setTimeout(() => {
@@ -144,8 +142,10 @@ export default function GearGroup({ style }) {
       }, randomInterval);
     };
 
-    scheduleNextCycle();
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(initialTimer);
+      clearTimeout(timer);
+    };
   }, []);
 
   const handlePressIn = () => {
@@ -169,33 +169,15 @@ export default function GearGroup({ style }) {
   }));
 
   const largeGearStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateX: 32 },
-      { translateY: 32 },
-      { rotate: `${rotLarge.value}deg` },
-      { translateX: -32 },
-      { translateY: -32 }
-    ]
+    transform: [{ rotate: `${rotLarge.value}deg` }]
   }));
 
   const mediumGearStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateX: 20 },
-      { translateY: 20 },
-      { rotate: `${rotMedium.value}deg` },
-      { translateX: -20 },
-      { translateY: -20 }
-    ]
+    transform: [{ rotate: `${rotMedium.value}deg` }]
   }));
 
   const smallGearStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateX: 44 },
-      { translateY: 43 },
-      { rotate: `${rotSmall.value}deg` },
-      { translateX: -44 },
-      { translateY: -43 }
-    ]
+    transform: [{ rotate: `${rotSmall.value}deg` }]
   }));
 
   return (
@@ -205,77 +187,83 @@ export default function GearGroup({ style }) {
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         onPress={() => router.push("/Settings")}
+        style={styles.touchArea}
       >
-        <Svg width={64} height={64} viewBox="0 0 64 64">
+        {/* Base Watch Crown SVG */}
+        <Svg width={64} height={64} viewBox="0 0 64 64" style={StyleSheet.absoluteFill}>
           <Defs>
-            {/* Metallic Crown Body Linear Gradient */}
-            <LinearGradient id="crownMetal" x1="0%" y1="0%" x2="100%" y2="100%">
+            {/* Matte Crown Flute Gradient */}
+            <LinearGradient id="crownMatte" x1="0%" y1="0%" x2="100%" y2="100%">
               <Stop offset="0%" stopColor="#E2E8F0" />
-              <Stop offset="30%" stopColor="#CBD5E1" />
-              <Stop offset="70%" stopColor="#94A3B8" />
-              <Stop offset="100%" stopColor="#64748B" />
+              <Stop offset="50%" stopColor="#CBD5E1" />
+              <Stop offset="100%" stopColor="#94A3B8" />
             </LinearGradient>
 
-            {/* Recessed Engraved Face Radial Gradient */}
-            <RadialGradient id="engravedFace" cx="50%" cy="50%" r="50%">
-              <Stop offset="0%" stopColor="#1E293B" />
-              <Stop offset="70%" stopColor="#0F172A" />
-              <Stop offset="100%" stopColor="#020617" />
+            {/* Inset Face Radial Gradient - Soft Matte Light Metallic */}
+            <RadialGradient id="matteFace" cx="50%" cy="50%" r="50%">
+              <Stop offset="0%" stopColor="#F8FAFC" />
+              <Stop offset="65%" stopColor="#E2E8F0" />
+              <Stop offset="100%" stopColor="#CBD5E1" />
             </RadialGradient>
 
-            {/* Sapphire Metal Gear Gradient */}
-            <LinearGradient id="sapphireGear" x1="0%" y1="0%" x2="100%" y2="100%">
-              <Stop offset="0%" stopColor="#60A5FA" />
-              <Stop offset="50%" stopColor="#2563EB" />
-              <Stop offset="100%" stopColor="#1D4ED8" />
+            {/* Sapphire Gear Gradient */}
+            <LinearGradient id="sapphireMatteGear" x1="0%" y1="0%" x2="100%" y2="100%">
+              <Stop offset="0%" stopColor="#3B82F6" />
+              <Stop offset="100%" stopColor="#1E40AF" />
             </LinearGradient>
 
-            {/* Silver Metal Gear Gradient */}
-            <LinearGradient id="silverGear" x1="0%" y1="0%" x2="100%" y2="100%">
-              <Stop offset="0%" stopColor="#F8FAFC" />
-              <Stop offset="60%" stopColor="#CBD5E1" />
-              <Stop offset="100%" stopColor="#64748B" />
+            {/* Silver Gear Gradient */}
+            <LinearGradient id="silverMatteGear" x1="0%" y1="0%" x2="100%" y2="100%">
+              <Stop offset="0%" stopColor="#FFFFFF" />
+              <Stop offset="100%" stopColor="#94A3B8" />
             </LinearGradient>
           </Defs>
 
           {/* 1. CNC Fluted Watch Crown Outer Perimeter */}
-          <Path d={crownFluteD} fill="url(#crownMetal)" stroke="rgba(0,0,0,0.25)" strokeWidth={1} />
+          <Path d={crownFluteD} fill="url(#crownMatte)" stroke="#94A3B8" strokeWidth={0.8} />
 
-          {/* 2. Bezel Inner Ring */}
-          <Circle cx={32} cy={32} r={24} fill="url(#engravedFace)" stroke="#475569" strokeWidth={1.2} />
+          {/* 2. Bezel Inner Ring - Matte Silver */}
+          <Circle cx={32} cy={32} r={24.5} fill="url(#matteFace)" stroke="#94A3B8" strokeWidth={1} />
 
-          {/* 3. Engraved Recessed Inner Shadow Groove */}
-          <Circle cx={32} cy={32} r={23.2} fill="none" stroke="rgba(0,0,0,0.6)" strokeWidth={0.8} />
+          {/* 3. Engraved Recessed Inner Groove Line */}
+          <Circle cx={32} cy={32} r={23.8} fill="none" stroke="rgba(71,85,105,0.25)" strokeWidth={0.7} />
+        </Svg>
 
-          {/* 4. Engraved 3-Gear Mechanism */}
-          
-          {/* Top-Left Medium Gear (CCW) */}
-          <AnimatedG style={mediumGearStyle}>
-            <Path d={mediumGearD} fill="url(#silverGear)" stroke="#1E293B" strokeWidth={0.8} />
-            <Circle cx={20} cy={20} r={2.5} fill="#0F172A" />
-          </AnimatedG>
+        {/* 4. Engraved 3-Gear Layer (Positioned Side-by-Side with 0 Overlap) */}
 
-          {/* Bottom-Right Small Gear (CCW) */}
-          <AnimatedG style={smallGearStyle}>
-            <Path d={smallGearD} fill="url(#silverGear)" stroke="#1E293B" strokeWidth={0.8} />
-            <Circle cx={44} cy={43} r={2} fill="#0F172A" />
-          </AnimatedG>
+        {/* Medium Gear Top-Left (CCW) */}
+        <Animated.View style={[styles.gearLayer, { top: 8, left: 8, width: 16, height: 16 }, mediumGearStyle]}>
+          <Svg width={16} height={16} viewBox="8 8 16 16">
+            <Path d={mediumGearD} fill="url(#silverMatteGear)" stroke="#475569" strokeWidth={0.7} />
+            <Circle cx={16} cy={16} r={2} fill="#475569" />
+          </Svg>
+        </Animated.View>
 
-          {/* Center Large Gear (CW) */}
-          <AnimatedG style={largeGearStyle}>
-            <Path d={largeGearD} fill="url(#sapphireGear)" stroke="#0F172A" strokeWidth={1} />
-            <Circle cx={32} cy={32} r={4.5} fill="#F8FAFC" stroke="#1E293B" strokeWidth={0.8} />
-            <Circle cx={32} cy={32} r={2} fill="#1E293B" />
-          </AnimatedG>
+        {/* Small Gear Bottom-Right (CCW) */}
+        <Animated.View style={[styles.gearLayer, { top: 40.5, left: 40.5, width: 13, height: 13 }, smallGearStyle]}>
+          <Svg width={13} height={13} viewBox="40.5 40.5 13 13">
+            <Path d={smallGearD} fill="url(#silverMatteGear)" stroke="#475569" strokeWidth={0.7} />
+            <Circle cx={47} cy={47} r={1.5} fill="#475569" />
+          </Svg>
+        </Animated.View>
 
-          {/* 5. Specular Top Highlight Crescent */}
+        {/* Center Large Gear (CW) */}
+        <Animated.View style={[styles.gearLayer, { top: 20.5, left: 20.5, width: 23, height: 23 }, largeGearStyle]}>
+          <Svg width={23} height={23} viewBox="20.5 20.5 23 23">
+            <Path d={largeGearD} fill="url(#sapphireMatteGear)" stroke="#1E3A8A" strokeWidth={0.8} />
+            <Circle cx={32} cy={32} r={3.5} fill="#F8FAFC" stroke="#1E3A8A" strokeWidth={0.6} />
+            <Circle cx={32} cy={32} r={1.5} fill="#1E3A8A" />
+          </Svg>
+        </Animated.View>
+
+        {/* Matte Crescent Highlight */}
+        <Svg width={64} height={64} viewBox="0 0 64 64" style={StyleSheet.absoluteFill} pointerEvents="none">
           <Path
-            d="M 14 22 A 22 22 0 0 1 50 22"
+            d="M 14 20 A 22 22 0 0 1 50 20"
             fill="none"
-            stroke="#FFFFFF"
-            strokeWidth={1.5}
+            stroke="rgba(255,255,255,0.4)"
+            strokeWidth={1.2}
             strokeLinecap="round"
-            opacity={0.5}
           />
         </Svg>
       </TouchableOpacity>
@@ -294,8 +282,19 @@ const styles = StyleSheet.create({
     zIndex: 999999,
     elevation: 999999,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+  },
+  touchArea: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    position: 'relative',
+  },
+  gearLayer: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
