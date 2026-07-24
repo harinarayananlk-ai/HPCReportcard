@@ -17,7 +17,7 @@ export default function MenuDropdown() {
   const router = useRouter();
   const pathname = usePathname();
   const { theme } = useTheme();
-  const { user, profile, activeStudentProfile } = useAuth();
+  const { user, profile, teacherInfo, activeStudentProfile } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const targetProfile = activeStudentProfile || profile;
@@ -181,7 +181,8 @@ export default function MenuDropdown() {
   const handleGoHome = () => {
     setIsMenuOpen(false);
     buttonRotation.value = 0;
-    const target = isTeacher ? "/teacher/Dashboard" : "/StudentHomepage";
+    const isTeacherRole = user?.role === 'teacher' || user?.role === 'superadmin' || teacherInfo != null;
+    const target = isTeacherRole ? "/TeacherTracking" : "/StudentHomepage";
     router.replace(target);
   };
 

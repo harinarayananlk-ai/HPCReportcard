@@ -3,7 +3,6 @@ import { View, StyleSheet, TouchableOpacity, Animated, Easing, Platform } from "
 import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
 import Svg, { Path, Circle, Defs, LinearGradient, RadialGradient, Stop } from "react-native-svg";
-import { useTheme } from "../context/GlobalContext";
 
 // Helper to generate a 24-point fluted watch crown perimeter path (64x64 container)
 const generateWatchCrownPath = (cx, cy, outerR, innerR, teeth = 24) => {
@@ -66,12 +65,13 @@ const generateGearPath = (cx, cy, outerR, innerR, teeth = 8) => {
 export default function GearGroup({ style }) {
   const router = useRouter();
 
-  // Bulletproof Core Animated Values
+  // Animated Values
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const depthAnim = useRef(new Animated.Value(0)).current;
-
-  // Gear Rotation Animated Values (0 to 1)
   const gearAnim = useRef(new Animated.Value(0)).current;
+
+  // Track dynamic rotation degrees for the current cycle
+  const currentRotationTarget = useRef(180);
 
   // Exact pitch circle geometry
   const crownFluteD = useRef(generateWatchCrownPath(32, 32, 30, 26.5, 24)).current;
@@ -79,9 +79,17 @@ export default function GearGroup({ style }) {
   const mediumGearD = useRef(generateGearPath(20.1, 20.1, 7.8, 5.2, 7)).current;
   const smallGearD = useRef(generateGearPath(43.3, 43.3, 6.8, 4.4, 6)).current;
 
-  // 4-Phase Luxury Watch Animation Sequence (~1.6s duration)
+  // 4-Phase Luxury Watch Animation Sequence (150-250 deg randomized rotation)
   const runMechanicalCycle = () => {
+    // Pick random rotation angle between 150° and 250°
+    const randomDeg = 150 + Math.floor(Math.random() * 100);
+    currentRotationTarget.current = randomDeg;
+
+    // Calculate rotation duration maintaining same angular velocity (24 deg / 600ms = 40 deg/sec)
+    const rotationDuration = Math.round((randomDeg / 24) * 350); // smooth luxury mechanical pace
     const easeOut = Easing.bezier(0.25, 0.1, 0.25, 1.0);
+
+    gearAnim.setValue(0);
 
     Animated.sequence([
       // Phase 1: Anticipation (150ms) -> Scale 1.00 to 1.02
@@ -92,45 +100,45 @@ export default function GearGroup({ style }) {
         useNativeDriver: false,
       }),
 
-      // Phase 2 & 3: Move toward user (Scale 1.08, depth shadow) + Gear engagement (+24deg CW / -24deg CCW)
+      // Phase 2 & 3: Move toward user (Scale 1.08, depth shadow) + Gear engagement (150-250deg CW / CCW)
       Animated.parallel([
         Animated.timing(scaleAnim, {
           toValue: 1.08,
-          duration: 600,
+          duration: rotationDuration,
           easing: easeOut,
           useNativeDriver: false,
         }),
         Animated.timing(depthAnim, {
           toValue: 1,
-          duration: 600,
+          duration: rotationDuration,
           easing: easeOut,
           useNativeDriver: false,
         }),
         Animated.timing(gearAnim, {
-          toValue: 1,
-          duration: 600,
+          toValue: randomDeg,
+          duration: rotationDuration,
           easing: easeOut,
           useNativeDriver: false,
         }),
       ]),
 
-      // Phase 4: Gentle return to resting state (0deg, scale 1.00, shadow return)
+      // Phase 4: Gentle return to resting state (Scale 1.00, shadow return, gear rotation eases back to 0° resting offset)
       Animated.parallel([
         Animated.timing(scaleAnim, {
           toValue: 1.0,
-          duration: 750,
+          duration: Math.round(rotationDuration * 0.8),
           easing: Easing.inOut(Easing.quad),
           useNativeDriver: false,
         }),
         Animated.timing(depthAnim, {
           toValue: 0,
-          duration: 750,
+          duration: Math.round(rotationDuration * 0.8),
           easing: Easing.inOut(Easing.quad),
           useNativeDriver: false,
         }),
         Animated.timing(gearAnim, {
           toValue: 0,
-          duration: 750,
+          duration: Math.round(rotationDuration * 0.8),
           easing: Easing.inOut(Easing.quad),
           useNativeDriver: false,
         }),
@@ -179,20 +187,20 @@ export default function GearGroup({ style }) {
     }).start();
   };
 
-  // Interpolations
+  // Interpolations (Large Center Gear starts with 18° resting offset to mesh perfectly with Medium and Small gears!)
   const rotLargeStr = gearAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0deg", "24deg"], // Clockwise +24°
+    inputRange: [0, 360],
+    outputRange: ["18deg", "378deg"], // Resting offset 18° + Clockwise rotation
   });
 
   const rotMediumStr = gearAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0deg", "-24deg"], // Counter-Clockwise -24°
+    inputRange: [0, 360],
+    outputRange: ["0deg", "-360deg"], // Counter-Clockwise rotation
   });
 
   const rotSmallStr = gearAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0deg", "-24deg"], // Counter-Clockwise -24°
+    inputRange: [0, 360],
+    outputRange: ["0deg", "-360deg"], // Counter-Clockwise rotation
   });
 
   const shadowRadiusVal = depthAnim.interpolate({
@@ -264,9 +272,9 @@ export default function GearGroup({ style }) {
           <Circle cx={32} cy={32} r={23.8} fill="none" stroke="rgba(71,85,105,0.25)" strokeWidth={0.7} />
         </Svg>
 
-        {/* 4. Engraved 3-Gear Layer (Calculated Exact Distance - Touching Edge-to-Edge with 0 Overlap) */}
+        {/* 4. Engraved 3-Gear Layer (18° Resting Alignment Offset + 150-250° Randomized Rotation) */}
 
-        {/* Medium Gear Top-Left (CCW -24°) */}
+        {/* Medium Gear Top-Left (CCW) */}
         <Animated.View style={[styles.gearLayer, { top: 12.3, left: 12.3, width: 15.6, height: 15.6, transform: [{ rotate: rotMediumStr }] }]}>
           <Svg width={15.6} height={15.6} viewBox="12.3 12.3 15.6 15.6">
             <Path d={mediumGearD} fill="url(#silverMatteGear)" stroke="#475569" strokeWidth={0.7} />
@@ -274,7 +282,7 @@ export default function GearGroup({ style }) {
           </Svg>
         </Animated.View>
 
-        {/* Small Gear Bottom-Right (CCW -24°) */}
+        {/* Small Gear Bottom-Right (CCW) */}
         <Animated.View style={[styles.gearLayer, { top: 36.5, left: 36.5, width: 13.6, height: 13.6, transform: [{ rotate: rotSmallStr }] }]}>
           <Svg width={13.6} height={13.6} viewBox="36.5 36.5 13.6 13.6">
             <Path d={smallGearD} fill="url(#silverMatteGear)" stroke="#475569" strokeWidth={0.7} />
@@ -282,7 +290,7 @@ export default function GearGroup({ style }) {
           </Svg>
         </Animated.View>
 
-        {/* Center Large Gear (CW +24°) */}
+        {/* Center Large Gear (CW with 18° Resting Alignment Offset) */}
         <Animated.View style={[styles.gearLayer, { top: 20.5, left: 20.5, width: 23, height: 23, transform: [{ rotate: rotLargeStr }] }]}>
           <Svg width={23} height={23} viewBox="20.5 20.5 23 23">
             <Path d={largeGearD} fill="url(#sapphireMatteGear)" stroke="#1E3A8A" strokeWidth={0.8} />
