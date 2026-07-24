@@ -90,8 +90,8 @@ export default function Stage4Dashboard() {
     },
     {
       id: 'partD',
-      title: 'Part D: Classroom Interactions',
-      desc: 'Short-burst activities. Tracks classroom discussions, debates, lab experiments, and peer reviews.',
+      title: 'Part D: Observation Template',
+      desc: 'Short-burst activities. Tracks classroom discussions, debates, lab experiments, observation template, and peer reviews.',
       path: '/stage4/PartD_ClassroomInteractions',
       icon: 'chatbubbles-outline',
       accent: gems.sapphire

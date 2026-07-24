@@ -654,16 +654,16 @@ export default function PartDClassroomInteractions() {
         {/* Peer Reflection */}
         <GemCutCard borderColor={gems.sapphire + '40'} style={styles.card}>
           <View style={styles.cardHeaderRow}>
-            <Text style={styles.cardHeader}>Peer Feedback & Level</Text>
+            <Text style={styles.cardHeader}>Peer Feedback</Text>
             <View style={[styles.badge, { backgroundColor: gems.silver + '20' }]}><Text style={{ color: gems.silver, fontWeight: '700', fontSize: 8 }}>PEER</Text></View>
           </View>
 
           {/* Awareness */}
-          <Text style={styles.subHeader}>Awareness Ticks ({peerSums.awr}/3)</Text>
+          <Text style={styles.subHeader}>Awareness (Total selections: {peerSums.awr}/3)</Text>
           {[
-            { key: 'awr1', label: 'My peer was prepared for the debate/experiment.' },
-            { key: 'awr2', label: 'My peer actively contributed relevant points.' },
-            { key: 'awr3', label: 'My peer understood the main conceptual points.' },
+            { key: 'awr1', label: 'My peer was sufficiently prepared for the activity.' },
+            { key: 'awr2', label: 'My peer demonstrated a clear understanding of the key concepts covered.' },
+            { key: 'awr3', label: 'My peer changed her/his approach as per the changing dynamics of the activity.' },
           ].map(item => (
             <TouchableOpacity key={item.key} style={styles.checkboxRow} onPress={() => toggleCheckbox(peerReflection, setPeerReflection, item.key)}>
               <Ionicons name={peerReflection[item.key] ? "checkbox" : "square-outline"} size={18} color={peerReflection[item.key] ? gems.sapphire : '#666'} />
@@ -672,11 +672,11 @@ export default function PartDClassroomInteractions() {
           ))}
 
           {/* Sensitivity */}
-          <Text style={[styles.subHeader, { marginTop: 12 }]}>Sensitivity Ticks ({peerSums.sen}/3)</Text>
+          <Text style={[styles.subHeader, { marginTop: 12 }]}>Sensitivity (Total selections: {peerSums.sen}/3)</Text>
           {[
-            { key: 'sen1', label: 'My peer listened respectfully to other members.' },
-            { key: 'sen2', label: 'My peer valued differing views.' },
-            { key: 'sen3', label: 'My peer adjusted comments politely.' },
+            { key: 'sen1', label: 'My peer actively considered different perspectives during the activity.' },
+            { key: 'sen2', label: 'My peer acknowledged the feelings and opinions of her/his peers.' },
+            { key: 'sen3', label: 'My peer gave constructive feedback in a considerate manner.' },
           ].map(item => (
             <TouchableOpacity key={item.key} style={styles.checkboxRow} onPress={() => toggleCheckbox(peerReflection, setPeerReflection, item.key)}>
               <Ionicons name={peerReflection[item.key] ? "checkbox" : "square-outline"} size={18} color={peerReflection[item.key] ? gems.sapphire : '#666'} />
@@ -685,11 +685,11 @@ export default function PartDClassroomInteractions() {
           ))}
 
           {/* Creativity */}
-          <Text style={[styles.subHeader, { marginTop: 12 }]}>Creativity Ticks ({peerSums.cre}/3)</Text>
+          <Text style={[styles.subHeader, { marginTop: 12 }]}>Creativity (Total selections: {peerSums.cre}/3)</Text>
           {[
-            { key: 'cre1', label: 'My peer connected ideas creatively.' },
-            { key: 'cre2', label: 'My peer proposed unique points/questions.' },
-            { key: 'cre3', label: 'My peer suggested alternative approaches.' },
+            { key: 'cre1', label: 'My peer approached challenges with a willingness to explore unique solutions.' },
+            { key: 'cre2', label: 'My peer demonstrated flexibility in her/his thinking.' },
+            { key: 'cre3', label: 'My peer actively sought inspiration from different sources to improve her/his contribution.' },
           ].map(item => (
             <TouchableOpacity key={item.key} style={styles.checkboxRow} onPress={() => toggleCheckbox(peerReflection, setPeerReflection, item.key)}>
               <Ionicons name={peerReflection[item.key] ? "checkbox" : "square-outline"} size={18} color={peerReflection[item.key] ? gems.sapphire : '#666'} />
@@ -699,7 +699,7 @@ export default function PartDClassroomInteractions() {
 
           {/* Peer Level Selection */}
           <View style={{ marginTop: 16 }}>
-            <Text style={styles.inputLabel}>Peer Suggested Levels</Text>
+            <Text style={styles.inputLabel}>Peer Performance Level</Text>
             {['awr', 'sen', 'cre'].map(key => {
               const nameMap = { awr: 'Awareness', sen: 'Sensitivity', cre: 'Creativity' };
               const sug = getSuggestedLevelPeer(peerSums[key]);
@@ -723,9 +723,9 @@ export default function PartDClassroomInteractions() {
             })}
           </View>
 
-          <Text style={[styles.inputLabel, { marginTop: 16 }]}>Peer Appreciation note</Text>
+          <Text style={[styles.inputLabel, { marginTop: 16 }]}>Leave some words of appreciation/ encouragement for yourself.</Text>
           <AutoResizingInput
-            placeholder="Type peer appreciation comment..."
+            placeholder="Write here..."
             value={peerReflection.appreciation}
             onChangeText={(v) => setPeerReflection(prev => ({ ...prev, appreciation: v }))}
             minHeight={50}
@@ -757,7 +757,7 @@ export default function PartDClassroomInteractions() {
             <Ionicons name="chevron-back" size={22} color={theme.text} />
           </TouchableOpacity>
           <View style={styles.headerTitleContainer}>
-            <Text style={[styles.title, { color: theme.text }]}>CLASSROOM INTERACTIONS</Text>
+            <Text style={[styles.title, { color: theme.text }]}>OBSERVATION TEMPLATE</Text>
             <Text style={[styles.subtitle, { color: theme.secondaryText }]}>
               {targetProfile?.full_name || 'Loading...'}
             </Text>

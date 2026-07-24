@@ -21,73 +21,102 @@ import SoundButton from '../../components/SoundButton';
 import GemButton from '../../components/GemButton';
 import GemCutCard from '../../components/GemCutCard';
 import MenuDropdown from '../../components/MenuDropdown';
-import AnimatedTabBar from '../../components/AnimatedTabBar';
 import { gems } from '../../colour_themes';
 import useAutoSave from '../../hooks/useAutoSave';
 
 export default function PartEFTimeInventories() {
   const router = useRouter();
   const { theme } = useTheme();
-  const { user, profile, activeStudentId, activeStudentProfile, setActiveStudentProfile, setProfile: setAuthProfile } = useAuth();
+  const { user, profile, activeStudentId, activeStudentProfile } = useAuth();
   const isTeacher = user?.role === 'teacher' || user?.role === 'superadmin';
   const targetUserId = activeStudentId || user?.id;
   const targetProfile = isTeacher ? activeStudentProfile : profile;
 
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState(0);
 
-  // --- STATE ---
-  // Part E: Online Courses (10 rows, a to j)
-  const [courses, setCourses] = useState(
-    Array.from({ length: 10 }, (_, i) => ({
-      id: String.fromCharCode(97 + i), // a, b, c... j
-      courseName: '',
-      hours: '',
-      completed: false
-    }))
-  );
+  // --- STATE FOR 5 ACTIVITIES ---
 
-  // Part F: Category Hours Spent
-  const [hoursSpent, setHoursSpent] = useState({
-    groupProject: '',
-    problemInquiry: '',
-    classroomInteractions: ''
+  // 1. Group Project Work (5 steps)
+  const [groupProjectHours, setGroupProjectHours] = useState({
+    step1: { hh: '00', mm: '00' },
+    step2: { hh: '00', mm: '00' },
+    step3: { hh: '00', mm: '00' },
+    step4: { hh: '00', mm: '00' },
+    step5: { hh: '00', mm: '00' },
   });
 
-  // Part F.4: Skill training (4 rows, a to d)
-  const [vocationalSkills, setVocationalSkills] = useState([
-    { id: 'a', skillName: '', hours: '', status: '' },
-    { id: 'b', skillName: '', hours: '', status: '' },
-    { id: 'c', skillName: '', hours: '', status: '' },
-    { id: 'd', skillName: '', hours: '', status: '' }
+  // 2. Problem-Based Inquiry (7 steps)
+  const [problemInquiryHours, setProblemInquiryHours] = useState({
+    step1: { hh: '00', mm: '00' },
+    step2: { hh: '00', mm: '00' },
+    step3: { hh: '00', mm: '00' },
+    step4: { hh: '00', mm: '00' },
+    step5: { hh: '00', mm: '00' },
+    step6: { hh: '00', mm: '00' },
+    step7: { hh: '00', mm: '00' },
+  });
+
+  // 3. Classroom Interactions (5 steps)
+  const [classroomHours, setClassroomHours] = useState({
+    step1: { hh: '00', mm: '00' },
+    step2: { hh: '00', mm: '00' },
+    step3: { hh: '00', mm: '00' },
+    step4: { hh: '00', mm: '00' },
+    step5: { hh: '00', mm: '00' },
+  });
+
+  // 4. Skill Training (5 rows)
+  const [skillTraining, setSkillTraining] = useState([
+    { id: 1, name: '', hh: '00', mm: '00', status: 'Pursuing' },
+    { id: 2, name: '', hh: '00', mm: '00', status: 'Pursuing' },
+    { id: 3, name: '', hh: '00', mm: '00', status: 'Pursuing' },
+    { id: 4, name: '', hh: '00', mm: '00', status: 'Pursuing' },
+    { id: 5, name: '', hh: '00', mm: '00', status: 'Pursuing' },
   ]);
 
-  // --- AUTO CALCULATIONS ---
-  // Sum online course hours
-  const totalOnlineHours = courses.reduce((sum, item) => {
-    const val = parseFloat(item.hours) || 0;
-    return sum + val;
-  }, 0);
+  // 5. Online Course (5 rows)
+  const [onlineCourses, setOnlineCourses] = useState([
+    { id: 1, name: '', hh: '00', mm: '00', status: 'Pursuing' },
+    { id: 2, name: '', hh: '00', mm: '00', status: 'Pursuing' },
+    { id: 3, name: '', hh: '00', mm: '00', status: 'Pursuing' },
+    { id: 4, name: '', hh: '00', mm: '00', status: 'Pursuing' },
+    { id: 5, name: '', hh: '00', mm: '00', status: 'Pursuing' },
+  ]);
 
-  // Sum vocational training hours
-  const totalVocationalHours = vocationalSkills.reduce((sum, item) => {
-    const val = parseFloat(item.hours) || 0;
-    return sum + val;
-  }, 0);
+  // --- HELPER TIME CALCULATORS ---
+  const sumTimeObj = (obj) => {
+    let totalMinutes = 0;
+    Object.values(obj).forEach(time => {
+      const h = parseInt(time.hh, 10) || 0;
+      const m = parseInt(time.mm, 10) || 0;
+      totalMinutes += h * 60 + m;
+    });
+    const hh = String(Math.floor(totalMinutes / 60)).padStart(2, '0');
+    const mm = String(totalMinutes % 60).padStart(2, '0');
+    return `${hh}:${mm}`;
+  };
 
-  // Sum overall hours spent
-  const totalOverallHours = (parseFloat(hoursSpent.groupProject) || 0) +
-                            (parseFloat(hoursSpent.problemInquiry) || 0) +
-                            (parseFloat(hoursSpent.classroomInteractions) || 0) +
-                            totalVocationalHours;
+  const sumTimeArray = (arr) => {
+    let totalMinutes = 0;
+    arr.forEach(item => {
+      const h = parseInt(item.hh, 10) || 0;
+      const m = parseInt(item.mm, 10) || 0;
+      totalMinutes += h * 60 + m;
+    });
+    const hh = String(Math.floor(totalMinutes / 60)).padStart(2, '0');
+    const mm = String(totalMinutes % 60).padStart(2, '0');
+    return `${hh}:${mm}`;
+  };
 
   // --- SAVE & LOAD ---
   const getPayload = useCallback(() => {
     const stage4Obj = {
       timeInventories: {
-        courses,
-        hoursSpent,
-        vocationalSkills
+        groupProjectHours,
+        problemInquiryHours,
+        classroomHours,
+        skillTraining,
+        onlineCourses
       }
     };
 
@@ -103,10 +132,10 @@ export default function PartEFTimeInventories() {
         stage4: stage4Merged
       }
     };
-  }, [courses, hoursSpent, vocationalSkills, targetProfile]);
+  }, [groupProjectHours, problemInquiryHours, classroomHours, skillTraining, onlineCourses, targetProfile]);
 
   const { triggerSave } = useAutoSave(targetUserId, getPayload, [
-    courses, hoursSpent, vocationalSkills
+    groupProjectHours, problemInquiryHours, classroomHours, skillTraining, onlineCourses
   ]);
 
   useEffect(() => {
@@ -124,9 +153,11 @@ export default function PartEFTimeInventories() {
         const assess = typeof data.assessments === 'string' ? JSON.parse(data.assessments) : data.assessments;
         const ti = assess.stage4?.timeInventories;
         if (ti) {
-          if (ti.courses) setCourses(ti.courses);
-          if (ti.hoursSpent) setHoursSpent(prev => ({ ...prev, ...ti.hoursSpent }));
-          if (ti.vocationalSkills) setVocationalSkills(ti.vocationalSkills);
+          if (ti.groupProjectHours) setGroupProjectHours(prev => ({ ...prev, ...ti.groupProjectHours }));
+          if (ti.problemInquiryHours) setProblemInquiryHours(prev => ({ ...prev, ...ti.problemInquiryHours }));
+          if (ti.classroomHours) setClassroomHours(prev => ({ ...prev, ...ti.classroomHours }));
+          if (ti.skillTraining) setSkillTraining(ti.skillTraining);
+          if (ti.onlineCourses) setOnlineCourses(ti.onlineCourses);
         }
       }
     } catch (e) {
@@ -145,199 +176,29 @@ export default function PartEFTimeInventories() {
     }
   };
 
-  // Row update helpers
-  const updateCourseRow = (idx, field, val) => {
-    setCourses(prev => {
-      const updated = [...prev];
-      updated[idx] = { ...updated[idx], [field]: val };
-      return updated;
-    });
-  };
-
-  const updateVocationalRow = (idx, field, val) => {
-    setVocationalSkills(prev => {
-      const updated = [...prev];
-      updated[idx] = { ...updated[idx], [field]: val };
-      return updated;
-    });
-  };
-
-  const renderPartE = () => {
-    return (
-      <ScrollView style={styles.tabContent} contentContainerStyle={{ paddingBottom: 60 }} nestedScrollEnabled>
-        <GemCutCard borderColor={gems.sapphire + '40'} style={styles.card}>
-          <Text style={styles.cardHeader}>Learning Through Online Courses (a to j)</Text>
-          <Text style={styles.helperText}>Enter course title, hours spent, and check if completed.</Text>
-          
-          <View style={styles.tableHeader}>
-            <Text style={[styles.headerCell, { flex: 0.1, textAlign: 'center' }]}>#</Text>
-            <Text style={[styles.headerCell, { flex: 0.5 }]}>Course Title</Text>
-            <Text style={[styles.headerCell, { flex: 0.2, textAlign: 'center' }]}>Hours</Text>
-            <Text style={[styles.headerCell, { flex: 0.2, textAlign: 'center' }]}>Done</Text>
-          </View>
-
-          {courses.map((item, idx) => (
-            <View key={item.id} style={styles.tableRow}>
-              <Text style={[styles.cellText, { flex: 0.1, textAlign: 'center', fontWeight: 'bold' }]}>
-                {item.id.toUpperCase()}
-              </Text>
-              <TextInput
-                style={[styles.rowInput, { flex: 0.5 }]}
-                placeholder="e.g. Intro to AI"
-                placeholderTextColor="#ccc"
-                value={item.courseName}
-                onChangeText={(v) => updateCourseRow(idx, 'courseName', v)}
-              />
-              <TextInput
-                style={[styles.rowInput, { flex: 0.2, textAlign: 'center' }]}
-                placeholder="0"
-                keyboardType="numeric"
-                placeholderTextColor="#ccc"
-                value={item.hours}
-                onChangeText={(v) => updateCourseRow(idx, 'hours', v)}
-              />
-              <TouchableOpacity
-                style={{ flex: 0.2, alignItems: 'center', justifyContent: 'center' }}
-                onPress={() => updateCourseRow(idx, 'completed', !item.completed)}
-              >
-                <Ionicons
-                  name={item.completed ? "checkbox-outline" : "square-outline"}
-                  size={18}
-                  color={item.completed ? gems.sapphire : '#888'}
-                />
-              </TouchableOpacity>
-            </View>
-          ))}
-
-          <View style={styles.totalRow}>
-            <Text style={styles.totalLabel}>TOTAL ONLINE COURSE HOURS</Text>
-            <View style={styles.totalBadge}>
-              <Text style={styles.totalBadgeText}>{totalOnlineHours} hrs</Text>
-            </View>
-          </View>
-        </GemCutCard>
-      </ScrollView>
-    );
-  };
-
-  const renderPartF = () => {
-    return (
-      <ScrollView style={styles.tabContent} contentContainerStyle={{ paddingBottom: 60 }} nestedScrollEnabled>
-        {/* Core Parts hours */}
-        <GemCutCard borderColor={gems.sapphire + '40'} style={styles.card}>
-          <Text style={styles.cardHeader}>1. Standard Academic Activities</Text>
-          <Text style={styles.helperText}>Enter estimated hours spent on each main module.</Text>
-          
-          <View style={styles.fieldRow}>
-            <Text style={[styles.fieldLabel, { color: theme.text }]}>Part B: Group Project Work</Text>
-            <TextInput
-              style={styles.numericInput}
-              placeholder="0"
-              keyboardType="numeric"
-              placeholderTextColor="#ccc"
-              value={hoursSpent.groupProject}
-              onChangeText={(v) => setHoursSpent(prev => ({ ...prev, groupProject: v }))}
-            />
-          </View>
-
-          <View style={styles.fieldRow}>
-            <Text style={[styles.fieldLabel, { color: theme.text }]}>Part C: Problem-Based Inquiry</Text>
-            <TextInput
-              style={styles.numericInput}
-              placeholder="0"
-              keyboardType="numeric"
-              placeholderTextColor="#ccc"
-              value={hoursSpent.problemInquiry}
-              onChangeText={(v) => setHoursSpent(prev => ({ ...prev, problemInquiry: v }))}
-            />
-          </View>
-
-          <View style={styles.fieldRow}>
-            <Text style={[styles.fieldLabel, { color: theme.text }]}>Part D: Classroom Interactions</Text>
-            <TextInput
-              style={styles.numericInput}
-              placeholder="0"
-              keyboardType="numeric"
-              placeholderTextColor="#ccc"
-              value={hoursSpent.classroomInteractions}
-              onChangeText={(v) => setHoursSpent(prev => ({ ...prev, classroomInteractions: v }))}
-            />
-          </View>
-        </GemCutCard>
-
-        {/* Vocational training */}
-        <GemCutCard borderColor={gems.sapphire + '40'} style={styles.card}>
-          <Text style={styles.cardHeader}>2. Outside Classroom (Skill Training) (a to d)</Text>
-          <Text style={styles.helperText}>Enter skill training course, hours spent, and status.</Text>
-          
-          <View style={styles.tableHeader}>
-            <Text style={[styles.headerCell, { flex: 0.1, textAlign: 'center' }]}>#</Text>
-            <Text style={[styles.headerCell, { flex: 0.5 }]}>Skill Description</Text>
-            <Text style={[styles.headerCell, { flex: 0.2, textAlign: 'center' }]}>Hours</Text>
-            <Text style={[styles.headerCell, { flex: 0.2, textAlign: 'center' }]}>Status</Text>
-          </View>
-
-          {vocationalSkills.map((item, idx) => (
-            <View key={item.id} style={styles.tableRow}>
-              <Text style={[styles.cellText, { flex: 0.1, textAlign: 'center', fontWeight: 'bold' }]}>
-                {item.id.toUpperCase()}
-              </Text>
-              <TextInput
-                style={[styles.rowInput, { flex: 0.5 }]}
-                placeholder="e.g. Carpentry"
-                placeholderTextColor="#ccc"
-                value={item.skillName}
-                onChangeText={(v) => updateVocationalRow(idx, 'skillName', v)}
-              />
-              <TextInput
-                style={[styles.rowInput, { flex: 0.2, textAlign: 'center' }]}
-                placeholder="0"
-                keyboardType="numeric"
-                placeholderTextColor="#ccc"
-                value={item.hours}
-                onChangeText={(v) => updateVocationalRow(idx, 'hours', v)}
-              />
-              <TextInput
-                style={[styles.rowInput, { flex: 0.2, textAlign: 'center' }]}
-                placeholder="Completed"
-                placeholderTextColor="#ccc"
-                value={item.status}
-                onChangeText={(v) => updateVocationalRow(idx, 'status', v)}
-              />
-            </View>
-          ))}
-
-          <View style={styles.totalRow}>
-            <Text style={styles.totalLabel}>TOTAL SKILL TRAINING HOURS</Text>
-            <View style={styles.totalBadge}>
-              <Text style={styles.totalBadgeText}>{totalVocationalHours} hrs</Text>
-            </View>
-          </View>
-        </GemCutCard>
-
-        {/* Grand Total Part F */}
-        <GemCutCard borderColor={gems.silver + '40'} style={styles.card}>
-          <View style={styles.grandTotalRow}>
-            <View>
-              <Text style={styles.grandTotalHeader}>GRAND TOTAL TIME SPENT</Text>
-              <Text style={styles.grandTotalSub}>Sums Part B, C, D, and Vocational training</Text>
-            </View>
-            <View style={[styles.totalBadge, { backgroundColor: gems.sapphire }]}>
-              <Text style={[styles.totalBadgeText, { color: '#FFF' }]}>{totalOverallHours} hrs</Text>
-            </View>
-          </View>
-        </GemCutCard>
-      </ScrollView>
-    );
-  };
-
-  const renderActiveTab = () => {
-    switch (activeTab) {
-      case 0: return renderPartE();
-      case 1: return renderPartF();
-      default: return renderPartE();
-    }
-  };
+  const renderTimeInput = (timeVal, onChange) => (
+    <View style={styles.timeInputBox}>
+      <TextInput
+        style={styles.timeInputText}
+        keyboardType="numeric"
+        maxLength={2}
+        placeholder="00"
+        placeholderTextColor="#999"
+        value={timeVal.hh}
+        onChangeText={(v) => onChange({ ...timeVal, hh: v })}
+      />
+      <Text style={styles.timeColon}>:</Text>
+      <TextInput
+        style={styles.timeInputText}
+        keyboardType="numeric"
+        maxLength={2}
+        placeholder="00"
+        placeholderTextColor="#999"
+        value={timeVal.mm}
+        onChangeText={(v) => onChange({ ...timeVal, mm: v })}
+      />
+    </View>
+  );
 
   return (
     <View style={{ flex: 1 }}>
@@ -364,22 +225,213 @@ export default function PartEFTimeInventories() {
         {loading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={gems.sapphire} />
-            <Text style={[styles.loadingText, { color: theme.secondaryText }]}>Loading inventories...</Text>
+            <Text style={[styles.loadingText, { color: theme.secondaryText }]}>Loading time inventories...</Text>
           </View>
         ) : (
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             style={{ flex: 1 }}
           >
-            <AnimatedTabBar
-              tabs={['Part E: Online', 'Part F: Hours Spent']}
-              activeIndex={activeTab}
-              onTabChange={setActiveTab}
-            />
+            <ScrollView style={styles.scrollContent} contentContainerStyle={{ paddingBottom: 60 }} nestedScrollEnabled>
+              <Text style={styles.mainSectionTitle}>Number of Hours Spent by the Learner on the Following Activities:</Text>
 
-            <View style={{ flex: 1, paddingHorizontal: 16 }}>
-              {renderActiveTab()}
-            </View>
+              {/* 1. Group Project Work */}
+              <GemCutCard borderColor={gems.sapphire + '40'} style={styles.card}>
+                <Text style={styles.cardHeader}>1. Group Project Work</Text>
+                <View style={styles.tableHeader}>
+                  <Text style={[styles.headerCell, { flex: 0.7 }]}>Steps</Text>
+                  <Text style={[styles.headerCell, { flex: 0.3, textAlign: 'center' }]}>Hours Spent (HH:MM)</Text>
+                </View>
+
+                {[
+                  { key: 'step1', label: '1. Research prompt/question/ problem/challenge/ planned final output' },
+                  { key: 'step2', label: '2. Guiding questions' },
+                  { key: 'step3', label: '3. Stage 1 (Brainstorming and ideation)' },
+                  { key: 'step4', label: '4. Stage 2 (Drafting, feedback, and revision)' },
+                  { key: 'step5', label: '5. Stage 3 (Final submission)' },
+                ].map(step => (
+                  <View key={step.key} style={styles.tableRow}>
+                    <Text style={[styles.stepLabel, { flex: 0.7, color: theme.text }]}>{step.label}</Text>
+                    <View style={{ flex: 0.3, alignItems: 'center' }}>
+                      {renderTimeInput(groupProjectHours[step.key], (v) => setGroupProjectHours(prev => ({ ...prev, [step.key]: v })))}
+                    </View>
+                  </View>
+                ))}
+
+                <View style={styles.totalRow}>
+                  <Text style={styles.totalLabel}>Total</Text>
+                  <Text style={styles.totalValText}>{sumTimeObj(groupProjectHours)}</Text>
+                </View>
+              </GemCutCard>
+
+              {/* 2. Problem-Based Inquiry */}
+              <GemCutCard borderColor={gems.sapphire + '40'} style={styles.card}>
+                <Text style={styles.cardHeader}>2. Problem-Based Inquiry (Individual Work)</Text>
+                <View style={styles.tableHeader}>
+                  <Text style={[styles.headerCell, { flex: 0.7 }]}>Steps</Text>
+                  <Text style={[styles.headerCell, { flex: 0.3, textAlign: 'center' }]}>Hours Spent (HH:MM)</Text>
+                </View>
+
+                {[
+                  { key: 'step1', label: '1. Project prompt/question/problem/challenge/planned final output' },
+                  { key: 'step2', label: '2. Hypothesis' },
+                  { key: 'step3', label: '3. Guiding questions' },
+                  { key: 'step4', label: '4. Evidence collection to support/negate hypothesis' },
+                  { key: 'step5', label: '5. Analysis and synthesis' },
+                  { key: 'step6', label: '6. Discussions' },
+                  { key: 'step7', label: '7. Conclusion' },
+                ].map(step => (
+                  <View key={step.key} style={styles.tableRow}>
+                    <Text style={[styles.stepLabel, { flex: 0.7, color: theme.text }]}>{step.label}</Text>
+                    <View style={{ flex: 0.3, alignItems: 'center' }}>
+                      {renderTimeInput(problemInquiryHours[step.key], (v) => setProblemInquiryHours(prev => ({ ...prev, [step.key]: v })))}
+                    </View>
+                  </View>
+                ))}
+
+                <View style={styles.totalRow}>
+                  <Text style={styles.totalLabel}>Total</Text>
+                  <Text style={styles.totalValText}>{sumTimeObj(problemInquiryHours)}</Text>
+                </View>
+              </GemCutCard>
+
+              {/* 3. Classroom Interactions */}
+              <GemCutCard borderColor={gems.sapphire + '40'} style={styles.card}>
+                <Text style={styles.cardHeader}>3. Classroom Interactions</Text>
+                <View style={styles.tableHeader}>
+                  <Text style={[styles.headerCell, { flex: 0.7 }]}>Steps</Text>
+                  <Text style={[styles.headerCell, { flex: 0.3, textAlign: 'center' }]}>Hours Spent (HH:MM)</Text>
+                </View>
+
+                {[
+                  { key: 'step1', label: '1. Classroom discussion' },
+                  { key: 'step2', label: '2. Organised debate' },
+                  { key: 'step3', label: '3. Simulation/roleplay' },
+                  { key: 'step4', label: '4. Lab experiment' },
+                  { key: 'step5', label: '5. Digital Learning' },
+                ].map(step => (
+                  <View key={step.key} style={styles.tableRow}>
+                    <Text style={[styles.stepLabel, { flex: 0.7, color: theme.text }]}>{step.label}</Text>
+                    <View style={{ flex: 0.3, alignItems: 'center' }}>
+                      {renderTimeInput(classroomHours[step.key], (v) => setClassroomHours(prev => ({ ...prev, [step.key]: v })))}
+                    </View>
+                  </View>
+                ))}
+
+                <View style={styles.totalRow}>
+                  <Text style={styles.totalLabel}>Total</Text>
+                  <Text style={styles.totalValText}>{sumTimeObj(classroomHours)}</Text>
+                </View>
+              </GemCutCard>
+
+              {/* 4. Skill Training */}
+              <GemCutCard borderColor={gems.sapphire + '40'} style={styles.card}>
+                <Text style={styles.cardHeader}>4. Skill Training</Text>
+                <View style={styles.tableHeader}>
+                  <Text style={[styles.headerCell, { flex: 0.4 }]}>Steps</Text>
+                  <Text style={[styles.headerCell, { flex: 0.3, textAlign: 'center' }]}>Hours Spent</Text>
+                  <Text style={[styles.headerCell, { flex: 0.3, textAlign: 'center' }]}>Status</Text>
+                </View>
+
+                {skillTraining.map((item, idx) => (
+                  <View key={item.id} style={styles.tableRow}>
+                    <TextInput
+                      style={[styles.textInputCell, { flex: 0.4 }]}
+                      placeholder="Write here..."
+                      placeholderTextColor="#999"
+                      value={item.name}
+                      onChangeText={(v) => {
+                        const updated = [...skillTraining];
+                        updated[idx].name = v;
+                        setSkillTraining(updated);
+                      }}
+                    />
+                    <View style={{ flex: 0.3, alignItems: 'center' }}>
+                      {renderTimeInput({ hh: item.hh, mm: item.mm }, (newT) => {
+                        const updated = [...skillTraining];
+                        updated[idx].hh = newT.hh;
+                        updated[idx].mm = newT.mm;
+                        setSkillTraining(updated);
+                      })}
+                    </View>
+                    <View style={{ flex: 0.3, flexDirection: 'row', justifyContent: 'center', gap: 4 }}>
+                      {['Pursuing', 'Completed'].map(st => (
+                        <TouchableOpacity
+                          key={st}
+                          style={[styles.statusBtn, item.status === st && styles.statusBtnActive]}
+                          onPress={() => {
+                            const updated = [...skillTraining];
+                            updated[idx].status = st;
+                            setSkillTraining(updated);
+                          }}
+                        >
+                          <Text style={[styles.statusBtnText, item.status === st && styles.statusBtnTextActive]}>{st[0]}</Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  </View>
+                ))}
+
+                <View style={styles.totalRow}>
+                  <Text style={styles.totalLabel}>Total</Text>
+                  <Text style={styles.totalValText}>{sumTimeArray(skillTraining)}</Text>
+                </View>
+              </GemCutCard>
+
+              {/* 5. Online Course */}
+              <GemCutCard borderColor={gems.sapphire + '40'} style={styles.card}>
+                <Text style={styles.cardHeader}>5. Online Course</Text>
+                <View style={styles.tableHeader}>
+                  <Text style={[styles.headerCell, { flex: 0.4 }]}>Steps</Text>
+                  <Text style={[styles.headerCell, { flex: 0.3, textAlign: 'center' }]}>Hours Spent</Text>
+                  <Text style={[styles.headerCell, { flex: 0.3, textAlign: 'center' }]}>Status</Text>
+                </View>
+
+                {onlineCourses.map((item, idx) => (
+                  <View key={item.id} style={styles.tableRow}>
+                    <TextInput
+                      style={[styles.textInputCell, { flex: 0.4 }]}
+                      placeholder="Write here..."
+                      placeholderTextColor="#999"
+                      value={item.name}
+                      onChangeText={(v) => {
+                        const updated = [...onlineCourses];
+                        updated[idx].name = v;
+                        setOnlineCourses(updated);
+                      }}
+                    />
+                    <View style={{ flex: 0.3, alignItems: 'center' }}>
+                      {renderTimeInput({ hh: item.hh, mm: item.mm }, (newT) => {
+                        const updated = [...onlineCourses];
+                        updated[idx].hh = newT.hh;
+                        updated[idx].mm = newT.mm;
+                        setOnlineCourses(updated);
+                      })}
+                    </View>
+                    <View style={{ flex: 0.3, flexDirection: 'row', justifyContent: 'center', gap: 4 }}>
+                      {['Pursuing', 'Completed'].map(st => (
+                        <TouchableOpacity
+                          key={st}
+                          style={[styles.statusBtn, item.status === st && styles.statusBtnActive]}
+                          onPress={() => {
+                            const updated = [...onlineCourses];
+                            updated[idx].status = st;
+                            setOnlineCourses(updated);
+                          }}
+                        >
+                          <Text style={[styles.statusBtnText, item.status === st && styles.statusBtnTextActive]}>{st[0]}</Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  </View>
+                ))}
+
+                <View style={styles.totalRow}>
+                  <Text style={styles.totalLabel}>Total</Text>
+                  <Text style={styles.totalValText}>{sumTimeArray(onlineCourses)}</Text>
+                </View>
+              </GemCutCard>
+            </ScrollView>
           </KeyboardAvoidingView>
         )}
       </SafeAreaView>
@@ -445,36 +497,39 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: 'Inter_400Regular',
   },
-  tabContent: {
+  scrollContent: {
     flex: 1,
-    marginTop: 16,
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  mainSectionTitle: {
+    fontSize: 12.5,
+    fontWeight: '700',
+    color: gems.sapphire,
+    fontFamily: 'Outfit_600SemiBold',
+    marginBottom: 14,
+    textTransform: 'uppercase',
   },
   card: {
-    marginBottom: 16,
+    marginBottom: 18,
   },
   cardHeader: {
     fontSize: 13,
     fontWeight: '700',
     fontFamily: 'Outfit_600SemiBold',
-    letterSpacing: 0.5,
     textTransform: 'uppercase',
     color: gems.sapphire,
-  },
-  helperText: {
-    fontSize: 10,
-    color: '#888',
-    fontStyle: 'italic',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   tableHeader: {
     flexDirection: 'row',
     borderBottomWidth: 1.5,
     borderBottomColor: '#ccc',
-    paddingBottom: 4,
+    paddingBottom: 6,
     marginBottom: 8,
   },
   headerCell: {
-    fontSize: 10.5,
+    fontSize: 10,
     fontWeight: '700',
     fontFamily: 'Outfit_600SemiBold',
     textTransform: 'uppercase',
@@ -485,84 +540,81 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
-    paddingVertical: 4,
+    paddingVertical: 8,
+    gap: 8,
   },
-  cellText: {
-    fontSize: 12,
+  stepLabel: {
+    fontSize: 11,
     fontFamily: 'Inter_400Regular',
   },
-  rowInput: {
-    height: 32,
-    fontSize: 12,
-    color: '#222',
+  textInputCell: {
+    fontSize: 11,
     fontFamily: 'Inter_400Regular',
-    paddingHorizontal: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    paddingVertical: 2,
+  },
+  timeInputBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.03)',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 6,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+  timeInputText: {
+    fontSize: 11,
+    fontWeight: '700',
+    width: 20,
+    textAlign: 'center',
+    padding: 0,
+    fontFamily: 'Outfit_600SemiBold',
+  },
+  timeColon: {
+    fontSize: 11,
+    fontWeight: '700',
+    marginHorizontal: 2,
   },
   totalRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 16,
-    paddingTop: 12,
+    marginTop: 12,
+    paddingTop: 10,
     borderTopWidth: 1.5,
     borderTopColor: '#ccc',
   },
   totalLabel: {
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: '700',
     fontFamily: 'Outfit_600SemiBold',
-    color: '#444',
+    color: '#333',
   },
-  totalBadge: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 8,
-    backgroundColor: 'rgba(46, 88, 148, 0.1)',
-  },
-  totalBadgeText: {
-    fontSize: 11,
-    fontWeight: '700',
+  totalValText: {
+    fontSize: 13,
+    fontWeight: '800',
     color: gems.sapphire,
     fontFamily: 'Outfit_600SemiBold',
   },
-  fieldRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f3f3f3',
+  statusBtn: {
+    paddingHorizontal: 6,
+    paddingVertical: 4,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 6,
   },
-  fieldLabel: {
-    fontSize: 12,
-    fontFamily: 'Inter_400Regular',
+  statusBtnActive: {
+    borderColor: gems.sapphire,
+    backgroundColor: gems.sapphire + '15',
   },
-  numericInput: {
-    width: 60,
-    height: 32,
-    borderBottomWidth: 1,
-    borderBottomColor: gems.sapphire,
-    textAlign: 'center',
-    fontSize: 13,
-    color: '#222',
-    fontFamily: 'Inter_400Regular',
-  },
-  grandTotalRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 6,
-  },
-  grandTotalHeader: {
-    fontSize: 12.5,
+  statusBtnText: {
+    fontSize: 9,
     fontWeight: '700',
-    fontFamily: 'Outfit_600SemiBold',
-    color: '#222',
-  },
-  grandTotalSub: {
-    fontSize: 9.5,
     color: '#666',
-    fontStyle: 'italic',
-    marginTop: 2,
+  },
+  statusBtnTextActive: {
+    color: gems.sapphire,
   },
 });

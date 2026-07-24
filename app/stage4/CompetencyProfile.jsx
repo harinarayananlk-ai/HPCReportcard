@@ -7,7 +7,10 @@ import {
   StatusBar,
   TouchableOpacity,
   ActivityIndicator,
+  TextInput,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -24,7 +27,7 @@ import useAutoSave from '../../hooks/useAutoSave';
 export default function CompetencyProfile() {
   const router = useRouter();
   const { theme } = useTheme();
-  const { user, profile, activeStudentId, activeStudentProfile, setActiveStudentProfile, setProfile: setAuthProfile } = useAuth();
+  const { user, profile, activeStudentId, activeStudentProfile } = useAuth();
   const isTeacher = user?.role === 'teacher' || user?.role === 'superadmin';
   const targetUserId = activeStudentId || user?.id;
   const targetProfile = isTeacher ? activeStudentProfile : profile;
@@ -34,32 +37,32 @@ export default function CompetencyProfile() {
 
   const skillsData = {
     awareness: [
-      { id: 'awr_a', label: 'a. Proficiency in language R1, R2, R3' },
-      { id: 'awr_b', label: 'b. Oral communication' },
-      { id: 'awr_c', label: 'c. Written communication' },
-      { id: 'awr_d', label: 'd. Health and nutrition literacy' },
-      { id: 'awr_e', label: 'e. Physical education, fitness, wellness, and sports' },
-      { id: 'awr_f', label: 'f. Digital literacy' },
-      { id: 'awr_g', label: 'g. Knowledge of India' },
-      { id: 'awr_h', label: 'h. Environmental literacy (conservation, sanitation, hygiene)' },
-      { id: 'awr_i', label: 'i. Knowledge of critical issues (current affairs, local, global)' },
+      { id: 'awr_a', label: 'Proficiency in language R1, R2, R3' },
+      { id: 'awr_b', label: 'Oral Communication' },
+      { id: 'awr_c', label: 'Written communication' },
+      { id: 'awr_d', label: 'Health and nutrition literacy' },
+      { id: 'awr_e', label: 'Physical education, fitness, wellness, and sports' },
+      { id: 'awr_f', label: 'Digital literacy' },
+      { id: 'awr_g', label: 'Knowledge of India' },
+      { id: 'awr_h', label: 'Environmental literacy (including awareness of water and resource, conservation, sanitation and hygiene)' },
+      { id: 'awr_i', label: 'Knowledge of critical issues (including current affairs and facing local communities, States, the country and the world, etc.)' },
     ],
     sensitivity: [
-      { id: 'sen_a', label: 'a. Collaboration and teamwork' },
-      { id: 'sen_b', label: 'b. Ethical and moral reasoning' },
-      { id: 'sen_c', label: 'c. Practice of human and Constitutional values' },
-      { id: 'sen_d', label: 'd. Gender sensitivity' },
-      { id: 'sen_e', label: 'e. Citizenship skills and values' },
-      { id: 'sen_f', label: 'f. Fundamental duties' },
+      { id: 'sen_a', label: 'Collaboration and teamwork' },
+      { id: 'sen_b', label: 'Ethical and moral reasoning' },
+      { id: 'sen_c', label: 'Knowledge and practice of human and Constitutional values' },
+      { id: 'sen_d', label: 'Gender sensitivity' },
+      { id: 'sen_e', label: 'Citizenship skills and values' },
+      { id: 'sen_f', label: 'Fundamental duties' },
     ],
     creativity: [
-      { id: 'cre_a', label: 'a. Scientific temper and evidence-based thinking' },
-      { id: 'cre_b', label: 'b. Creativity and innovativeness' },
-      { id: 'cre_c', label: 'c. Sense of aesthetics and art' },
-      { id: 'cre_d', label: 'd. Critical thinking' },
-      { id: 'cre_e', label: 'e. Problem-solving' },
-      { id: 'cre_f', label: 'f. Skills training' },
-      { id: 'cre_g', label: 'g. Coding and computational thinking' },
+      { id: 'cre_a', label: 'Scientific temper and evidence-based thinking' },
+      { id: 'cre_b', label: 'Creativity and innovativeness' },
+      { id: 'cre_c', label: 'Sense of aesthetics and art' },
+      { id: 'cre_d', label: 'Critical thinking' },
+      { id: 'cre_e', label: 'Problem-solving' },
+      { id: 'cre_f', label: 'Skills training' },
+      { id: 'cre_g', label: 'Coding and computational thinking' },
     ]
   };
 
@@ -122,23 +125,30 @@ export default function CompetencyProfile() {
     }
   };
 
-  const setLevelValue = (skillId, grade, val) => {
+  const setLevelValue = (skillId, grade, lvl) => {
     if (!isTeacher) return;
-    const key = `${skillId}_g${grade}`;
-    setProfileData(prev => {
-      const updated = { ...prev };
-      if (updated[key] === val) {
-        delete updated[key]; // toggle off
-      } else {
-        updated[key] = val;
-      }
-      return updated;
-    });
+    const key = `${skillId}_g${grade}_level`;
+    setProfileData(prev => ({
+      ...prev,
+      [key]: prev[key] === lvl ? '' : lvl
+    }));
   };
 
   const getLevelValue = (skillId, grade) => {
-    const key = `${skillId}_g${grade}`;
-    return profileData[key] || '';
+    return profileData[`${skillId}_g${grade}_level`] || '';
+  };
+
+  const setDescriptorText = (skillId, grade, text) => {
+    if (!isTeacher) return;
+    const key = `${skillId}_g${grade}_desc`;
+    setProfileData(prev => ({
+      ...prev,
+      [key]: text
+    }));
+  };
+
+  const getDescriptorText = (skillId, grade) => {
+    return profileData[`${skillId}_g${grade}_desc`] || '';
   };
 
   const renderSection = (title, skillsList) => {
@@ -153,27 +163,40 @@ export default function CompetencyProfile() {
             <View style={styles.gradesGrid}>
               {grades.map(grade => {
                 const currentVal = getLevelValue(skill.id, grade);
+                const descText = getDescriptorText(skill.id, grade);
                 return (
                   <View key={grade} style={styles.gradeCol}>
-                    <Text style={[styles.gradeText, { color: theme.secondaryText }]}>G-{grade}</Text>
-                    <View style={styles.badgeRow}>
-                      {levels.map(lvl => (
-                        <TouchableOpacity
-                          key={lvl}
-                          disabled={!isTeacher}
-                          onPress={() => setLevelValue(skill.id, grade, lvl)}
-                          style={[
-                            styles.badgeBtn,
-                            currentVal === lvl && styles.badgeBtnActive,
-                            !isTeacher && { opacity: 0.8 }
-                          ]}
-                        >
-                          <Text style={[styles.badgeText, currentVal === lvl && styles.badgeTextActive]}>
-                            {lvl}
-                          </Text>
-                        </TouchableOpacity>
-                      ))}
+                    <View style={styles.gradeHeaderRow}>
+                      <Text style={[styles.gradeText, { color: theme.secondaryText }]}>GRADE - {grade}</Text>
+                      <View style={styles.badgeRow}>
+                        {levels.map(lvl => (
+                          <TouchableOpacity
+                            key={lvl}
+                            disabled={!isTeacher}
+                            onPress={() => setLevelValue(skill.id, grade, lvl)}
+                            style={[
+                              styles.badgeBtn,
+                              currentVal === lvl && styles.badgeBtnActive,
+                              !isTeacher && { opacity: 0.8 }
+                            ]}
+                          >
+                            <Text style={[styles.badgeText, currentVal === lvl && styles.badgeTextActive]}>
+                              {lvl}
+                            </Text>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
                     </View>
+
+                    <TextInput
+                      style={[styles.descriptorInput, { color: theme.text }]}
+                      placeholder="Write here..."
+                      placeholderTextColor="#999"
+                      multiline
+                      value={descText}
+                      editable={isTeacher}
+                      onChangeText={(v) => setDescriptorText(skill.id, grade, v)}
+                    />
                   </View>
                 );
               })}
@@ -196,7 +219,7 @@ export default function CompetencyProfile() {
             <Ionicons name="chevron-back" size={22} color={theme.text} />
           </TouchableOpacity>
           <View style={styles.headerTitleContainer}>
-            <Text style={[styles.title, { color: theme.text }]}>COMPETENCY PROFILE</Text>
+            <Text style={[styles.title, { color: theme.text }]}>STUDENT COMPETENCY PROFILE</Text>
             <Text style={[styles.subtitle, { color: theme.secondaryText }]}>
               {targetProfile?.full_name || 'Loading...'}
             </Text>
@@ -223,15 +246,15 @@ export default function CompetencyProfile() {
             )}
 
             <View style={styles.infoCard}>
-              <Text style={[styles.infoTitle, { color: theme.text }]}>How to read descriptors:</Text>
+              <Text style={[styles.infoTitle, { color: theme.text }]}>PERFORMANCE LEVEL DESCRIPTORS (GRADES 9-12)</Text>
               <Text style={[styles.infoText, { color: theme.secondaryText }]}>
                 <Text style={{ fontWeight: 'bold', color: theme.text }}>B</Text> = Beginner | <Text style={{ fontWeight: 'bold', color: theme.text }}>P</Text> = Proficient | <Text style={{ fontWeight: 'bold', color: theme.text }}>A</Text> = Advanced
               </Text>
             </View>
 
-            {renderSection('1. AWARENESS SKILLS', skillsData.awareness)}
-            {renderSection('2. SENSITIVITY SKILLS', skillsData.sensitivity)}
-            {renderSection('3. CREATIVITY SKILLS', skillsData.creativity)}
+            {renderSection('AWARENESS SKILLS', skillsData.awareness)}
+            {renderSection('SENSITIVITY SKILLS', skillsData.sensitivity)}
+            {renderSection('CREATIVITY SKILLS', skillsData.creativity)}
 
             <View style={{ height: 40 }} />
           </ScrollView>
@@ -277,7 +300,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '300',
     letterSpacing: 2,
     fontFamily: 'Inter_400Regular',
@@ -333,6 +356,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontFamily: 'Outfit_600SemiBold',
     marginBottom: 4,
+    letterSpacing: 1,
   },
   infoText: {
     fontSize: 11,
@@ -351,34 +375,34 @@ const styles = StyleSheet.create({
     fontFamily: 'Outfit_600SemiBold',
   },
   skillCard: {
-    marginBottom: 10,
+    marginBottom: 12,
     padding: 12,
   },
   skillLabel: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: '700',
     fontFamily: 'Outfit_600SemiBold',
     marginBottom: 12,
   },
   gradesGrid: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 8,
-    flexWrap: 'wrap',
+    gap: 10,
   },
   gradeCol: {
-    flex: 1,
-    minWidth: '46%',
-    alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.02)',
     borderRadius: 8,
-    padding: 6,
-    marginVertical: 4,
+    padding: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.05)',
+  },
+  gradeHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 6,
   },
   gradeText: {
     fontSize: 10,
     fontWeight: '700',
-    marginBottom: 4,
     fontFamily: 'Outfit_600SemiBold',
   },
   badgeRow: {
@@ -386,8 +410,8 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   badgeBtn: {
-    width: 26,
-    height: 26,
+    width: 24,
+    height: 24,
     borderRadius: 6,
     borderWidth: 1,
     borderColor: '#ccc',
@@ -399,12 +423,23 @@ const styles = StyleSheet.create({
     backgroundColor: gems.sapphire,
   },
   badgeText: {
-    fontSize: 10,
+    fontSize: 9.5,
     fontWeight: '700',
     color: '#666',
     fontFamily: 'Outfit_600SemiBold',
   },
   badgeTextActive: {
     color: '#FFF',
+  },
+  descriptorInput: {
+    fontSize: 11,
+    fontFamily: 'Inter_400Regular',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 6,
+    padding: 6,
+    minHeight: 40,
+    textAlignVertical: 'top',
+    backgroundColor: 'rgba(255,255,255,0.7)',
   },
 });

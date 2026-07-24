@@ -2366,11 +2366,17 @@ function buildHpcHtml(studentData) {
         };
 
         const getCpBadge = (skillId, grade) => {
-            const val = competencyProfile[`${skillId}_g${grade}`] || '';
-            if (val === 'B') return `<span style="background: rgba(100,116,139,0.08); border: 1px solid rgba(100,116,139,0.25); color:#475569; padding: 2px 6px; border-radius: 4px; font-weight:700; font-size:9px; display:inline-block;">B</span>`;
-            if (val === 'P') return `<span style="background: rgba(184,151,46,0.08); border: 1px solid rgba(184,151,46,0.25); color:#8a6d1a; padding: 2px 6px; border-radius: 4px; font-weight:700; font-size:9px; display:inline-block;">P</span>`;
-            if (val === 'A') return `<span style="background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25); color:#15803d; padding: 2px 6px; border-radius: 4px; font-weight:700; font-size:9px; display:inline-block;">A</span>`;
-            return `<span style="color:#aaa;">-</span>`;
+            const lvl = competencyProfile[`${skillId}_g${grade}_level`] || competencyProfile[`${skillId}_g${grade}`] || '';
+            const desc = competencyProfile[`${skillId}_g${grade}_desc`] || '';
+            let badge = '';
+            if (lvl === 'B') badge = `<span style="background: rgba(100,116,139,0.08); border: 1px solid rgba(100,116,139,0.25); color:#475569; padding: 2px 6px; border-radius: 4px; font-weight:700; font-size:9px; display:inline-block;">B</span>`;
+            else if (lvl === 'P') badge = `<span style="background: rgba(184,151,46,0.08); border: 1px solid rgba(184,151,46,0.25); color:#8a6d1a; padding: 2px 6px; border-radius: 4px; font-weight:700; font-size:9px; display:inline-block;">P</span>`;
+            else if (lvl === 'A') badge = `<span style="background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25); color:#15803d; padding: 2px 6px; border-radius: 4px; font-weight:700; font-size:9px; display:inline-block;">A</span>`;
+            
+            if (desc) {
+                return `<div>${badge} <div style="font-size:8px; color:#555; margin-top:2px;">${escapeHtml(desc)}</div></div>`;
+            }
+            return badge || `<span style="color:#aaa;">-</span>`;
         };
 
         // --- PAGE 3: PART A SELF-REFLECTION ---
@@ -2813,7 +2819,7 @@ function buildHpcHtml(studentData) {
             <div class="matte-shield"></div>
             <div class="page-border"></div>
             <div class="content-container">
-                <div class="section-title">Part D: Classroom Interactions (Short-Burst Activities)</div>
+                <div class="section-title">Part D: Observation Template (Classroom Interactions)</div>
                 
                 <div class="glass-card" style="padding: 12px; margin-bottom: 12px;">
                     <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">1. DOSSIER & ACTIVITY CONFIG</div>
@@ -2880,21 +2886,43 @@ function buildHpcHtml(studentData) {
         `;
 
         // --- PAGE 9: PART E & F TIME INVENTORIES ---
-        const eCourses = timeInventories.courses || [];
-        const fHours = timeInventories.hoursSpent || {};
-        const fSkills = timeInventories.vocationalSkills || [];
+        const gHours = timeInventories.groupProjectHours || {};
+        const pHours = timeInventories.problemInquiryHours || {};
+        const cHours = timeInventories.classroomHours || {};
+        const sSkills = timeInventories.skillTraining || [];
+        const oCourses = timeInventories.onlineCourses || [];
 
-        const calculateTotalOnline = () => {
-            return eCourses.reduce((sum, item) => sum + (parseFloat(item.hours) || 0), 0);
+        const getTimeStr = (obj, key) => {
+            if (!obj || !obj[key]) return '00:00';
+            const hh = String(obj[key].hh || '00').padStart(2, '0');
+            const mm = String(obj[key].mm || '00').padStart(2, '0');
+            return `${hh}:${mm}`;
         };
-        const calculateTotalVocational = () => {
-            return fSkills.reduce((sum, item) => sum + (parseFloat(item.hours) || 0), 0);
+
+        const calcTotalMinutesObj = (obj) => {
+            let total = 0;
+            if (!obj) return '00:00';
+            Object.values(obj).forEach(t => {
+                const h = parseInt(t.hh, 10) || 0;
+                const m = parseInt(t.mm, 10) || 0;
+                total += h * 60 + m;
+            });
+            const hh = String(Math.floor(total / 60)).padStart(2, '0');
+            const mm = String(total % 60).padStart(2, '0');
+            return `${hh}:${mm}`;
         };
-        const calculateOverall = () => {
-            return (parseFloat(fHours.groupProject) || 0) +
-                   (parseFloat(fHours.problemInquiry) || 0) +
-                   (parseFloat(fHours.classroomInteractions) || 0) +
-                   calculateTotalVocational();
+
+        const calcTotalMinutesArray = (arr) => {
+            let total = 0;
+            if (!arr) return '00:00';
+            arr.forEach(t => {
+                const h = parseInt(t.hh, 10) || 0;
+                const m = parseInt(t.mm, 10) || 0;
+                total += h * 60 + m;
+            });
+            const hh = String(Math.floor(total / 60)).padStart(2, '0');
+            const mm = String(total % 60).padStart(2, '0');
+            return `${hh}:${mm}`;
         };
 
         htmlContent += `
@@ -2904,81 +2932,92 @@ function buildHpcHtml(studentData) {
             <div class="matte-shield"></div>
             <div class="page-border"></div>
             <div class="content-container">
-                <div class="section-title">Part E & F: Time Inventories</div>
+                <div class="section-title">Part E & F: Time Inventories (Hours Spent)</div>
                 
-                <div class="glass-card" style="padding: 12px; margin-bottom: 12px;">
-                    <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">PART E: LEARNING THROUGH ONLINE COURSES</div>
-                    <table class="rubric-table" style="width: 100%; border-collapse: collapse; font-size: 9px; margin-top: 4px;">
-                        <thead>
-                            <tr style="background:#2E5894; color:#FFF;">
-                                <th style="padding:4px; width:15%; text-align:center;">Row</th>
-                                <th style="padding:4px; width:50%;">Course Name</th>
-                                <th style="padding:4px; width:20%; text-align:center;">Hours Spent</th>
-                                <th style="padding:4px; width:15%; text-align:center;">Status</th>
-                            </tr>
-                        </thead>
+                <div class="glass-card" style="padding: 10px; margin-bottom: 10px;">
+                    <div style="font-size: 10.5px; font-weight: 700; color: #2E5894; margin-bottom: 4px;">1. GROUP PROJECT WORK</div>
+                    <table class="rubric-table" style="width: 100%; border-collapse: collapse; font-size: 8.5px;">
+                        <thead><tr style="background:#2E5894; color:#FFF;"><th style="padding:3px; width:75%;">Steps</th><th style="padding:3px; width:25%; text-align:center;">Hours Spent</th></tr></thead>
                         <tbody>
-                            ${eCourses.map(c => `
-                                <tr>
-                                    <td style="text-align:center;font-weight:700;background:rgba(0,0,0,0.01);padding:4px;">${escapeHtml(c.id?.toUpperCase())}</td>
-                                    <td style="padding:4px;">${escapeHtml(c.courseName || '-')}</td>
-                                    <td style="padding:4px; text-align:center;">${escapeHtml(c.hours || '0')}</td>
-                                    <td style="padding:4px; text-align:center;">${c.completed ? 'Completed' : 'Pursuing'}</td>
-                                </tr>
-                            `).join('') || `<tr><td colspan="4" style="text-align:center;padding:10px;color:#aaa;">No online course records entered</td></tr>`}
+                            <tr><td style="padding:3px;">1. Research prompt/question/ problem/challenge/ planned final output</td><td style="text-align:center;padding:3px;">${getTimeStr(gHours, 'step1')}</td></tr>
+                            <tr><td style="padding:3px;">2. Guiding questions</td><td style="text-align:center;padding:3px;">${getTimeStr(gHours, 'step2')}</td></tr>
+                            <tr><td style="padding:3px;">3. Stage 1 (Brainstorming and ideation)</td><td style="text-align:center;padding:3px;">${getTimeStr(gHours, 'step3')}</td></tr>
+                            <tr><td style="padding:3px;">4. Stage 2 (Drafting, feedback, and revision)</td><td style="text-align:center;padding:3px;">${getTimeStr(gHours, 'step4')}</td></tr>
+                            <tr><td style="padding:3px;">5. Stage 3 (Final submission)</td><td style="text-align:center;padding:3px;">${getTimeStr(gHours, 'step5')}</td></tr>
+                            <tr style="font-weight:700; background:rgba(0,0,0,0.02);"><td style="padding:3px;">Total</td><td style="text-align:center;padding:3px;color:#2E5894;">${calcTotalMinutesObj(gHours)}</td></tr>
                         </tbody>
                     </table>
-                    <div style="text-align:right; font-weight:700; font-size:11px; color:#2E5894; margin-top:8px; padding-right:12px;">
-                        TOTAL ONLINE COURSE HOURS: ${calculateTotalOnline()} hrs
-                    </div>
                 </div>
 
-                <div class="glass-card" style="padding: 12px; margin-bottom: 12px;">
-                    <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">PART F: ESTIMATED HOURS SPENT LOGS</div>
-                    <div style="font-size: 11.5px; line-height: 1.5;">
-                        <strong>1. Group Project Work:</strong> ${escapeHtml(fHours.groupProject || '0')} hours<br/>
-                        <strong>2. Problem-Based Inquiry:</strong> ${escapeHtml(fHours.problemInquiry || '0')} hours<br/>
-                        <strong>3. Classroom Interactions:</strong> ${escapeHtml(fHours.classroomInteractions || '0')} hours
-                    </div>
-                </div>
-
-                <div class="glass-card" style="padding: 12px; margin-bottom: 12px;">
-                    <div style="font-size: 11px; font-weight: 700; color: #2E5894; margin-bottom: 6px;">PART F.4: VOCATIONAL TRAINING & SKILLS INVENTORIES</div>
-                    <table class="rubric-table" style="width: 100%; border-collapse: collapse; font-size: 9px; margin-top: 4px;">
-                        <thead>
-                            <tr style="background:#2E5894; color:#FFF;">
-                                <th style="padding:4px; width:15%; text-align:center;">Row</th>
-                                <th style="padding:4px; width:50%;">Vocational Skill Training Description</th>
-                                <th style="padding:4px; width:20%; text-align:center;">Hours Log</th>
-                                <th style="padding:4px; width:15%; text-align:center;">Status</th>
-                            </tr>
-                        </thead>
+                <div class="glass-card" style="padding: 10px; margin-bottom: 10px;">
+                    <div style="font-size: 10.5px; font-weight: 700; color: #2E5894; margin-bottom: 4px;">2. PROBLEM-BASED INQUIRY (INDIVIDUAL WORK)</div>
+                    <table class="rubric-table" style="width: 100%; border-collapse: collapse; font-size: 8.5px;">
+                        <thead><tr style="background:#2E5894; color:#FFF;"><th style="padding:3px; width:75%;">Steps</th><th style="padding:3px; width:25%; text-align:center;">Hours Spent</th></tr></thead>
                         <tbody>
-                            ${fSkills.map(s => `
-                                <tr>
-                                    <td style="text-align:center;font-weight:700;background:rgba(0,0,0,0.01);padding:4px;">${escapeHtml(s.id?.toUpperCase())}</td>
-                                    <td style="padding:4px;">${escapeHtml(s.skillName || '-')}</td>
-                                    <td style="padding:4px; text-align:center;">${escapeHtml(s.hours || '0')}</td>
-                                    <td style="padding:4px; text-align:center;">${escapeHtml(s.status || '-')}</td>
-                                </tr>
-                            `).join('') || `<tr><td colspan="4" style="text-align:center;padding:10px;color:#aaa;">No skill training records entered</td></tr>`}
+                            <tr><td style="padding:3px;">1. Project prompt/question/problem/challenge/planned final output</td><td style="text-align:center;padding:3px;">${getTimeStr(pHours, 'step1')}</td></tr>
+                            <tr><td style="padding:3px;">2. Hypothesis</td><td style="text-align:center;padding:3px;">${getTimeStr(pHours, 'step2')}</td></tr>
+                            <tr><td style="padding:3px;">3. Guiding questions</td><td style="text-align:center;padding:3px;">${getTimeStr(pHours, 'step3')}</td></tr>
+                            <tr><td style="padding:3px;">4. Evidence collection to support/negate hypothesis</td><td style="text-align:center;padding:3px;">${getTimeStr(pHours, 'step4')}</td></tr>
+                            <tr><td style="padding:3px;">5. Analysis and synthesis</td><td style="text-align:center;padding:3px;">${getTimeStr(pHours, 'step5')}</td></tr>
+                            <tr><td style="padding:3px;">6. Discussions</td><td style="text-align:center;padding:3px;">${getTimeStr(pHours, 'step6')}</td></tr>
+                            <tr><td style="padding:3px;">7. Conclusion</td><td style="text-align:center;padding:3px;">${getTimeStr(pHours, 'step7')}</td></tr>
+                            <tr style="font-weight:700; background:rgba(0,0,0,0.02);"><td style="padding:3px;">Total</td><td style="text-align:center;padding:3px;color:#2E5894;">${calcTotalMinutesObj(pHours)}</td></tr>
                         </tbody>
                     </table>
-                    <div style="text-align:right; font-weight:700; font-size:11px; color:#2E5894; margin-top:8px; padding-right:12px;">
-                        TOTAL SKILL TRAINING HOURS: ${calculateTotalVocational()} hrs
-                    </div>
                 </div>
 
-                <div class="glass-card" style="padding: 12px; border-left: 4px solid #2E5894;">
-                    <div style="font-size: 12px; font-weight: 700; color: #2E5894; display: flex; justify-content: space-between; align-items: center;">
-                        <span>GRAND TOTAL HOURS LOGGED SPENT:</span>
-                        <span>${calculateOverall()} hrs</span>
+                <div class="glass-card" style="padding: 10px; margin-bottom: 10px;">
+                    <div style="font-size: 10.5px; font-weight: 700; color: #2E5894; margin-bottom: 4px;">3. CLASSROOM INTERACTIONS</div>
+                    <table class="rubric-table" style="width: 100%; border-collapse: collapse; font-size: 8.5px;">
+                        <thead><tr style="background:#2E5894; color:#FFF;"><th style="padding:3px; width:75%;">Steps</th><th style="padding:3px; width:25%; text-align:center;">Hours Spent</th></tr></thead>
+                        <tbody>
+                            <tr><td style="padding:3px;">1. Classroom discussion</td><td style="text-align:center;padding:3px;">${getTimeStr(cHours, 'step1')}</td></tr>
+                            <tr><td style="padding:3px;">2. Organised debate</td><td style="text-align:center;padding:3px;">${getTimeStr(cHours, 'step2')}</td></tr>
+                            <tr><td style="padding:3px;">3. Simulation/roleplay</td><td style="text-align:center;padding:3px;">${getTimeStr(cHours, 'step3')}</td></tr>
+                            <tr><td style="padding:3px;">4. Lab experiment</td><td style="text-align:center;padding:3px;">${getTimeStr(cHours, 'step4')}</td></tr>
+                            <tr><td style="padding:3px;">5. Digital Learning</td><td style="text-align:center;padding:3px;">${getTimeStr(cHours, 'step5')}</td></tr>
+                            <tr style="font-weight:700; background:rgba(0,0,0,0.02);"><td style="padding:3px;">Total</td><td style="text-align:center;padding:3px;color:#2E5894;">${calcTotalMinutesObj(cHours)}</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="glass-card" style="padding: 10px;">
+                        <div style="font-size: 10px; font-weight: 700; color: #2E5894; margin-bottom: 4px;">4. SKILL TRAINING</div>
+                        <table class="rubric-table" style="width: 100%; border-collapse: collapse; font-size: 8px;">
+                            <thead><tr style="background:#2E5894; color:#FFF;"><th style="padding:2px; width:50%;">Skill</th><th style="padding:2px; width:25%; text-align:center;">Hours</th><th style="padding:2px; width:25%; text-align:center;">Status</th></tr></thead>
+                            <tbody>
+                                ${sSkills.map(s => `
+                                    <tr>
+                                        <td style="padding:2px;">${escapeHtml(s.name || 'Write here...')}</td>
+                                        <td style="text-align:center;padding:2px;">${String(s.hh || '00').padStart(2,'0')}:${String(s.mm || '00').padStart(2,'0')}</td>
+                                        <td style="text-align:center;padding:2px;">${escapeHtml(s.status || '-')}</td>
+                                    </tr>
+                                `).join('')}
+                                <tr style="font-weight:700;"><td style="padding:2px;">Total</td><td style="text-align:center;padding:2px;color:#2E5894;">${calcTotalMinutesArray(sSkills)}</td><td></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="glass-card" style="padding: 10px;">
+                        <div style="font-size: 10px; font-weight: 700; color: #2E5894; margin-bottom: 4px;">5. ONLINE COURSE</div>
+                        <table class="rubric-table" style="width: 100%; border-collapse: collapse; font-size: 8px;">
+                            <thead><tr style="background:#2E5894; color:#FFF;"><th style="padding:2px; width:50%;">Course</th><th style="padding:2px; width:25%; text-align:center;">Hours</th><th style="padding:2px; width:25%; text-align:center;">Status</th></tr></thead>
+                            <tbody>
+                                ${oCourses.map(c => `
+                                    <tr>
+                                        <td style="padding:2px;">${escapeHtml(c.name || 'Write here...')}</td>
+                                        <td style="text-align:center;padding:2px;">${String(c.hh || '00').padStart(2,'0')}:${String(c.mm || '00').padStart(2,'0')}</td>
+                                        <td style="text-align:center;padding:2px;">${escapeHtml(c.status || '-')}</td>
+                                    </tr>
+                                `).join('')}
+                                <tr style="font-weight:700;"><td style="padding:2px;">Total</td><td style="text-align:center;padding:2px;color:#2E5894;">${calcTotalMinutesArray(oCourses)}</td><td></td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
         `;
-
         // --- PAGE 10: COMPETENCY PROFILE MATRIX ---
         htmlContent += `
         <div class="page" style="page-break-after: avoid;">
