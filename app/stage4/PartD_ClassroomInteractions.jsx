@@ -815,6 +815,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
+    zIndex: 99999,
+    elevation: 99999,
+    position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

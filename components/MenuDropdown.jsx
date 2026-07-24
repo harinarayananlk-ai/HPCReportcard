@@ -17,17 +17,18 @@ export default function MenuDropdown() {
   const router = useRouter();
   const pathname = usePathname();
   const { theme } = useTheme();
-  const { profile, activeStudentProfile } = useAuth();
+  const { user, profile, activeStudentProfile } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const targetProfile = activeStudentProfile || profile;
   const cls = (targetProfile?.class_name || '').toLowerCase().trim();
   const isStage4 = pathname?.includes('/stage4/') || cls === 'grade 9' || cls === 'grade 10' || cls === 'grade 11' || cls === 'grade 12';
+  const isTeacher = user?.role === 'teacher' || user?.role === 'superadmin';
 
   // Trigger button coin-flip rotation (0 to 180 degrees)
   const buttonRotation = useSharedValue(0);
 
-  // Shared values for up to 6 cards (A to F)
+  // Shared values for cards A-F + HOME
   const translateY_A = useSharedValue(0);
   const rotateX_A = useSharedValue(-90);
   const rotateZ_A = useSharedValue(0);
@@ -57,6 +58,11 @@ export default function MenuDropdown() {
   const rotateX_F = useSharedValue(-90);
   const rotateZ_F = useSharedValue(0);
   const opacity_F = useSharedValue(0);
+
+  const translateY_Home = useSharedValue(0);
+  const rotateX_Home = useSharedValue(-90);
+  const rotateZ_Home = useSharedValue(0);
+  const opacity_Home = useSharedValue(0);
 
   const toggleMenu = () => {
     const nextState = !isMenuOpen;
@@ -89,56 +95,72 @@ export default function MenuDropdown() {
       rotateZ_A.value = withSpring(0, swingSpringConfig);
 
       // Card B
-      translateY_B.value = withDelay(80, withSpring(96, dropSpringConfig));
-      rotateX_B.value = withDelay(80, withSpring(0, dropSpringConfig));
-      opacity_B.value = withDelay(80, withTiming(1, { duration: 150 }));
+      translateY_B.value = withDelay(70, withSpring(94, dropSpringConfig));
+      rotateX_B.value = withDelay(70, withSpring(0, dropSpringConfig));
+      opacity_B.value = withDelay(70, withTiming(1, { duration: 150 }));
       rotateZ_B.value = 7;
-      rotateZ_B.value = withDelay(80, withSpring(0, swingSpringConfig));
+      rotateZ_B.value = withDelay(70, withSpring(0, swingSpringConfig));
 
       // Card C
-      translateY_C.value = withDelay(160, withSpring(140, dropSpringConfig));
-      rotateX_C.value = withDelay(160, withSpring(0, dropSpringConfig));
-      opacity_C.value = withDelay(160, withTiming(1, { duration: 150 }));
+      translateY_C.value = withDelay(140, withSpring(136, dropSpringConfig));
+      rotateX_C.value = withDelay(140, withSpring(0, dropSpringConfig));
+      opacity_C.value = withDelay(140, withTiming(1, { duration: 150 }));
       rotateZ_C.value = -7;
-      rotateZ_C.value = withDelay(160, withSpring(0, swingSpringConfig));
+      rotateZ_C.value = withDelay(140, withSpring(0, swingSpringConfig));
 
       if (isStage4) {
         // Card D
-        translateY_D.value = withDelay(240, withSpring(184, dropSpringConfig));
-        rotateX_D.value = withDelay(240, withSpring(0, dropSpringConfig));
-        opacity_D.value = withDelay(240, withTiming(1, { duration: 150 }));
+        translateY_D.value = withDelay(210, withSpring(178, dropSpringConfig));
+        rotateX_D.value = withDelay(210, withSpring(0, dropSpringConfig));
+        opacity_D.value = withDelay(210, withTiming(1, { duration: 150 }));
         rotateZ_D.value = 7;
-        rotateZ_D.value = withDelay(240, withSpring(0, swingSpringConfig));
+        rotateZ_D.value = withDelay(210, withSpring(0, swingSpringConfig));
 
         // Card E
-        translateY_E.value = withDelay(320, withSpring(228, dropSpringConfig));
-        rotateX_E.value = withDelay(320, withSpring(0, dropSpringConfig));
-        opacity_E.value = withDelay(320, withTiming(1, { duration: 150 }));
+        translateY_E.value = withDelay(280, withSpring(220, dropSpringConfig));
+        rotateX_E.value = withDelay(280, withSpring(0, dropSpringConfig));
+        opacity_E.value = withDelay(280, withTiming(1, { duration: 150 }));
         rotateZ_E.value = -7;
-        rotateZ_E.value = withDelay(320, withSpring(0, swingSpringConfig));
+        rotateZ_E.value = withDelay(280, withSpring(0, swingSpringConfig));
 
         // Card F
-        translateY_F.value = withDelay(400, withSpring(272, dropSpringConfig));
-        rotateX_F.value = withDelay(400, withSpring(0, dropSpringConfig));
-        opacity_F.value = withDelay(400, withTiming(1, { duration: 150 }));
+        translateY_F.value = withDelay(350, withSpring(262, dropSpringConfig));
+        rotateX_F.value = withDelay(350, withSpring(0, dropSpringConfig));
+        opacity_F.value = withDelay(350, withTiming(1, { duration: 150 }));
         rotateZ_F.value = 7;
-        rotateZ_F.value = withDelay(400, withSpring(0, swingSpringConfig));
+        rotateZ_F.value = withDelay(350, withSpring(0, swingSpringConfig));
+
+        // Card HOME
+        translateY_Home.value = withDelay(420, withSpring(304, dropSpringConfig));
+        rotateX_Home.value = withDelay(420, withSpring(0, dropSpringConfig));
+        opacity_Home.value = withDelay(420, withTiming(1, { duration: 150 }));
+        rotateZ_Home.value = -7;
+        rotateZ_Home.value = withDelay(420, withSpring(0, swingSpringConfig));
+      } else {
+        // Card HOME for non-stage 4
+        translateY_Home.value = withDelay(210, withSpring(178, dropSpringConfig));
+        rotateX_Home.value = withDelay(210, withSpring(0, dropSpringConfig));
+        opacity_Home.value = withDelay(210, withTiming(1, { duration: 150 }));
+        rotateZ_Home.value = 7;
+        rotateZ_Home.value = withDelay(210, withSpring(0, swingSpringConfig));
       }
     } else {
       // Collapse
       const cardsToReset = isStage4
         ? [
-            { y: translateY_F, rx: rotateX_F, op: opacity_F, rz: rotateZ_F, delay: 0 },
-            { y: translateY_E, rx: rotateX_E, op: opacity_E, rz: rotateZ_E, delay: 60 },
-            { y: translateY_D, rx: rotateX_D, op: opacity_D, rz: rotateZ_D, delay: 120 },
-            { y: translateY_C, rx: rotateX_C, op: opacity_C, rz: rotateZ_C, delay: 180 },
-            { y: translateY_B, rx: rotateX_B, op: opacity_B, rz: rotateZ_B, delay: 240 },
+            { y: translateY_Home, rx: rotateX_Home, op: opacity_Home, rz: rotateZ_Home, delay: 0 },
+            { y: translateY_F, rx: rotateX_F, op: opacity_F, rz: rotateZ_F, delay: 50 },
+            { y: translateY_E, rx: rotateX_E, op: opacity_E, rz: rotateZ_E, delay: 100 },
+            { y: translateY_D, rx: rotateX_D, op: opacity_D, rz: rotateZ_D, delay: 150 },
+            { y: translateY_C, rx: rotateX_C, op: opacity_C, rz: rotateZ_C, delay: 200 },
+            { y: translateY_B, rx: rotateX_B, op: opacity_B, rz: rotateZ_B, delay: 250 },
             { y: translateY_A, rx: rotateX_A, op: opacity_A, rz: rotateZ_A, delay: 300 },
           ]
         : [
-            { y: translateY_C, rx: rotateX_C, op: opacity_C, rz: rotateZ_C, delay: 0 },
-            { y: translateY_B, rx: rotateX_B, op: opacity_B, rz: rotateZ_B, delay: 80 },
-            { y: translateY_A, rx: rotateX_A, op: opacity_A, rz: rotateZ_A, delay: 160 },
+            { y: translateY_Home, rx: rotateX_Home, op: opacity_Home, rz: rotateZ_Home, delay: 0 },
+            { y: translateY_C, rx: rotateX_C, op: opacity_C, rz: rotateZ_C, delay: 60 },
+            { y: translateY_B, rx: rotateX_B, op: opacity_B, rz: rotateZ_B, delay: 120 },
+            { y: translateY_A, rx: rotateX_A, op: opacity_A, rz: rotateZ_A, delay: 180 },
           ];
 
       cardsToReset.forEach(item => {
@@ -154,6 +176,13 @@ export default function MenuDropdown() {
     setIsMenuOpen(false);
     buttonRotation.value = 0;
     router.push(route);
+  };
+
+  const handleGoHome = () => {
+    setIsMenuOpen(false);
+    buttonRotation.value = 0;
+    const target = isTeacher ? "/teacher/Dashboard" : "/StudentHomepage";
+    router.replace(target);
   };
 
   const animatedButtonStyle = useAnimatedStyle(() => {
@@ -214,9 +243,10 @@ export default function MenuDropdown() {
   const cardStyle_D = useCardStyle(translateY_D, rotateX_D, rotateZ_D, opacity_D);
   const cardStyle_E = useCardStyle(translateY_E, rotateX_E, rotateZ_E, opacity_E);
   const cardStyle_F = useCardStyle(translateY_F, rotateX_F, rotateZ_F, opacity_F);
+  const cardStyle_Home = useCardStyle(translateY_Home, rotateX_Home, rotateZ_Home, opacity_Home);
 
   const threadStyle = useAnimatedStyle(() => {
-    const maxVal = isStage4 ? translateY_F.value : translateY_C.value;
+    const maxVal = translateY_Home.value;
     const height = Math.max(0, maxVal - 44);
     return {
       height: height,
@@ -319,6 +349,22 @@ export default function MenuDropdown() {
           </Animated.View>
         </>
       )}
+
+      {/* HOME CARD (Go back to Homepage) */}
+      <Animated.View pointerEvents={isMenuOpen ? "auto" : "none"} style={[styles.domino, cardStyle_Home]}>
+        <TouchableOpacity
+          onPress={handleGoHome}
+          style={[
+            styles.cardBody,
+            { backgroundColor: gems.sapphire, borderColor: gems.sapphire }
+          ]}
+        >
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+            <Ionicons name="home" size={13} color="#FFF" />
+            <Text style={[styles.cardText, { color: '#FFF', fontWeight: 'bold' }]}>HOME</Text>
+          </View>
+        </TouchableOpacity>
+      </Animated.View>
     </View>
   );
 }
@@ -326,7 +372,8 @@ export default function MenuDropdown() {
 const styles = StyleSheet.create({
   container: {
     position: "relative",
-    zIndex: 2000,
+    zIndex: 99999,
+    elevation: 99999,
   },
   triggerButton: {
     height: 44,
@@ -362,8 +409,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 50 - 60,
     width: 120,
-    height: 34,
-    zIndex: 1999,
+    height: 32,
+    zIndex: 99999,
+    elevation: 99999,
   },
   cardBody: {
     width: "100%",
@@ -374,9 +422,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
+    shadowOpacity: 0.2,
     shadowRadius: 6,
-    elevation: 4,
+    elevation: 6,
   },
   cardText: {
     fontSize: 10,
