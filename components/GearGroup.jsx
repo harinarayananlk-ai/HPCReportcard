@@ -1,17 +1,9 @@
 import React, { useEffect, useRef } from "react";
-import { View, StyleSheet, TouchableOpacity, Platform } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Animated, Easing, Platform } from "react-native";
 import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
 import Svg, { Path, Circle, Defs, LinearGradient, RadialGradient, Stop } from "react-native-svg";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  withDelay,
-  Easing,
-} from "react-native-reanimated";
 import { useTheme } from "../context/GlobalContext";
-import { gems } from "../colour_themes";
 
 // Helper to generate a 24-point fluted watch crown perimeter path (64x64 container)
 const generateWatchCrownPath = (cx, cy, outerR, innerR, teeth = 24) => {
@@ -72,58 +64,78 @@ const generateGearPath = (cx, cy, outerR, innerR, teeth = 8) => {
 };
 
 export default function GearGroup({ style }) {
-  const { theme } = useTheme();
   const router = useRouter();
 
-  // Animation Shared Values
-  const scale = useSharedValue(1);
-  const shadowOpacity = useSharedValue(0.15);
-  const shadowRadius = useSharedValue(6);
+  // Bulletproof Core Animated Values
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const depthAnim = useRef(new Animated.Value(0)).current;
 
-  // Gear Rotation Shared Values (Degrees)
-  // Large Center Gear: CW (+24 deg)
-  // Medium Top-Left Gear: CCW (-24 deg)
-  // Small Bottom-Right Gear: CCW (-24 deg)
-  const rotLarge = useSharedValue(0);
-  const rotMedium = useSharedValue(0);
-  const rotSmall = useSharedValue(0);
+  // Gear Rotation Animated Values (0 to 1)
+  const gearAnim = useRef(new Animated.Value(0)).current;
 
+  // Exact pitch circle geometry
   const crownFluteD = useRef(generateWatchCrownPath(32, 32, 30, 26.5, 24)).current;
-  const largeGearD = useRef(generateGearPath(32, 32, 11.5, 8.5, 9)).current;
-  const mediumGearD = useRef(generateGearPath(16, 16, 7.5, 5.2, 7)).current;
-  const smallGearD = useRef(generateGearPath(47, 47, 6, 4.2, 6)).current;
+  const largeGearD = useRef(generateGearPath(32, 32, 11.5, 8.5, 10)).current;
+  const mediumGearD = useRef(generateGearPath(20.1, 20.1, 7.8, 5.2, 7)).current;
+  const smallGearD = useRef(generateGearPath(43.3, 43.3, 6.8, 4.4, 6)).current;
 
-  // Trigger one 4-Phase Mechanical Animation Cycle (~1.6 seconds)
+  // 4-Phase Luxury Watch Animation Sequence (~1.6s duration)
   const runMechanicalCycle = () => {
-    const mechanicalEase = Easing.bezier(0.25, 0.1, 0.25, 1.0);
+    const easeOut = Easing.bezier(0.25, 0.1, 0.25, 1.0);
 
-    // Phase 1: Anticipation (150ms) -> Scale 1.00 to 1.02
-    scale.value = withTiming(1.02, { duration: 150, easing: Easing.out(Easing.quad) });
+    Animated.sequence([
+      // Phase 1: Anticipation (150ms) -> Scale 1.00 to 1.02
+      Animated.timing(scaleAnim, {
+        toValue: 1.02,
+        duration: 150,
+        easing: Easing.out(Easing.quad),
+        useNativeDriver: false,
+      }),
 
-    // Phase 2 & 3: Depth move toward user (Scale 1.08) + Gear engagement (+24deg CW / -24deg CCW)
-    scale.value = withDelay(
-      150,
-      withTiming(1.08, { duration: 600, easing: mechanicalEase })
-    );
-    shadowOpacity.value = withDelay(150, withTiming(0.3, { duration: 600 }));
-    shadowRadius.value = withDelay(150, withTiming(12, { duration: 600 }));
+      // Phase 2 & 3: Move toward user (Scale 1.08, depth shadow) + Gear engagement (+24deg CW / -24deg CCW)
+      Animated.parallel([
+        Animated.timing(scaleAnim, {
+          toValue: 1.08,
+          duration: 600,
+          easing: easeOut,
+          useNativeDriver: false,
+        }),
+        Animated.timing(depthAnim, {
+          toValue: 1,
+          duration: 600,
+          easing: easeOut,
+          useNativeDriver: false,
+        }),
+        Animated.timing(gearAnim, {
+          toValue: 1,
+          duration: 600,
+          easing: easeOut,
+          useNativeDriver: false,
+        }),
+      ]),
 
-    rotLarge.value = withDelay(150, withTiming(24, { duration: 600, easing: mechanicalEase }));
-    rotMedium.value = withDelay(150, withTiming(-24, { duration: 600, easing: mechanicalEase }));
-    rotSmall.value = withDelay(150, withTiming(-24, { duration: 600, easing: mechanicalEase }));
-
-    // Phase 4: Gentle return to resting state
-    const returnDelay = 800; // 150 + 650
-    scale.value = withDelay(
-      returnDelay,
-      withTiming(1.0, { duration: 750, easing: Easing.inOut(Easing.quad) })
-    );
-    shadowOpacity.value = withDelay(returnDelay, withTiming(0.15, { duration: 750 }));
-    shadowRadius.value = withDelay(returnDelay, withTiming(6, { duration: 750 }));
-
-    rotLarge.value = withDelay(returnDelay, withTiming(0, { duration: 750, easing: Easing.inOut(Easing.quad) }));
-    rotMedium.value = withDelay(returnDelay, withTiming(0, { duration: 750, easing: Easing.inOut(Easing.quad) }));
-    rotSmall.value = withDelay(returnDelay, withTiming(0, { duration: 750, easing: Easing.inOut(Easing.quad) }));
+      // Phase 4: Gentle return to resting state (0deg, scale 1.00, shadow return)
+      Animated.parallel([
+        Animated.timing(scaleAnim, {
+          toValue: 1.0,
+          duration: 750,
+          easing: Easing.inOut(Easing.quad),
+          useNativeDriver: false,
+        }),
+        Animated.timing(depthAnim, {
+          toValue: 0,
+          duration: 750,
+          easing: Easing.inOut(Easing.quad),
+          useNativeDriver: false,
+        }),
+        Animated.timing(gearAnim, {
+          toValue: 0,
+          duration: 750,
+          easing: Easing.inOut(Easing.quad),
+          useNativeDriver: false,
+        }),
+      ]),
+    ]).start();
   };
 
   // Idle Loop: Runs initial cycle 1.5s after mount, then every 10 to 16 seconds
@@ -152,36 +164,59 @@ export default function GearGroup({ style }) {
     if (Platform.OS !== 'web') {
       try { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium); } catch(e) {}
     }
-    scale.value = withTiming(0.92, { duration: 120 });
+    Animated.timing(scaleAnim, {
+      toValue: 0.92,
+      duration: 120,
+      useNativeDriver: false,
+    }).start();
   };
 
   const handlePressOut = () => {
-    scale.value = withTiming(1.0, { duration: 200 });
+    Animated.timing(scaleAnim, {
+      toValue: 1.0,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
   };
 
-  const containerAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      { perspective: 600 },
-      { scale: scale.value }
-    ],
-    shadowOpacity: shadowOpacity.value,
-    shadowRadius: shadowRadius.value,
-  }));
+  // Interpolations
+  const rotLargeStr = gearAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "24deg"], // Clockwise +24°
+  });
 
-  const largeGearStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${rotLarge.value}deg` }]
-  }));
+  const rotMediumStr = gearAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "-24deg"], // Counter-Clockwise -24°
+  });
 
-  const mediumGearStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${rotMedium.value}deg` }]
-  }));
+  const rotSmallStr = gearAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "-24deg"], // Counter-Clockwise -24°
+  });
 
-  const smallGearStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${rotSmall.value}deg` }]
-  }));
+  const shadowRadiusVal = depthAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [6, 14],
+  });
+
+  const shadowOpacityVal = depthAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.15, 0.35],
+  });
 
   return (
-    <Animated.View style={[styles.container, containerAnimatedStyle, style]}>
+    <Animated.View
+      style={[
+        styles.container,
+        style,
+        {
+          transform: [{ scale: scaleAnim }],
+          shadowRadius: shadowRadiusVal,
+          shadowOpacity: shadowOpacityVal,
+        },
+      ]}
+    >
       <TouchableOpacity
         activeOpacity={0.9}
         onPressIn={handlePressIn}
@@ -229,26 +264,26 @@ export default function GearGroup({ style }) {
           <Circle cx={32} cy={32} r={23.8} fill="none" stroke="rgba(71,85,105,0.25)" strokeWidth={0.7} />
         </Svg>
 
-        {/* 4. Engraved 3-Gear Layer (Positioned Side-by-Side with 0 Overlap) */}
+        {/* 4. Engraved 3-Gear Layer (Calculated Exact Distance - Touching Edge-to-Edge with 0 Overlap) */}
 
-        {/* Medium Gear Top-Left (CCW) */}
-        <Animated.View style={[styles.gearLayer, { top: 8, left: 8, width: 16, height: 16 }, mediumGearStyle]}>
-          <Svg width={16} height={16} viewBox="8 8 16 16">
+        {/* Medium Gear Top-Left (CCW -24°) */}
+        <Animated.View style={[styles.gearLayer, { top: 12.3, left: 12.3, width: 15.6, height: 15.6, transform: [{ rotate: rotMediumStr }] }]}>
+          <Svg width={15.6} height={15.6} viewBox="12.3 12.3 15.6 15.6">
             <Path d={mediumGearD} fill="url(#silverMatteGear)" stroke="#475569" strokeWidth={0.7} />
-            <Circle cx={16} cy={16} r={2} fill="#475569" />
+            <Circle cx={20.1} cy={20.1} r={2} fill="#475569" />
           </Svg>
         </Animated.View>
 
-        {/* Small Gear Bottom-Right (CCW) */}
-        <Animated.View style={[styles.gearLayer, { top: 40.5, left: 40.5, width: 13, height: 13 }, smallGearStyle]}>
-          <Svg width={13} height={13} viewBox="40.5 40.5 13 13">
+        {/* Small Gear Bottom-Right (CCW -24°) */}
+        <Animated.View style={[styles.gearLayer, { top: 36.5, left: 36.5, width: 13.6, height: 13.6, transform: [{ rotate: rotSmallStr }] }]}>
+          <Svg width={13.6} height={13.6} viewBox="36.5 36.5 13.6 13.6">
             <Path d={smallGearD} fill="url(#silverMatteGear)" stroke="#475569" strokeWidth={0.7} />
-            <Circle cx={47} cy={47} r={1.5} fill="#475569" />
+            <Circle cx={43.3} cy={43.3} r={1.5} fill="#475569" />
           </Svg>
         </Animated.View>
 
-        {/* Center Large Gear (CW) */}
-        <Animated.View style={[styles.gearLayer, { top: 20.5, left: 20.5, width: 23, height: 23 }, largeGearStyle]}>
+        {/* Center Large Gear (CW +24°) */}
+        <Animated.View style={[styles.gearLayer, { top: 20.5, left: 20.5, width: 23, height: 23, transform: [{ rotate: rotLargeStr }] }]}>
           <Svg width={23} height={23} viewBox="20.5 20.5 23 23">
             <Path d={largeGearD} fill="url(#sapphireMatteGear)" stroke="#1E3A8A" strokeWidth={0.8} />
             <Circle cx={32} cy={32} r={3.5} fill="#F8FAFC" stroke="#1E3A8A" strokeWidth={0.6} />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity, Modal, TouchableWithoutFeedback } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter, usePathname } from "expo-router";
 import Animated, {
@@ -258,10 +258,8 @@ export default function MenuDropdown() {
   const solidBg = isDark ? "#222222" : "#FFFFFF";
 
   return (
-    <View style={[styles.container, isMenuOpen && { zIndex: 9999999, elevation: 9999999 }]}>
-      <Animated.View style={[styles.threadLine, { left: 32 - 0.75 }, threadStyle]} />
-      <Animated.View style={[styles.threadLine, { left: 68 - 0.75 }, threadStyle]} />
-
+    <View style={styles.container}>
+      {/* Trigger Button (Always visible on header) */}
       <Animated.View style={[styles.triggerButton, animatedButtonStyle]}>
         <SoundButton
           onPress={toggleMenu}
@@ -282,89 +280,110 @@ export default function MenuDropdown() {
         </SoundButton>
       </Animated.View>
 
-      {/* Domino Cards */}
-      <Animated.View pointerEvents={isMenuOpen ? "auto" : "none"} style={[styles.domino, cardStyle_A]}>
-        <TouchableOpacity
-          onPress={() => handleNavigate("/part_a1/StudentRegistration")}
-          style={[styles.cardBody, { backgroundColor: solidBg, borderColor: gems.sapphire }]}
+      {/* Top Portal Overlay for Domino Cards when Menu is Open */}
+      {isMenuOpen && (
+        <Modal
+          transparent
+          visible={isMenuOpen}
+          animationType="none"
+          onRequestClose={() => setIsMenuOpen(false)}
         >
-          <Text style={[styles.cardText, { color: gems.sapphire }]}>PART A</Text>
-        </TouchableOpacity>
-      </Animated.View>
+          <TouchableOpacity
+            activeOpacity={1}
+            style={styles.modalOverlay}
+            onPress={() => setIsMenuOpen(false)}
+          >
+            <View style={styles.modalContentWrapper} pointerEvents="box-none">
+              <Animated.View style={[styles.threadLine, { left: 32 - 0.75 }, threadStyle]} />
+              <Animated.View style={[styles.threadLine, { left: 68 - 0.75 }, threadStyle]} />
 
-      <Animated.View pointerEvents={isMenuOpen ? "auto" : "none"} style={[styles.domino, cardStyle_B]}>
-        <TouchableOpacity
-          onPress={() => {
-            const partBRoute = isStage4
-              ? "/stage4/PartB_GroupProject"
-              : (cls === 'grade 3' || cls === 'grade 4' || cls === 'grade 5')
-                ? "/part_b_s2/SelectionPage"
-                : (cls === 'grade 6' || cls === 'grade 7' || cls === 'grade 8')
-                  ? "/part_b_s3/SelectionPage"
-                  : "/part_b_s1/SelectionPage";
-            handleNavigate(partBRoute);
-          }}
-          style={[styles.cardBody, { backgroundColor: solidBg, borderColor: gems.silver }]}
-        >
-          <Text style={[styles.cardText, { color: gems.silver }]}>PART B</Text>
-        </TouchableOpacity>
-      </Animated.View>
+              {/* Domino Cards */}
+              <Animated.View pointerEvents="auto" style={[styles.domino, cardStyle_A]}>
+                <TouchableOpacity
+                  onPress={() => handleNavigate("/part_a1/StudentRegistration")}
+                  style={[styles.cardBody, { backgroundColor: solidBg, borderColor: gems.sapphire }]}
+                >
+                  <Text style={[styles.cardText, { color: gems.sapphire }]}>PART A</Text>
+                </TouchableOpacity>
+              </Animated.View>
 
-      <Animated.View pointerEvents={isMenuOpen ? "auto" : "none"} style={[styles.domino, cardStyle_C]}>
-        <TouchableOpacity
-          onPress={() => handleNavigate(isStage4 ? "/stage4/PartC_ProblemBasedInquiry" : "/part_c_s1/YearEndSummary")}
-          style={[styles.cardBody, { backgroundColor: solidBg, borderColor: gems.sapphire }]}
-        >
-          <Text style={[styles.cardText, { color: gems.sapphire }]}>PART C</Text>
-        </TouchableOpacity>
-      </Animated.View>
+              <Animated.View pointerEvents="auto" style={[styles.domino, cardStyle_B]}>
+                <TouchableOpacity
+                  onPress={() => {
+                    const partBRoute = isStage4
+                      ? "/stage4/PartB_GroupProject"
+                      : (cls === 'grade 3' || cls === 'grade 4' || cls === 'grade 5')
+                        ? "/part_b_s2/SelectionPage"
+                        : (cls === 'grade 6' || cls === 'grade 7' || cls === 'grade 8')
+                          ? "/part_b_s3/SelectionPage"
+                          : "/part_b_s1/SelectionPage";
+                    handleNavigate(partBRoute);
+                  }}
+                  style={[styles.cardBody, { backgroundColor: solidBg, borderColor: gems.silver }]}
+                >
+                  <Text style={[styles.cardText, { color: gems.silver }]}>PART B</Text>
+                </TouchableOpacity>
+              </Animated.View>
 
-      {isStage4 && (
-        <>
-          <Animated.View pointerEvents={isMenuOpen ? "auto" : "none"} style={[styles.domino, cardStyle_D]}>
-            <TouchableOpacity
-              onPress={() => handleNavigate("/stage4/PartD_ClassroomInteractions")}
-              style={[styles.cardBody, { backgroundColor: solidBg, borderColor: gems.silver }]}
-            >
-              <Text style={[styles.cardText, { color: gems.silver }]}>PART D</Text>
-            </TouchableOpacity>
-          </Animated.View>
+              <Animated.View pointerEvents="auto" style={[styles.domino, cardStyle_C]}>
+                <TouchableOpacity
+                  onPress={() => handleNavigate(isStage4 ? "/stage4/PartC_ProblemBasedInquiry" : "/part_c_s1/YearEndSummary")}
+                  style={[styles.cardBody, { backgroundColor: solidBg, borderColor: gems.sapphire }]}
+                >
+                  <Text style={[styles.cardText, { color: gems.sapphire }]}>PART C</Text>
+                </TouchableOpacity>
+              </Animated.View>
 
-          <Animated.View pointerEvents={isMenuOpen ? "auto" : "none"} style={[styles.domino, cardStyle_E]}>
-            <TouchableOpacity
-              onPress={() => handleNavigate("/stage4/PartEF_TimeInventories")}
-              style={[styles.cardBody, { backgroundColor: solidBg, borderColor: gems.sapphire }]}
-            >
-              <Text style={[styles.cardText, { color: gems.sapphire }]}>PART E</Text>
-            </TouchableOpacity>
-          </Animated.View>
+              {isStage4 && (
+                <>
+                  <Animated.View pointerEvents="auto" style={[styles.domino, cardStyle_D]}>
+                    <TouchableOpacity
+                      onPress={() => handleNavigate("/stage4/PartD_ClassroomInteractions")}
+                      style={[styles.cardBody, { backgroundColor: solidBg, borderColor: gems.silver }]}
+                    >
+                      <Text style={[styles.cardText, { color: gems.silver }]}>PART D</Text>
+                    </TouchableOpacity>
+                  </Animated.View>
 
-          <Animated.View pointerEvents={isMenuOpen ? "auto" : "none"} style={[styles.domino, cardStyle_F]}>
-            <TouchableOpacity
-              onPress={() => handleNavigate("/stage4/CompetencyProfile")}
-              style={[styles.cardBody, { backgroundColor: solidBg, borderColor: gems.silver }]}
-            >
-              <Text style={[styles.cardText, { color: gems.silver }]}>PART F</Text>
-            </TouchableOpacity>
-          </Animated.View>
-        </>
+                  <Animated.View pointerEvents="auto" style={[styles.domino, cardStyle_E]}>
+                    <TouchableOpacity
+                      onPress={() => handleNavigate("/stage4/PartEF_TimeInventories")}
+                      style={[styles.cardBody, { backgroundColor: solidBg, borderColor: gems.sapphire }]}
+                    >
+                      <Text style={[styles.cardText, { color: gems.sapphire }]}>PART E</Text>
+                    </TouchableOpacity>
+                  </Animated.View>
+
+                  <Animated.View pointerEvents="auto" style={[styles.domino, cardStyle_F]}>
+                    <TouchableOpacity
+                      onPress={() => handleNavigate("/stage4/CompetencyProfile")}
+                      style={[styles.cardBody, { backgroundColor: solidBg, borderColor: gems.silver }]}
+                    >
+                      <Text style={[styles.cardText, { color: gems.silver }]}>PART F</Text>
+                    </TouchableOpacity>
+                  </Animated.View>
+                </>
+              )}
+
+              {/* HOME CARD (Go back to Homepage) */}
+              <Animated.View pointerEvents="auto" style={[styles.domino, cardStyle_Home]}>
+                <TouchableOpacity
+                  onPress={handleGoHome}
+                  style={[
+                    styles.cardBody,
+                    { backgroundColor: gems.sapphire, borderColor: gems.sapphire }
+                  ]}
+                >
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                    <Ionicons name="home" size={13} color="#FFF" />
+                    <Text style={[styles.cardText, { color: '#FFF', fontWeight: 'bold' }]}>HOME</Text>
+                  </View>
+                </TouchableOpacity>
+              </Animated.View>
+            </View>
+          </TouchableOpacity>
+        </Modal>
       )}
-
-      {/* HOME CARD (Go back to Homepage) */}
-      <Animated.View pointerEvents={isMenuOpen ? "auto" : "none"} style={[styles.domino, cardStyle_Home]}>
-        <TouchableOpacity
-          onPress={handleGoHome}
-          style={[
-            styles.cardBody,
-            { backgroundColor: gems.sapphire, borderColor: gems.sapphire }
-          ]}
-        >
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-            <Ionicons name="home" size={13} color="#FFF" />
-            <Text style={[styles.cardText, { color: '#FFF', fontWeight: 'bold' }]}>HOME</Text>
-          </View>
-        </TouchableOpacity>
-      </Animated.View>
     </View>
   );
 }
@@ -372,8 +391,21 @@ export default function MenuDropdown() {
 const styles = StyleSheet.create({
   container: {
     position: "relative",
-    zIndex: 99999,
-    elevation: 99999,
+    zIndex: 9999999,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "transparent",
+    position: "relative",
+    zIndex: 999999999,
+  },
+  modalContentWrapper: {
+    position: "absolute",
+    top: 24,
+    left: 24,
+    width: 120,
+    height: 400,
+    zIndex: 999999999,
   },
   triggerButton: {
     height: 44,
@@ -410,8 +442,8 @@ const styles = StyleSheet.create({
     left: 50 - 60,
     width: 120,
     height: 32,
-    zIndex: 99999,
-    elevation: 99999,
+    zIndex: 999999999,
+    elevation: 999999999,
   },
   cardBody: {
     width: "100%",
