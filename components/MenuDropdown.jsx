@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text, TouchableOpacity, Platform } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useRouter, usePathname } from "expo-router";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
   withTiming,
   withDelay,
-  interpolate,
 } from "react-native-reanimated";
 import { useTheme, useAuth } from "../context/GlobalContext";
 import SoundButton from "./SoundButton";
@@ -16,14 +15,19 @@ import { gems } from "../colour_themes";
 
 export default function MenuDropdown() {
   const router = useRouter();
+  const pathname = usePathname();
   const { theme } = useTheme();
   const { profile, activeStudentProfile } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const targetProfile = activeStudentProfile || profile;
+  const cls = (targetProfile?.class_name || '').toLowerCase().trim();
+  const isStage4 = pathname?.includes('/stage4/') || cls === 'grade 9' || cls === 'grade 10' || cls === 'grade 11' || cls === 'grade 12';
+
   // Trigger button coin-flip rotation (0 to 180 degrees)
   const buttonRotation = useSharedValue(0);
 
-  // Domino cards shared values
+  // Shared values for up to 6 cards (A to F)
   const translateY_A = useSharedValue(0);
   const rotateX_A = useSharedValue(-90);
   const rotateZ_A = useSharedValue(0);
@@ -39,12 +43,25 @@ export default function MenuDropdown() {
   const rotateZ_C = useSharedValue(0);
   const opacity_C = useSharedValue(0);
 
-  // Toggle menu state and trigger flip & cascade animations
+  const translateY_D = useSharedValue(0);
+  const rotateX_D = useSharedValue(-90);
+  const rotateZ_D = useSharedValue(0);
+  const opacity_D = useSharedValue(0);
+
+  const translateY_E = useSharedValue(0);
+  const rotateX_E = useSharedValue(-90);
+  const rotateZ_E = useSharedValue(0);
+  const opacity_E = useSharedValue(0);
+
+  const translateY_F = useSharedValue(0);
+  const rotateX_F = useSharedValue(-90);
+  const rotateZ_F = useSharedValue(0);
+  const opacity_F = useSharedValue(0);
+
   const toggleMenu = () => {
     const nextState = !isMenuOpen;
     setIsMenuOpen(nextState);
 
-    // Flip trigger button
     buttonRotation.value = withSpring(nextState ? 180 : 0, {
       damping: 14,
       stiffness: 95,
@@ -52,71 +69,93 @@ export default function MenuDropdown() {
   };
 
   useEffect(() => {
-    // Custom spring configuration for heavy card drop & tug
     const dropSpringConfig = {
       damping: 10,
       stiffness: 110,
       mass: 1.1,
     };
 
-    // Low damping for swinging pendulum oscillations
     const swingSpringConfig = {
       damping: 3.8,
       stiffness: 28,
     };
 
     if (isMenuOpen) {
-      // Staggered Cascade Drop
-      // Card A (Part A) - No delay
-      translateY_A.value = withSpring(56, dropSpringConfig);
+      // Card A
+      translateY_A.value = withSpring(52, dropSpringConfig);
       rotateX_A.value = withSpring(0, dropSpringConfig);
       opacity_A.value = withTiming(1, { duration: 150 });
-      rotateZ_A.value = -7; // Start tilted tighter
+      rotateZ_A.value = -7;
       rotateZ_A.value = withSpring(0, swingSpringConfig);
 
-      // Card B (Part B) - 120ms delay
-      translateY_B.value = withDelay(120, withSpring(106, dropSpringConfig));
-      rotateX_B.value = withDelay(120, withSpring(0, dropSpringConfig));
-      opacity_B.value = withDelay(120, withTiming(1, { duration: 150 }));
-      rotateZ_B.value = 7; // Start tilted opposite tighter
-      rotateZ_B.value = withDelay(120, withSpring(0, swingSpringConfig));
+      // Card B
+      translateY_B.value = withDelay(80, withSpring(96, dropSpringConfig));
+      rotateX_B.value = withDelay(80, withSpring(0, dropSpringConfig));
+      opacity_B.value = withDelay(80, withTiming(1, { duration: 150 }));
+      rotateZ_B.value = 7;
+      rotateZ_B.value = withDelay(80, withSpring(0, swingSpringConfig));
 
-      // Card C (Part C) - 240ms delay
-      translateY_C.value = withDelay(240, withSpring(156, dropSpringConfig));
-      rotateX_C.value = withDelay(240, withSpring(0, dropSpringConfig));
-      opacity_C.value = withDelay(240, withTiming(1, { duration: 150 }));
+      // Card C
+      translateY_C.value = withDelay(160, withSpring(140, dropSpringConfig));
+      rotateX_C.value = withDelay(160, withSpring(0, dropSpringConfig));
+      opacity_C.value = withDelay(160, withTiming(1, { duration: 150 }));
       rotateZ_C.value = -7;
-      rotateZ_C.value = withDelay(240, withSpring(0, swingSpringConfig));
+      rotateZ_C.value = withDelay(160, withSpring(0, swingSpringConfig));
+
+      if (isStage4) {
+        // Card D
+        translateY_D.value = withDelay(240, withSpring(184, dropSpringConfig));
+        rotateX_D.value = withDelay(240, withSpring(0, dropSpringConfig));
+        opacity_D.value = withDelay(240, withTiming(1, { duration: 150 }));
+        rotateZ_D.value = 7;
+        rotateZ_D.value = withDelay(240, withSpring(0, swingSpringConfig));
+
+        // Card E
+        translateY_E.value = withDelay(320, withSpring(228, dropSpringConfig));
+        rotateX_E.value = withDelay(320, withSpring(0, dropSpringConfig));
+        opacity_E.value = withDelay(320, withTiming(1, { duration: 150 }));
+        rotateZ_E.value = -7;
+        rotateZ_E.value = withDelay(320, withSpring(0, swingSpringConfig));
+
+        // Card F
+        translateY_F.value = withDelay(400, withSpring(272, dropSpringConfig));
+        rotateX_F.value = withDelay(400, withSpring(0, dropSpringConfig));
+        opacity_F.value = withDelay(400, withTiming(1, { duration: 150 }));
+        rotateZ_F.value = 7;
+        rotateZ_F.value = withDelay(400, withSpring(0, swingSpringConfig));
+      }
     } else {
-      // Reverse Staggered Collapse
-      // Card C collapses first - No delay
-      translateY_C.value = withSpring(0, dropSpringConfig);
-      rotateX_C.value = withSpring(-90, dropSpringConfig);
-      opacity_C.value = withTiming(0, { duration: 150 });
-      rotateZ_C.value = withTiming(0, { duration: 150 });
+      // Collapse
+      const cardsToReset = isStage4
+        ? [
+            { y: translateY_F, rx: rotateX_F, op: opacity_F, rz: rotateZ_F, delay: 0 },
+            { y: translateY_E, rx: rotateX_E, op: opacity_E, rz: rotateZ_E, delay: 60 },
+            { y: translateY_D, rx: rotateX_D, op: opacity_D, rz: rotateZ_D, delay: 120 },
+            { y: translateY_C, rx: rotateX_C, op: opacity_C, rz: rotateZ_C, delay: 180 },
+            { y: translateY_B, rx: rotateX_B, op: opacity_B, rz: rotateZ_B, delay: 240 },
+            { y: translateY_A, rx: rotateX_A, op: opacity_A, rz: rotateZ_A, delay: 300 },
+          ]
+        : [
+            { y: translateY_C, rx: rotateX_C, op: opacity_C, rz: rotateZ_C, delay: 0 },
+            { y: translateY_B, rx: rotateX_B, op: opacity_B, rz: rotateZ_B, delay: 80 },
+            { y: translateY_A, rx: rotateX_A, op: opacity_A, rz: rotateZ_A, delay: 160 },
+          ];
 
-      // Card B collapses second - 120ms delay
-      translateY_B.value = withDelay(120, withSpring(0, dropSpringConfig));
-      rotateX_B.value = withDelay(120, withSpring(-90, dropSpringConfig));
-      opacity_B.value = withDelay(120, withTiming(0, { duration: 150 }));
-      rotateZ_B.value = withDelay(120, withTiming(0, { duration: 150 }));
-
-      // Card A collapses last - 240ms delay
-      translateY_A.value = withDelay(240, withSpring(0, dropSpringConfig));
-      rotateX_A.value = withDelay(240, withSpring(-90, dropSpringConfig));
-      opacity_A.value = withDelay(240, withTiming(0, { duration: 150 }));
-      rotateZ_A.value = withDelay(240, withTiming(0, { duration: 150 }));
+      cardsToReset.forEach(item => {
+        item.y.value = withDelay(item.delay, withSpring(0, dropSpringConfig));
+        item.rx.value = withDelay(item.delay, withSpring(-90, dropSpringConfig));
+        item.op.value = withDelay(item.delay, withTiming(0, { duration: 150 }));
+        item.rz.value = withDelay(item.delay, withTiming(0, { duration: 150 }));
+      });
     }
-  }, [isMenuOpen]);
+  }, [isMenuOpen, isStage4]);
 
-  // Handle navigation and auto-collapse the menu
   const handleNavigate = (route) => {
     setIsMenuOpen(false);
     buttonRotation.value = 0;
     router.push(route);
   };
 
-  // 3D Flip Animated Styles for the Entire Trigger Button Container
   const animatedButtonStyle = useAnimatedStyle(() => {
     const rot = buttonRotation.value;
     const width = rot < 90 ? 44 : 100;
@@ -154,17 +193,16 @@ export default function MenuDropdown() {
     };
   });
 
-  // Domino Cards Hanging Pivot Animated Styles
   const useCardStyle = (translateY, rotateX, rotateZ, opacity) => {
     return useAnimatedStyle(() => {
       return {
         opacity: opacity.value,
         transform: [
           { translateY: translateY.value },
-          { translateY: -18 }, // Shift pivot point to top edge of card
+          { translateY: -18 },
           { rotateX: `${rotateX.value}deg` },
           { rotateZ: `${rotateZ.value}deg` },
-          { translateY: 18 }, // Shift back
+          { translateY: 18 },
         ],
       };
     });
@@ -173,28 +211,27 @@ export default function MenuDropdown() {
   const cardStyle_A = useCardStyle(translateY_A, rotateX_A, rotateZ_A, opacity_A);
   const cardStyle_B = useCardStyle(translateY_B, rotateX_B, rotateZ_B, opacity_B);
   const cardStyle_C = useCardStyle(translateY_C, rotateX_C, rotateZ_C, opacity_C);
+  const cardStyle_D = useCardStyle(translateY_D, rotateX_D, rotateZ_D, opacity_D);
+  const cardStyle_E = useCardStyle(translateY_E, rotateX_E, rotateZ_E, opacity_E);
+  const cardStyle_F = useCardStyle(translateY_F, rotateX_F, rotateZ_F, opacity_F);
 
-  // Dynamic Golden Thread stretching in sync with Card C
   const threadStyle = useAnimatedStyle(() => {
-    const height = Math.max(0, translateY_C.value - 44);
+    const maxVal = isStage4 ? translateY_F.value : translateY_C.value;
+    const height = Math.max(0, maxVal - 44);
     return {
       height: height,
-      opacity: translateY_C.value > 44 ? 1 : 0,
+      opacity: maxVal > 44 ? 1 : 0,
     };
   });
 
   const isDark = theme?.isDark;
   const solidBg = isDark ? "#222222" : "#FFFFFF";
-  const borderCol = isDark ? "rgba(255, 255, 255, 0.15)" : "rgba(0, 0, 0, 0.08)";
-  const textColor = theme?.text || "#000000";
 
   return (
     <View style={styles.container}>
-      {/* Parallel Dual Golden Threads */}
       <Animated.View style={[styles.threadLine, { left: 32 - 0.75 }, threadStyle]} />
       <Animated.View style={[styles.threadLine, { left: 68 - 0.75 }, threadStyle]} />
 
-      {/* 3D Y-Axis Flipping Menu Wrapper */}
       <Animated.View style={[styles.triggerButton, animatedButtonStyle]}>
         <SoundButton
           onPress={toggleMenu}
@@ -205,72 +242,83 @@ export default function MenuDropdown() {
             alignItems: "center",
           }}
         >
-          {/* Front Face: List Icon (Larger size: 28) */}
           <Animated.View style={[styles.btnFace, frontBtnStyle]}>
-            <Ionicons name="list" size={28} color={textColor} />
+            <Ionicons name="list" size={28} color={theme?.text || "#000"} />
           </Animated.View>
 
-          {/* Back Face: Clean Text "MENU" (Larger bold text) */}
           <Animated.View style={[styles.btnFace, backBtnStyle]}>
             <Text style={[styles.menuText, { color: gems.sapphire }]}>MENU</Text>
           </Animated.View>
         </SoundButton>
       </Animated.View>
 
-      {/* Staggered Domino Cards list */}
-      <Animated.View
-        pointerEvents={isMenuOpen ? "auto" : "none"}
-        style={[styles.domino, cardStyle_A]}
-      >
+      {/* Domino Cards */}
+      <Animated.View pointerEvents={isMenuOpen ? "auto" : "none"} style={[styles.domino, cardStyle_A]}>
         <TouchableOpacity
           onPress={() => handleNavigate("/part_a1/StudentRegistration")}
-          style={[
-            styles.cardBody,
-            { backgroundColor: solidBg, borderColor: gems.sapphire },
-          ]}
+          style={[styles.cardBody, { backgroundColor: solidBg, borderColor: gems.sapphire }]}
         >
           <Text style={[styles.cardText, { color: gems.sapphire }]}>PART A</Text>
         </TouchableOpacity>
       </Animated.View>
 
-      <Animated.View
-        pointerEvents={isMenuOpen ? "auto" : "none"}
-        style={[styles.domino, cardStyle_B]}
-      >
+      <Animated.View pointerEvents={isMenuOpen ? "auto" : "none"} style={[styles.domino, cardStyle_B]}>
         <TouchableOpacity
           onPress={() => {
-            const targetProfile = activeStudentProfile || profile;
-            const cls = (targetProfile?.class_name || '').toLowerCase().trim();
-            const partBRoute = (cls === 'grade 3' || cls === 'grade 4' || cls === 'grade 5')
-              ? "/part_b_s2/SelectionPage"
-              : (cls === 'grade 6' || cls === 'grade 7' || cls === 'grade 8')
-                ? "/part_b_s3/SelectionPage"
-                : "/part_b_s1/SelectionPage";
+            const partBRoute = isStage4
+              ? "/stage4/PartB_GroupProject"
+              : (cls === 'grade 3' || cls === 'grade 4' || cls === 'grade 5')
+                ? "/part_b_s2/SelectionPage"
+                : (cls === 'grade 6' || cls === 'grade 7' || cls === 'grade 8')
+                  ? "/part_b_s3/SelectionPage"
+                  : "/part_b_s1/SelectionPage";
             handleNavigate(partBRoute);
           }}
-          style={[
-            styles.cardBody,
-            { backgroundColor: solidBg, borderColor: gems.silver },
-          ]}
+          style={[styles.cardBody, { backgroundColor: solidBg, borderColor: gems.silver }]}
         >
           <Text style={[styles.cardText, { color: gems.silver }]}>PART B</Text>
         </TouchableOpacity>
       </Animated.View>
 
-      <Animated.View
-        pointerEvents={isMenuOpen ? "auto" : "none"}
-        style={[styles.domino, cardStyle_C]}
-      >
+      <Animated.View pointerEvents={isMenuOpen ? "auto" : "none"} style={[styles.domino, cardStyle_C]}>
         <TouchableOpacity
-          onPress={() => handleNavigate("/part_c_s1/YearEndSummary")}
-          style={[
-            styles.cardBody,
-            { backgroundColor: solidBg, borderColor: gems.sapphire },
-          ]}
+          onPress={() => handleNavigate(isStage4 ? "/stage4/PartC_ProblemBasedInquiry" : "/part_c_s1/YearEndSummary")}
+          style={[styles.cardBody, { backgroundColor: solidBg, borderColor: gems.sapphire }]}
         >
           <Text style={[styles.cardText, { color: gems.sapphire }]}>PART C</Text>
         </TouchableOpacity>
       </Animated.View>
+
+      {isStage4 && (
+        <>
+          <Animated.View pointerEvents={isMenuOpen ? "auto" : "none"} style={[styles.domino, cardStyle_D]}>
+            <TouchableOpacity
+              onPress={() => handleNavigate("/stage4/PartD_ClassroomInteractions")}
+              style={[styles.cardBody, { backgroundColor: solidBg, borderColor: gems.silver }]}
+            >
+              <Text style={[styles.cardText, { color: gems.silver }]}>PART D</Text>
+            </TouchableOpacity>
+          </Animated.View>
+
+          <Animated.View pointerEvents={isMenuOpen ? "auto" : "none"} style={[styles.domino, cardStyle_E]}>
+            <TouchableOpacity
+              onPress={() => handleNavigate("/stage4/PartEF_TimeInventories")}
+              style={[styles.cardBody, { backgroundColor: solidBg, borderColor: gems.sapphire }]}
+            >
+              <Text style={[styles.cardText, { color: gems.sapphire }]}>PART E</Text>
+            </TouchableOpacity>
+          </Animated.View>
+
+          <Animated.View pointerEvents={isMenuOpen ? "auto" : "none"} style={[styles.domino, cardStyle_F]}>
+            <TouchableOpacity
+              onPress={() => handleNavigate("/stage4/CompetencyProfile")}
+              style={[styles.cardBody, { backgroundColor: solidBg, borderColor: gems.silver }]}
+            >
+              <Text style={[styles.cardText, { color: gems.silver }]}>PART F</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        </>
+      )}
     </View>
   );
 }
@@ -304,17 +352,17 @@ const styles = StyleSheet.create({
   },
   threadLine: {
     position: "absolute",
-    left: 50 - 0.75, // Centered under the 100px button (half width is 50)
+    left: 50 - 0.75,
     top: 44,
     width: 1.5,
-    backgroundColor: gems.sapphire, // Sapphire thread
+    backgroundColor: gems.sapphire,
     zIndex: -1,
   },
   domino: {
     position: "absolute",
-    left: 50 - 60, // Centered horizontally relative to trigger button center (width 120)
+    left: 50 - 60,
     width: 120,
-    height: 36,
+    height: 34,
     zIndex: 1999,
   },
   cardBody: {

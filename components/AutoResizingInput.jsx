@@ -28,17 +28,20 @@ export default function AutoResizingInput({
     <TextInput
       multiline
       editable={editable}
+      selectionColor="#0055FF"
       style={[
         styles.input,
         {
           minHeight,
           height,
           color: theme.text,
-          borderColor: isFocused ? gems.sapphire : theme.border,
-          borderBottomWidth: isFocused ? 2 : 1.2,
-          shadowColor: isFocused ? theme.accent : 'transparent',
-          shadowOpacity: isFocused ? 0.2 : 0,
-          shadowRadius: isFocused ? 4 : 0,
+          borderColor: isFocused ? '#0055FF' : theme.border,
+          borderBottomColor: isFocused ? '#0055FF' : theme.border,
+          borderWidth: isFocused ? 1.5 : 1,
+          borderBottomWidth: isFocused ? 2.5 : 1.2,
+          shadowColor: isFocused ? '#0055FF' : 'transparent',
+          shadowOpacity: isFocused ? 0.25 : 0,
+          shadowRadius: isFocused ? 6 : 0,
           shadowOffset: { width: 0, height: 2 },
           backgroundColor: 'transparent',
         },

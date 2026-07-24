@@ -64,17 +64,17 @@ export default function PremiumBackground({ bgIndex, gemColor }) {
       
       {/* Dynamic Ambient Glow Orbs */}
       <View style={StyleSheet.absoluteFillObject}>
-        <GlowOrb color={gemColor || gems.sapphire} opacity={theme.isDark ? 0.3 : 0.12} size={400} style={{ top: -150, left: -100 }} />
-        <GlowOrb color={gems.silver} opacity={theme.isDark ? 0.25 : 0.08} size={350} style={{ bottom: -100, right: -100 }} />
-        <GlowOrb color={gems.sapphire} opacity={theme.isDark ? 0.2 : 0.06} size={300} style={{ top: '35%', right: -50 }} />
+        <GlowOrb color={gemColor || gems.sapphire} opacity={theme.isDark ? 0.3 : 0.22} size={420} style={{ top: -150, left: -100 }} />
+        <GlowOrb color={gems.silver} opacity={theme.isDark ? 0.25 : 0.18} size={380} style={{ bottom: -100, right: -100 }} />
+        <GlowOrb color={gems.sapphire} opacity={theme.isDark ? 0.2 : 0.15} size={320} style={{ top: '35%', right: -50 }} />
       </View>
 
-      {/* Matte overlay: high opacity white in light mode to make it light/matte, dark overlay in dark mode */}
+      {/* Matte overlay: soft sapphire tint in light mode */}
       <View style={[
         StyleSheet.absoluteFillObject, 
         { 
-          backgroundColor: theme.isDark ? '#000' : '#FFF', 
-          opacity: theme.isDark ? 0.3 : 0.35 // Made significantly lighter/softer for light mode (from 0.02 to 0.35)
+          backgroundColor: theme.isDark ? '#000000' : '#E8EEF6', 
+          opacity: theme.isDark ? 0.3 : 0.55
         }
       ]} />
     </View>

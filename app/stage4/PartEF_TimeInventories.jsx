@@ -34,8 +34,6 @@ export default function PartEFTimeInventories() {
 
   const [loading, setLoading] = useState(true);
 
-  // --- STATE FOR 5 ACTIVITIES ---
-
   // 1. Group Project Work (5 steps)
   const [groupProjectHours, setGroupProjectHours] = useState({
     step1: { hh: '00', mm: '00' },
@@ -83,7 +81,6 @@ export default function PartEFTimeInventories() {
     { id: 5, name: '', hh: '00', mm: '00', status: 'Pursuing' },
   ]);
 
-  // --- HELPER TIME CALCULATORS ---
   const sumTimeObj = (obj) => {
     let totalMinutes = 0;
     Object.values(obj).forEach(time => {
@@ -108,7 +105,6 @@ export default function PartEFTimeInventories() {
     return `${hh}:${mm}`;
   };
 
-  // --- SAVE & LOAD ---
   const getPayload = useCallback(() => {
     const stage4Obj = {
       timeInventories: {
@@ -170,7 +166,7 @@ export default function PartEFTimeInventories() {
   const handleManualSave = async () => {
     try {
       await triggerSave();
-      Alert.alert("Saved Successfully", "Your progress for Time Inventories has been saved.");
+      Alert.alert("Saved Successfully", "Your progress for Part E: Time Inventories has been saved.");
     } catch (e) {
       Alert.alert("Save Failed", "Could not connect to the database.");
     }
@@ -182,6 +178,7 @@ export default function PartEFTimeInventories() {
         style={styles.timeInputText}
         keyboardType="numeric"
         maxLength={2}
+        selectionColor="#0055FF"
         placeholder="00"
         placeholderTextColor="#999"
         value={timeVal.hh}
@@ -192,6 +189,7 @@ export default function PartEFTimeInventories() {
         style={styles.timeInputText}
         keyboardType="numeric"
         maxLength={2}
+        selectionColor="#0055FF"
         placeholder="00"
         placeholderTextColor="#999"
         value={timeVal.mm}
@@ -208,11 +206,9 @@ export default function PartEFTimeInventories() {
 
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.push('/stage4/Dashboard')} style={styles.backBtn}>
-            <Ionicons name="chevron-back" size={22} color={theme.text} />
-          </TouchableOpacity>
+          <MenuDropdown />
           <View style={styles.headerTitleContainer}>
-            <Text style={[styles.title, { color: theme.text }]}>TIME INVENTORIES</Text>
+            <Text style={[styles.title, { color: theme.text }]}>PART E: TIME INVENTORIES</Text>
             <Text style={[styles.subtitle, { color: theme.secondaryText }]}>
               {targetProfile?.full_name || 'Loading...'}
             </Text>
@@ -336,9 +332,10 @@ export default function PartEFTimeInventories() {
                 {skillTraining.map((item, idx) => (
                   <View key={item.id} style={styles.tableRow}>
                     <TextInput
-                      style={[styles.textInputCell, { flex: 0.4 }]}
+                      style={[styles.textInputCell, { flex: 0.4, color: theme.text }]}
                       placeholder="Write here..."
                       placeholderTextColor="#999"
+                      selectionColor="#0055FF"
                       value={item.name}
                       onChangeText={(v) => {
                         const updated = [...skillTraining];
@@ -390,9 +387,10 @@ export default function PartEFTimeInventories() {
                 {onlineCourses.map((item, idx) => (
                   <View key={item.id} style={styles.tableRow}>
                     <TextInput
-                      style={[styles.textInputCell, { flex: 0.4 }]}
+                      style={[styles.textInputCell, { flex: 0.4, color: theme.text }]}
                       placeholder="Write here..."
                       placeholderTextColor="#999"
+                      selectionColor="#0055FF"
                       value={item.name}
                       onChangeText={(v) => {
                         const updated = [...onlineCourses];
@@ -431,6 +429,25 @@ export default function PartEFTimeInventories() {
                   <Text style={styles.totalValText}>{sumTimeArray(onlineCourses)}</Text>
                 </View>
               </GemCutCard>
+
+              {/* Linear Progression Navigation */}
+              <View style={styles.linearNavRow}>
+                <TouchableOpacity
+                  style={styles.navBtnBack}
+                  onPress={() => router.push('/stage4/PartD_ClassroomInteractions')}
+                >
+                  <Ionicons name="arrow-back" size={16} color={gems.sapphire} />
+                  <Text style={styles.navBtnBackText}>Back: Part D</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.navBtnNext}
+                  onPress={() => router.push('/stage4/CompetencyProfile')}
+                >
+                  <Text style={styles.navBtnNextText}>Next: Part F (Competency Profile)</Text>
+                  <Ionicons name="arrow-forward" size={16} color="#FFF" />
+                </TouchableOpacity>
+              </View>
             </ScrollView>
           </KeyboardAvoidingView>
         )}
@@ -450,21 +467,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 12,
   },
-  backBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.1)',
-  },
   saveBtn: {
     width: 44,
     height: 44,
     borderRadius: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'rgba(255, 255, 255, 0.18)',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
@@ -475,10 +482,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 14,
-    fontWeight: '300',
-    letterSpacing: 2,
-    fontFamily: 'Inter_400Regular',
+    fontSize: 12.5,
+    fontWeight: '700',
+    letterSpacing: 1.5,
+    fontFamily: 'Outfit_600SemiBold',
   },
   subtitle: {
     fontSize: 9,
@@ -503,7 +510,7 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   mainSectionTitle: {
-    fontSize: 12.5,
+    fontSize: 11.5,
     fontWeight: '700',
     color: gems.sapphire,
     fontFamily: 'Outfit_600SemiBold',
@@ -514,7 +521,7 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   cardHeader: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '700',
     fontFamily: 'Outfit_600SemiBold',
     textTransform: 'uppercase',
@@ -616,5 +623,43 @@ const styles = StyleSheet.create({
   },
   statusBtnTextActive: {
     color: gems.sapphire,
+  },
+  linearNavRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+    gap: 12,
+  },
+  navBtnBack: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 10,
+    borderWidth: 1.5,
+    borderColor: gems.sapphire,
+    backgroundColor: 'rgba(46,88,148,0.06)',
+  },
+  navBtnBackText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: gems.sapphire,
+    fontFamily: 'Outfit_600SemiBold',
+  },
+  navBtnNext: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    borderRadius: 10,
+    backgroundColor: gems.sapphire,
+  },
+  navBtnNextText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#FFF',
+    fontFamily: 'Outfit_600SemiBold',
   },
 });

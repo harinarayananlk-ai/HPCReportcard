@@ -57,7 +57,7 @@ const SEEDED_PASSWORDS = {
 export default function StudentHomepage() {
   const router = useRouter();
   const { theme } = useTheme();
-  const { user, profile, setProfile, activeStudentId, userPassword } = useAuth();
+  const { user, profile, setProfile, activeStudentId, userPassword, logout } = useAuth();
   const [reports, setReports] = useState([]);
   const [showPassword, setShowPassword] = useState(false);
   const styles = getStyles(theme);
@@ -97,7 +97,6 @@ export default function StudentHomepage() {
   const displayPassword = userPassword || SEEDED_PASSWORDS[profile?.username || user?.username] || 'pass123';
   const isTeacher = user?.role === 'teacher' || user?.role === 'superadmin';
 
-
   return (
     <View style={styles.container}>
       <StatusBar barStyle={theme.isDark ? "light-content" : "dark-content"} />
@@ -121,8 +120,34 @@ export default function StudentHomepage() {
               <Text style={styles.greeting}>✨ Hello ✨</Text>
               <Text style={styles.userName}>{profile?.full_name || user?.username || "Adventurer"}</Text>
             </View>
-            <View style={[styles.avatar, { borderColor: gems.silver }]}>
-               <Text style={styles.avatarText}>{(profile?.full_name || user?.username || "S")[0].toUpperCase()}</Text>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+              <SoundButton
+                onPress={() => {
+                  logout();
+                  router.replace('/');
+                }}
+                style={{
+                  paddingHorizontal: 12,
+                  paddingVertical: 6,
+                  borderRadius: 20,
+                  backgroundColor: 'rgba(239, 68, 68, 0.12)',
+                  borderWidth: 1,
+                  borderColor: 'rgba(239, 68, 68, 0.3)',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 4,
+                }}
+              >
+                <Ionicons name="log-out-outline" size={14} color="#ef4444" />
+                <Text style={{ fontSize: 11, fontWeight: '700', color: '#ef4444', fontFamily: 'Outfit_600SemiBold' }}>
+                  LOGOUT
+                </Text>
+              </SoundButton>
+
+              <View style={[styles.avatar, { borderColor: gems.silver }]}>
+                 <Text style={styles.avatarText}>{(profile?.full_name || user?.username || "S")[0].toUpperCase()}</Text>
+              </View>
             </View>
           </View>
           <Sparkle style={{ top: 20, right: 80 }} color={gems.silver} />

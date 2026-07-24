@@ -98,15 +98,15 @@ export default function Stage4Dashboard() {
     },
     {
       id: 'timeInventories',
-      title: 'Part E & F: Time Inventories',
-      desc: 'Log hours for online courses and spent on different stages of your curriculum.',
+      title: 'Part E: Time Inventories',
+      desc: 'Log hours for online courses, group projects, inquiry, classroom interactions, and skill training.',
       path: '/stage4/PartEF_TimeInventories',
       icon: 'time-outline',
       accent: gems.sapphire
     },
     {
       id: 'competencyProfile',
-      title: 'Student’s Competency Profile',
+      title: 'Part F: Student’s Competency Profile',
       desc: 'Massive multiannual tracking matrix mapping Grade 9-12 performance descriptors.',
       path: '/stage4/CompetencyProfile',
       icon: 'ribbon-outline',

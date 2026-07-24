@@ -22,7 +22,7 @@ import GemCutCard from "../components/GemCutCard";
 export default function TeacherTracking() {
   const router = useRouter();
   const { theme } = useTheme();
-  const { user, setActiveStudentId, setActiveStudentProfile } = useAuth();
+  const { user, setActiveStudentId, setActiveStudentProfile, logout } = useAuth();
   const accentColor = gems.sapphire;
   const styles = getStyles(theme, accentColor);
   const [students, setStudents] = useState([]);
@@ -136,6 +136,28 @@ export default function TeacherTracking() {
           <Text style={styles.backText}>{"< Back"}</Text>
         </SoundButton>
         <Text style={styles.headerTitle}>Class Registry</Text>
+        <SoundButton
+          onPress={() => {
+            logout();
+            router.replace('/');
+          }}
+          style={{
+            paddingHorizontal: 12,
+            paddingVertical: 6,
+            borderRadius: 20,
+            backgroundColor: 'rgba(239, 68, 68, 0.12)',
+            borderWidth: 1,
+            borderColor: 'rgba(239, 68, 68, 0.3)',
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 4,
+          }}
+        >
+          <Ionicons name="log-out-outline" size={14} color="#ef4444" />
+          <Text style={{ fontSize: 11, fontWeight: '700', color: '#ef4444', fontFamily: 'Outfit_600SemiBold' }}>
+            LOGOUT
+          </Text>
+        </SoundButton>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 60 }}>

@@ -21,6 +21,7 @@ import SoundButton from '../../components/SoundButton';
 import GemButton from '../../components/GemButton';
 import GemCutCard from '../../components/GemCutCard';
 import MenuDropdown from '../../components/MenuDropdown';
+import AnimatedTabBar from '../../components/AnimatedTabBar';
 import { gems } from '../../colour_themes';
 import useAutoSave from '../../hooks/useAutoSave';
 
@@ -34,40 +35,41 @@ export default function CompetencyProfile() {
 
   const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState({});
+  const [activeGradeTab, setActiveGradeTab] = useState(0); // 0: Grade 9, 1: Grade 10, 2: Grade 11, 3: Grade 12
 
   const skillsData = {
     awareness: [
-      { id: 'awr_a', label: 'Proficiency in language R1, R2, R3' },
-      { id: 'awr_b', label: 'Oral Communication' },
-      { id: 'awr_c', label: 'Written communication' },
-      { id: 'awr_d', label: 'Health and nutrition literacy' },
-      { id: 'awr_e', label: 'Physical education, fitness, wellness, and sports' },
-      { id: 'awr_f', label: 'Digital literacy' },
-      { id: 'awr_g', label: 'Knowledge of India' },
-      { id: 'awr_h', label: 'Environmental literacy (including awareness of water and resource, conservation, sanitation and hygiene)' },
-      { id: 'awr_i', label: 'Knowledge of critical issues (including current affairs and facing local communities, States, the country and the world, etc.)' },
+      { id: 'awr_a', label: 'a. Proficiency in language R1, R2, R3' },
+      { id: 'awr_b', label: 'b. Oral Communication' },
+      { id: 'awr_c', label: 'c. Written communication' },
+      { id: 'awr_d', label: 'd. Health and nutrition literacy' },
+      { id: 'awr_e', label: 'e. Physical education, fitness, wellness, and sports' },
+      { id: 'awr_f', label: 'f. Digital literacy' },
+      { id: 'awr_g', label: 'g. Knowledge of India' },
+      { id: 'awr_h', label: 'h. Environmental literacy (conservation, sanitation, hygiene)' },
+      { id: 'awr_i', label: 'i. Knowledge of critical issues (current affairs, local, state, global)' },
     ],
     sensitivity: [
-      { id: 'sen_a', label: 'Collaboration and teamwork' },
-      { id: 'sen_b', label: 'Ethical and moral reasoning' },
-      { id: 'sen_c', label: 'Knowledge and practice of human and Constitutional values' },
-      { id: 'sen_d', label: 'Gender sensitivity' },
-      { id: 'sen_e', label: 'Citizenship skills and values' },
-      { id: 'sen_f', label: 'Fundamental duties' },
+      { id: 'sen_a', label: 'a. Collaboration and teamwork' },
+      { id: 'sen_b', label: 'b. Ethical and moral reasoning' },
+      { id: 'sen_c', label: 'c. Practice of human and Constitutional values' },
+      { id: 'sen_d', label: 'd. Gender sensitivity' },
+      { id: 'sen_e', label: 'e. Citizenship skills and values' },
+      { id: 'sen_f', label: 'f. Fundamental duties' },
     ],
     creativity: [
-      { id: 'cre_a', label: 'Scientific temper and evidence-based thinking' },
-      { id: 'cre_b', label: 'Creativity and innovativeness' },
-      { id: 'cre_c', label: 'Sense of aesthetics and art' },
-      { id: 'cre_d', label: 'Critical thinking' },
-      { id: 'cre_e', label: 'Problem-solving' },
-      { id: 'cre_f', label: 'Skills training' },
-      { id: 'cre_g', label: 'Coding and computational thinking' },
+      { id: 'cre_a', label: 'a. Scientific temper and evidence-based thinking' },
+      { id: 'cre_b', label: 'b. Creativity and innovativeness' },
+      { id: 'cre_c', label: 'c. Sense of aesthetics and art' },
+      { id: 'cre_d', label: 'd. Critical thinking' },
+      { id: 'cre_e', label: 'e. Problem-solving' },
+      { id: 'cre_f', label: 'f. Skills training (Vocational)' },
+      { id: 'cre_g', label: 'g. Coding and computational thinking' },
     ]
   };
 
   const grades = [9, 10, 11, 12];
-  const levels = ['B', 'P', 'A']; // Beginner, Proficient, Advanced
+  const levels = ['B', 'P', 'A'];
 
   // --- SAVE & LOAD ---
   const getPayload = useCallback(() => {
@@ -135,7 +137,7 @@ export default function CompetencyProfile() {
   };
 
   const getLevelValue = (skillId, grade) => {
-    return profileData[`${skillId}_g${grade}_level`] || '';
+    return profileData[`${skillId}_g${grade}_level`] || profileData[`${skillId}_g${grade}`] || '';
   };
 
   const setDescriptorText = (skillId, grade, text) => {
@@ -151,56 +153,68 @@ export default function CompetencyProfile() {
     return profileData[`${skillId}_g${grade}_desc`] || '';
   };
 
-  const renderSection = (title, skillsList) => {
+  const renderGradeTable = (grade) => {
     return (
-      <View style={styles.sectionContainer}>
-        <Text style={styles.sectionHeader}>{title}</Text>
-        
-        {skillsList.map(skill => (
-          <GemCutCard key={skill.id} borderColor={gems.sapphire + '25'} style={styles.skillCard}>
-            <Text style={[styles.skillLabel, { color: theme.text }]}>{skill.label}</Text>
-            
-            <View style={styles.gradesGrid}>
-              {grades.map(grade => {
-                const currentVal = getLevelValue(skill.id, grade);
-                const descText = getDescriptorText(skill.id, grade);
-                return (
-                  <View key={grade} style={styles.gradeCol}>
-                    <View style={styles.gradeHeaderRow}>
-                      <Text style={[styles.gradeText, { color: theme.secondaryText }]}>GRADE - {grade}</Text>
-                      <View style={styles.badgeRow}>
-                        {levels.map(lvl => (
-                          <TouchableOpacity
-                            key={lvl}
-                            disabled={!isTeacher}
-                            onPress={() => setLevelValue(skill.id, grade, lvl)}
-                            style={[
-                              styles.badgeBtn,
-                              currentVal === lvl && styles.badgeBtnActive,
-                              !isTeacher && { opacity: 0.8 }
-                            ]}
-                          >
-                            <Text style={[styles.badgeText, currentVal === lvl && styles.badgeTextActive]}>
-                              {lvl}
-                            </Text>
-                          </TouchableOpacity>
-                        ))}
-                      </View>
-                    </View>
+      <View style={{ marginBottom: 20 }}>
+        <Text style={styles.tableTitle}>GRADE - {grade} COMPETENCY PROFILE TABLE</Text>
 
+        {[
+          { title: '1. AWARENESS SKILLS', data: skillsData.awareness },
+          { title: '2. SENSITIVITY SKILLS', data: skillsData.sensitivity },
+          { title: '3. CREATIVITY SKILLS', data: skillsData.creativity }
+        ].map(cat => (
+          <GemCutCard key={cat.title} borderColor={gems.sapphire + '40'} style={styles.card}>
+            <Text style={styles.categoryHeader}>{cat.title}</Text>
+            
+            <View style={styles.tableHeader}>
+              <Text style={[styles.headerCell, { flex: 0.45 }]}>Abilities</Text>
+              <Text style={[styles.headerCell, { flex: 0.25, textAlign: 'center' }]}>Level (B/P/A)</Text>
+              <Text style={[styles.headerCell, { flex: 0.3, textAlign: 'center' }]}>Descriptors</Text>
+            </View>
+
+            {cat.data.map(skill => {
+              const currentLvl = getLevelValue(skill.id, grade);
+              const descText = getDescriptorText(skill.id, grade);
+              return (
+                <View key={skill.id} style={styles.tableRow}>
+                  <Text style={[styles.skillLabelText, { flex: 0.45, color: theme.text }]}>
+                    {skill.label}
+                  </Text>
+                  
+                  <View style={{ flex: 0.25, flexDirection: 'row', justifyContent: 'center', gap: 4 }}>
+                    {levels.map(lvl => (
+                      <TouchableOpacity
+                        key={lvl}
+                        disabled={!isTeacher}
+                        onPress={() => setLevelValue(skill.id, grade, lvl)}
+                        style={[
+                          styles.levelBtn,
+                          currentLvl === lvl && styles.levelBtnActive,
+                          !isTeacher && { opacity: 0.8 }
+                        ]}
+                      >
+                        <Text style={[styles.levelBtnText, currentLvl === lvl && styles.levelBtnTextActive]}>
+                          {lvl}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+
+                  <View style={{ flex: 0.3 }}>
                     <TextInput
                       style={[styles.descriptorInput, { color: theme.text }]}
                       placeholder="Write here..."
                       placeholderTextColor="#999"
+                      selectionColor="#0055FF"
                       multiline
                       value={descText}
                       editable={isTeacher}
                       onChangeText={(v) => setDescriptorText(skill.id, grade, v)}
                     />
                   </View>
-                );
-              })}
-            </View>
+                </View>
+              );
+            })}
           </GemCutCard>
         ))}
       </View>
@@ -215,11 +229,9 @@ export default function CompetencyProfile() {
 
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.push('/stage4/Dashboard')} style={styles.backBtn}>
-            <Ionicons name="chevron-back" size={22} color={theme.text} />
-          </TouchableOpacity>
+          <MenuDropdown />
           <View style={styles.headerTitleContainer}>
-            <Text style={[styles.title, { color: theme.text }]}>STUDENT COMPETENCY PROFILE</Text>
+            <Text style={[styles.title, { color: theme.text }]}>PART F: COMPETENCY PROFILE</Text>
             <Text style={[styles.subtitle, { color: theme.secondaryText }]}>
               {targetProfile?.full_name || 'Loading...'}
             </Text>
@@ -235,29 +247,55 @@ export default function CompetencyProfile() {
             <Text style={[styles.loadingText, { color: theme.secondaryText }]}>Loading profile...</Text>
           </View>
         ) : (
-          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-            {!isTeacher && (
-              <View style={styles.lockNotice}>
-                <Ionicons name="lock-closed" size={16} color="#eab308" />
-                <Text style={styles.lockNoticeText}>
-                  Locked: Only teachers can assess and update the Competency Profile. Students can view their progress card in read-only mode.
+          <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
+            {/* 4 Grade Tabs */}
+            <AnimatedTabBar
+              tabs={['Grade 9', 'Grade 10', 'Grade 11', 'Grade 12']}
+              activeIndex={activeGradeTab}
+              onTabChange={setActiveGradeTab}
+            />
+
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+              {!isTeacher && (
+                <View style={styles.lockNotice}>
+                  <Ionicons name="lock-closed" size={16} color="#eab308" />
+                  <Text style={styles.lockNoticeText}>
+                    Locked: Only teachers can assess and update the Competency Profile. Students can view in read-only mode.
+                  </Text>
+                </View>
+              )}
+
+              <View style={styles.infoCard}>
+                <Text style={[styles.infoTitle, { color: theme.text }]}>PERFORMANCE LEVEL DESCRIPTORS GRID</Text>
+                <Text style={[styles.infoText, { color: theme.secondaryText }]}>
+                  <Text style={{ fontWeight: 'bold', color: theme.text }}>B</Text> = Beginner | <Text style={{ fontWeight: 'bold', color: theme.text }}>P</Text> = Proficient | <Text style={{ fontWeight: 'bold', color: theme.text }}>A</Text> = Advanced
                 </Text>
               </View>
-            )}
 
-            <View style={styles.infoCard}>
-              <Text style={[styles.infoTitle, { color: theme.text }]}>PERFORMANCE LEVEL DESCRIPTORS (GRADES 9-12)</Text>
-              <Text style={[styles.infoText, { color: theme.secondaryText }]}>
-                <Text style={{ fontWeight: 'bold', color: theme.text }}>B</Text> = Beginner | <Text style={{ fontWeight: 'bold', color: theme.text }}>P</Text> = Proficient | <Text style={{ fontWeight: 'bold', color: theme.text }}>A</Text> = Advanced
-              </Text>
-            </View>
+              {renderGradeTable(grades[activeGradeTab])}
 
-            {renderSection('AWARENESS SKILLS', skillsData.awareness)}
-            {renderSection('SENSITIVITY SKILLS', skillsData.sensitivity)}
-            {renderSection('CREATIVITY SKILLS', skillsData.creativity)}
+              {/* Linear Progression Bottom Navigation */}
+              <View style={styles.linearNavRow}>
+                <TouchableOpacity
+                  style={styles.navBtnBack}
+                  onPress={() => router.push('/stage4/PartEF_TimeInventories')}
+                >
+                  <Ionicons name="arrow-back" size={16} color={gems.sapphire} />
+                  <Text style={styles.navBtnBackText}>Back: Part E</Text>
+                </TouchableOpacity>
 
-            <View style={{ height: 40 }} />
-          </ScrollView>
+                <TouchableOpacity
+                  style={styles.navBtnNext}
+                  onPress={() => router.push('/stage4/Dashboard')}
+                >
+                  <Text style={styles.navBtnNextText}>Finish & View Summary</Text>
+                  <Ionicons name="arrow-forward" size={16} color="#FFF" />
+                </TouchableOpacity>
+              </View>
+
+              <View style={{ height: 40 }} />
+            </ScrollView>
+          </KeyboardAvoidingView>
         )}
       </SafeAreaView>
     </View>
@@ -275,21 +313,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 12,
   },
-  backBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.1)',
-  },
   saveBtn: {
     width: 44,
     height: 44,
     borderRadius: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'rgba(255, 255, 255, 0.18)',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
@@ -300,10 +328,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 13,
-    fontWeight: '300',
-    letterSpacing: 2,
-    fontFamily: 'Inter_400Regular',
+    fontSize: 12.5,
+    fontWeight: '700',
+    letterSpacing: 1.5,
+    fontFamily: 'Outfit_600SemiBold',
   },
   subtitle: {
     fontSize: 9,
@@ -324,6 +352,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 16,
+    paddingBottom: 60,
   },
   lockNotice: {
     flexDirection: 'row',
@@ -332,9 +361,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(234, 179, 8, 0.2)',
     borderRadius: 8,
-    padding: 12,
-    marginBottom: 16,
-    gap: 10,
+    padding: 10,
+    marginBottom: 12,
+    gap: 8,
   },
   lockNoticeText: {
     fontSize: 11,
@@ -343,12 +372,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   infoCard: {
-    padding: 12,
+    padding: 10,
     borderRadius: 8,
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.08)',
-    marginBottom: 16,
+    marginBottom: 14,
     alignItems: 'center',
   },
   infoTitle: {
@@ -359,76 +388,75 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   infoText: {
-    fontSize: 11,
+    fontSize: 10.5,
     fontFamily: 'Inter_400Regular',
   },
-  sectionContainer: {
-    marginBottom: 20,
-  },
-  sectionHeader: {
+  tableTitle: {
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: '800',
     letterSpacing: 1.5,
     color: gems.sapphire,
     textTransform: 'uppercase',
     marginBottom: 10,
     fontFamily: 'Outfit_600SemiBold',
   },
-  skillCard: {
-    marginBottom: 12,
-    padding: 12,
+  card: {
+    marginBottom: 16,
   },
-  skillLabel: {
-    fontSize: 12,
+  categoryHeader: {
+    fontSize: 11.5,
     fontWeight: '700',
+    color: gems.sapphire,
     fontFamily: 'Outfit_600SemiBold',
-    marginBottom: 12,
+    marginBottom: 8,
+    textTransform: 'uppercase',
   },
-  gradesGrid: {
-    gap: 10,
-  },
-  gradeCol: {
-    backgroundColor: 'rgba(0,0,0,0.02)',
-    borderRadius: 8,
-    padding: 8,
-    borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.05)',
-  },
-  gradeHeaderRow: {
+  tableHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    borderBottomWidth: 1.5,
+    borderBottomColor: '#ccc',
+    paddingBottom: 6,
     marginBottom: 6,
   },
-  gradeText: {
+  headerCell: {
     fontSize: 10,
     fontWeight: '700',
     fontFamily: 'Outfit_600SemiBold',
+    textTransform: 'uppercase',
+    color: '#555',
   },
-  badgeRow: {
+  tableRow: {
     flexDirection: 'row',
-    gap: 4,
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    paddingVertical: 8,
+    gap: 6,
   },
-  badgeBtn: {
-    width: 24,
-    height: 24,
-    borderRadius: 6,
+  skillLabelText: {
+    fontSize: 11,
+    fontFamily: 'Inter_400Regular',
+  },
+  levelBtn: {
+    width: 22,
+    height: 22,
+    borderRadius: 5,
     borderWidth: 1,
     borderColor: '#ccc',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  badgeBtnActive: {
+  levelBtnActive: {
     borderColor: gems.sapphire,
     backgroundColor: gems.sapphire,
   },
-  badgeText: {
-    fontSize: 9.5,
+  levelBtnText: {
+    fontSize: 9,
     fontWeight: '700',
     color: '#666',
     fontFamily: 'Outfit_600SemiBold',
   },
-  badgeTextActive: {
+  levelBtnTextActive: {
     color: '#FFF',
   },
   descriptorInput: {
@@ -437,9 +465,47 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 6,
-    padding: 6,
-    minHeight: 40,
+    padding: 4,
+    minHeight: 34,
     textAlignVertical: 'top',
     backgroundColor: 'rgba(255,255,255,0.7)',
+  },
+  linearNavRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+    gap: 12,
+  },
+  navBtnBack: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 10,
+    borderWidth: 1.5,
+    borderColor: gems.sapphire,
+    backgroundColor: 'rgba(46,88,148,0.06)',
+  },
+  navBtnBackText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: gems.sapphire,
+    fontFamily: 'Outfit_600SemiBold',
+  },
+  navBtnNext: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    borderRadius: 10,
+    backgroundColor: gems.sapphire,
+  },
+  navBtnNextText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#FFF',
+    fontFamily: 'Outfit_600SemiBold',
   },
 });

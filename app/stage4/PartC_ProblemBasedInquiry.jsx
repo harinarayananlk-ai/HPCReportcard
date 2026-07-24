@@ -1471,6 +1471,25 @@ export default function PartCProblemBasedInquiry() {
             style={styles.underlineInput}
           />
         </GemCutCard>
+
+        {/* Linear Progression Navigation */}
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 16, gap: 12 }}>
+          <TouchableOpacity
+            style={{ flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 16, paddingVertical: 12, borderRadius: 10, borderWidth: 1.5, borderColor: gems.sapphire, backgroundColor: 'rgba(46,88,148,0.06)' }}
+            onPress={() => router.push('/stage4/PartB_GroupProject')}
+          >
+            <Ionicons name="arrow-back" size={16} color={gems.sapphire} />
+            <Text style={{ fontSize: 12, fontWeight: '700', color: gems.sapphire, fontFamily: 'Outfit_600SemiBold' }}>Back: Part B</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={{ flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 18, paddingVertical: 12, borderRadius: 10, backgroundColor: gems.sapphire }}
+            onPress={() => router.push('/stage4/PartD_ClassroomInteractions')}
+          >
+            <Text style={{ fontSize: 12, fontWeight: '700', color: '#FFF', fontFamily: 'Outfit_600SemiBold' }}>Next: Part D (Observation Template)</Text>
+            <Ionicons name="arrow-forward" size={16} color="#FFF" />
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     );
   };
@@ -1494,11 +1513,9 @@ export default function PartCProblemBasedInquiry() {
 
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.push('/stage4/Dashboard')} style={styles.backBtn}>
-            <Ionicons name="chevron-back" size={22} color={theme.text} />
-          </TouchableOpacity>
+          <MenuDropdown />
           <View style={styles.headerTitleContainer}>
-            <Text style={[styles.title, { color: theme.text }]}>PROBLEM-BASED INQUIRY</Text>
+            <Text style={[styles.title, { color: theme.text }]}>PART C: PROBLEM-BASED INQUIRY</Text>
             <Text style={[styles.subtitle, { color: theme.secondaryText }]}>
               {targetProfile?.full_name || 'Loading...'}
             </Text>

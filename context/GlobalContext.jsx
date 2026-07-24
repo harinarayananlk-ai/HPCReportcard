@@ -48,6 +48,16 @@ export const GlobalContextProvider = ({ children }) => {
   const [userPassword, setUserPassword] = useState("");
   const currentTheme = themes[themeName] || themes.light;
 
+  const logout = () => {
+    setUser(null);
+    setProfile(null);
+    setTeacherInfo(null);
+    setSchoolInfo(null);
+    setActiveStudentId(null);
+    setActiveStudentProfile(null);
+    setUserPassword("");
+  };
+
   return (
     <ThemeContext.Provider value={{ theme: currentTheme, setThemeName }}>
       <AuthContext.Provider value={{
@@ -58,8 +68,9 @@ export const GlobalContextProvider = ({ children }) => {
           activeStudentId, setActiveStudentId,
           activeStudentProfile, setActiveStudentProfile,
           soundEnabled, setSoundEnabled,
-          userPassword, setUserPassword
-      }}>
+          userPassword, setUserPassword,
+          logout,
+        }}>
         {children}
       </AuthContext.Provider>
     </ThemeContext.Provider>
