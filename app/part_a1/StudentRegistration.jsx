@@ -268,7 +268,7 @@ export default function TeacherRegistrationPage() {
                  <View style={styles.pickerWrapper}>
                    <Picker
                      selectedValue={studentClass}
-                     style={styles.picker}
+                     style={[styles.picker, { color: theme.text }]}
                      dropdownIconColor={theme.secondaryText}
                      onValueChange={setStudentClass}
                      enabled={isTeacher}
@@ -391,7 +391,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     overflow: 'hidden',
   },
-  picker: { height: 50, color: '#222' },
+  picker: { height: 50 },
 
   nextBtn: {
     marginTop: 25,

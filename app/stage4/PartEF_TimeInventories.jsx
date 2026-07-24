@@ -27,6 +27,7 @@ import useAutoSave from '../../hooks/useAutoSave';
 export default function PartEFTimeInventories() {
   const router = useRouter();
   const { theme } = useTheme();
+  const styles = getStyles(theme);
   const { user, profile, activeStudentId, activeStudentProfile } = useAuth();
   const isTeacher = user?.role === 'teacher' || user?.role === 'superadmin';
   const targetUserId = activeStudentId || user?.id;
@@ -456,7 +457,7 @@ export default function PartEFTimeInventories() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
   },
@@ -543,13 +544,13 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontFamily: 'Outfit_600SemiBold',
     textTransform: 'uppercase',
-    color: '#555',
+    color: theme.secondaryText,
   },
   tableRow: {
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: 'rgba(150,150,150,0.2)',
     paddingVertical: 8,
     gap: 8,
   },
@@ -561,15 +562,16 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontFamily: 'Inter_400Regular',
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: 'rgba(150,150,150,0.4)',
+    color: theme.text,
     paddingVertical: 2,
   },
   timeInputBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.03)',
+    backgroundColor: 'rgba(150,150,150,0.1)',
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: 'rgba(150,150,150,0.3)',
     borderRadius: 6,
     paddingHorizontal: 6,
     paddingVertical: 2,
@@ -580,11 +582,13 @@ const styles = StyleSheet.create({
     width: 20,
     textAlign: 'center',
     padding: 0,
+    color: theme.text,
     fontFamily: 'Outfit_600SemiBold',
   },
   timeColon: {
     fontSize: 11,
     fontWeight: '700',
+    color: theme.text,
     marginHorizontal: 2,
   },
   totalRow: {
@@ -594,13 +598,13 @@ const styles = StyleSheet.create({
     marginTop: 12,
     paddingTop: 10,
     borderTopWidth: 1.5,
-    borderTopColor: '#ccc',
+    borderTopColor: 'rgba(150,150,150,0.3)',
   },
   totalLabel: {
     fontSize: 12,
     fontWeight: '700',
     fontFamily: 'Outfit_600SemiBold',
-    color: '#333',
+    color: theme.text,
   },
   totalValText: {
     fontSize: 13,
@@ -612,7 +616,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     paddingVertical: 4,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: 'rgba(150,150,150,0.4)',
     borderRadius: 6,
   },
   statusBtnActive: {
@@ -622,7 +626,7 @@ const styles = StyleSheet.create({
   statusBtnText: {
     fontSize: 9,
     fontWeight: '700',
-    color: '#666',
+    color: theme.secondaryText,
   },
   statusBtnTextActive: {
     color: gems.sapphire,

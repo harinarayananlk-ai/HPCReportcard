@@ -323,7 +323,7 @@ export default function ParentRegistrationPage() {
                       setTimeout(() => setShowDatePicker(true), 300);
                     }}
                   >
-                    <Text style={styles.yearText}>{item}</Text>
+                    <Text style={[styles.yearText, { color: theme.text }]}>{item}</Text>
                   </SoundButton>
                 )}
               />
@@ -387,7 +387,7 @@ const styles = StyleSheet.create({
   yearPickerCard: { backgroundColor: '#FFF', width: '100%', borderRadius: 24, padding: 20, maxHeight: height * 0.7, borderWidth: 2 },
   modalTitle: { fontSize: 16, fontWeight: '800', textAlign: 'center', marginBottom: 20, letterSpacing: 2 },
   yearItem: { width: '33.33%', padding: 15, alignItems: 'center' },
-  yearText: { fontSize: 16, fontWeight: '600', color: '#444' },
+  yearText: { fontSize: 16, fontWeight: '600', color: '#333' },
   closeBtn: { marginTop: 20, padding: 15, backgroundColor: '#F5F5F5', borderRadius: 12, alignItems: 'center' },
   closeBtnText: { fontWeight: '700', color: '#666' },
 });

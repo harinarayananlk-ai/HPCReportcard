@@ -132,8 +132,18 @@ export default function TeacherTracking() {
       
       {/* Header */}
       <View style={styles.header}>
-        <SoundButton onPress={() => router.back()} style={styles.backBtn}>
-          <Text style={styles.backText}>{"< Back"}</Text>
+        <SoundButton 
+          onPress={() => {
+            if (router.canGoBack()) {
+              router.back();
+            } else {
+              router.push('/Teacher');
+            }
+          }} 
+          style={styles.backBtn}
+        >
+          <Ionicons name="arrow-back" size={16} color={theme.text} />
+          <Text style={styles.backText}>Back</Text>
         </SoundButton>
         <Text style={styles.headerTitle}>Class Registry</Text>
         <SoundButton
@@ -289,24 +299,34 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
-    paddingTop: 60,
+    justifyContent: "space-between",
+    paddingTop: Platform.OS === 'ios' ? 54 : 40,
     paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingBottom: 16,
     borderBottomWidth: 1,
     borderBottomColor: theme.border,
+    zIndex: 999,
   },
   backBtn: {
-    paddingRight: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    backgroundColor: theme.surface + '80',
+    borderWidth: 1,
+    borderColor: theme.border,
   },
   backText: {
-    color: theme.secondaryText,
-    fontSize: 14,
-    fontWeight: "300",
-    fontFamily: "Inter_400Regular",
+    color: theme.text,
+    fontSize: 12,
+    fontWeight: "600",
+    fontFamily: "Outfit_600SemiBold",
   },
   headerTitle: {
     color: theme.text,
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "600",
     fontFamily: "Outfit_600SemiBold",
   },
@@ -321,13 +341,13 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     fontFamily: "Outfit_600SemiBold",
   },
   input: {
-    backgroundColor: 'rgba(255,255,255,0.4)',
+    backgroundColor: theme.isDark ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.6)',
     borderBottomWidth: 1.5,
     borderTopWidth: 0,
     borderLeftWidth: 0,
     borderRightWidth: 0,
     borderColor: accentColor,
-    color: '#222',
+    color: theme.text,
     paddingHorizontal: 12,
     paddingVertical: 12,
     fontSize: 14,

@@ -462,7 +462,7 @@ const getStyles = (theme) => StyleSheet.create({
   actionTitle: {
     fontSize: 15,
     fontWeight: "600",
-    color: "#222",
+    color: theme.text,
     fontFamily: "Outfit_600SemiBold",
   },
   actionDesc: {

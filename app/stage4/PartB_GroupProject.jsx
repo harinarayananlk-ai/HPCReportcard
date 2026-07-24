@@ -95,6 +95,7 @@ export default function PartBGroupProject() {
     );
   };
   const { theme } = useTheme();
+  const styles = getStyles(theme);
   const { user, profile, activeStudentId, activeStudentProfile, setActiveStudentProfile, setProfile: setAuthProfile } = useAuth();
   const isTeacher = user?.role === 'teacher' || user?.role === 'superadmin';
   const targetUserId = activeStudentId || user?.id;
@@ -1444,7 +1445,7 @@ export default function PartBGroupProject() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
   },
@@ -1565,13 +1566,13 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontFamily: 'Outfit_600SemiBold',
     letterSpacing: 1,
-    color: '#555',
+    color: theme.text,
     marginTop: 12,
     marginBottom: 6,
   },
   helperText: {
     fontSize: 10,
-    color: '#888',
+    color: theme.secondaryText,
     fontStyle: 'italic',
     marginBottom: 8,
   },
@@ -1580,7 +1581,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     letterSpacing: 0.5,
     textTransform: 'uppercase',
-    color: '#444',
+    color: theme.secondaryText,
     marginTop: 8,
     marginBottom: 4,
     fontFamily: 'Outfit_600SemiBold',
@@ -1590,7 +1591,7 @@ const styles = StyleSheet.create({
     borderBottomColor: gems.sapphire,
     height: 40,
     fontSize: 13,
-    color: '#222',
+    color: theme.text,
     fontFamily: 'Inter_400Regular',
     paddingHorizontal: 4,
   },
@@ -1600,7 +1601,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     borderLeftWidth: 0,
     borderRightWidth: 0,
-    color: '#222',
+    color: theme.text,
     paddingVertical: 6,
   },
   tagInputRow: {

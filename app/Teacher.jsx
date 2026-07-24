@@ -5,6 +5,7 @@ import {
   ScrollView,
   StatusBar,
   Dimensions,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
@@ -13,6 +14,7 @@ import PremiumBackground from "../components/PremiumBackground";
 import { useTheme, useAuth } from "../context/GlobalContext";
 import { gems } from "../colour_themes";
 import GemCutCard from "../components/GemCutCard";
+import GemButton from "../components/GemButton";
 
 const { width } = Dimensions.get("window");
 
@@ -81,6 +83,38 @@ export default function TeacherHome() {
               </SoundButton>
             </GemCutCard>
           ))}
+        </View>
+
+        {/* ── GENERATE NORMAL REPORT CARD (DUMMY BUTTON) ── */}
+        <GemCutCard
+          borderColor={accentColor}
+          style={{ width: '100%', marginTop: 14, marginBottom: 8 }}
+          contentStyle={{ padding: 0 }}
+        >
+          <SoundButton 
+            style={[styles.boxCard, { paddingVertical: 18, flexDirection: 'row', gap: 12 }]}
+            onPress={() => {
+              Alert.alert("Normal Report Card", "This feature is currently under development and will be worked on later.");
+            }}
+            activeOpacity={0.7}
+          >
+            <Text style={[styles.boxIcon, styles.primaryBoxIcon, { marginBottom: 0 }]}>📄</Text>
+            <Text style={[styles.boxTitle, styles.primaryBoxTitle, { fontSize: 12, letterSpacing: 1.5 }]}>
+              GENERATE NORMAL REPORT CARD
+            </Text>
+          </SoundButton>
+        </GemCutCard>
+
+        <View style={{ marginTop: 4, alignItems: 'center' }}>
+          <GemButton
+            gemType="sapphire"
+            width={280}
+            onPress={() => {
+              Alert.alert("Normal Report Card", "This feature is currently under development and will be worked on later.");
+            }}
+          >
+            <Text style={styles.normalReportBtnText}>GENERATE NORMAL REPORT CARD</Text>
+          </GemButton>
         </View>
 
         {/* ── LOGOUT ── */}
@@ -226,5 +260,13 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     textTransform: "uppercase",
     letterSpacing: 1,
     fontFamily: "Inter_400Regular",
+  },
+  normalReportBtnText: {
+    color: "#FFF",
+    fontWeight: "700",
+    fontSize: 11,
+    letterSpacing: 1.5,
+    textAlign: "center",
+    fontFamily: "Outfit_600SemiBold",
   },
 });

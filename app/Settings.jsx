@@ -5,9 +5,12 @@ import {
   StyleSheet,
   ScrollView,
   StatusBar,
+  Linking,
+  TouchableOpacity,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 import SoundButton from "../components/SoundButton";
 import PremiumBackground from "../components/PremiumBackground";
 import { useTheme, useAuth } from "../context/GlobalContext";
@@ -17,8 +20,11 @@ import GemCutCard from "../components/GemCutCard";
 export default function Settings() {
   const router = useRouter();
   const { theme, setThemeName } = useTheme();
-  const { soundEnabled, setSoundEnabled } = useAuth();
+  const { soundEnabled, setSoundEnabled, user } = useAuth();
   const [showThemePicker, setShowThemePicker] = useState(false);
+  const [showSecurity, setShowSecurity] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
+  const [passwordRevealed, setPasswordRevealed] = useState(false);
 
   const accentColor = gems.sapphire;
   const styles = getStyles(theme, accentColor);
@@ -33,8 +39,11 @@ export default function Settings() {
   ];
 
   const handlePress = (id) => {
+    if (id === "security") setShowSecurity(!showSecurity);
     if (id === "theme") setShowThemePicker(!showThemePicker);
     if (id === "sound") setSoundEnabled(!soundEnabled);
+    if (id === "help") setShowHelp(!showHelp);
+    if (id === "about") router.push("/credits");
   };
 
   return (
@@ -56,48 +65,92 @@ export default function Settings() {
         >
           <GemCutCard borderColor={gems.sapphire + '60'} contentStyle={{ padding: 0 }}>
             <View style={styles.sectionContainer}>
-              {settingsItems.map((item, i) => (
-                <View key={i}>
-                  <SoundButton 
-                    style={[styles.settingRow, { borderBottomColor: theme.border + '30' }]} 
-                    activeOpacity={0.7}
-                    onPress={() => handlePress(item.id)}
-                  >
-                    <View style={styles.rowLeft}>
-                      <Text style={styles.settingIcon}>{item.icon}</Text>
-                      <Text style={styles.settingLabel}>{item.label}</Text>
-                    </View>
-                    <View style={styles.rowRight}>
-                      {item.detail && <Text style={styles.detailText}>{item.detail.toUpperCase()}</Text>}
-                      <Text style={[styles.chevron, item.id === "theme" && showThemePicker && styles.chevronActive]}>›</Text>
-                    </View>
-                  </SoundButton>
+              {settingsItems.map((item, i) => {
+                const isExpanded = (item.id === "security" && showSecurity) ||
+                                   (item.id === "theme" && showThemePicker) ||
+                                   (item.id === "help" && showHelp);
+                return (
+                  <View key={i}>
+                    <SoundButton 
+                      style={[styles.settingRow, { borderBottomColor: theme.border + '30' }]} 
+                      activeOpacity={0.7}
+                      onPress={() => handlePress(item.id)}
+                    >
+                      <View style={styles.rowLeft}>
+                        <Text style={styles.settingIcon}>{item.icon}</Text>
+                        <Text style={styles.settingLabel}>{item.label}</Text>
+                      </View>
+                      <View style={styles.rowRight}>
+                        {item.detail && <Text style={styles.detailText}>{item.detail.toUpperCase()}</Text>}
+                        <Text style={[styles.chevron, isExpanded && styles.chevronActive]}>›</Text>
+                      </View>
+                    </SoundButton>
 
-                  {/* Theme Picker Sub-menu */}
-                  {item.id === "theme" && showThemePicker && (
-                    <View style={[styles.pickerContainer, { backgroundColor: theme.surface + '40', borderColor: theme.border + '50' }]}>
-                      {Object.keys(availableThemes).map((key) => (
-                        <SoundButton 
-                          key={key} 
-                          style={[
-                            styles.pickerButton,
-                            theme.name === availableThemes[key].name && { backgroundColor: theme.surface + '80' }
-                          ]}
-                          onPress={() => setThemeName(key)}
-                        >
-                          <View style={[styles.colorSquare, { backgroundColor: availableThemes[key].background, borderColor: availableThemes[key].border }]} />
-                          <Text style={[
-                            styles.pickerButtonText,
-                            theme.name === availableThemes[key].name && { color: accentColor, fontFamily: "Outfit_600SemiBold" }
-                          ]}>
-                            {availableThemes[key].name.toUpperCase()}
+                    {/* Account Security Sub-menu */}
+                    {item.id === "security" && showSecurity && (
+                      <View style={[styles.pickerContainer, { backgroundColor: theme.surface + '40', borderColor: theme.border + '50' }]}>
+                        <View style={styles.infoRow}>
+                          <Text style={styles.infoLabel}>USERNAME:</Text>
+                          <Text style={[styles.infoValue, { color: accentColor }]}>{user?.username || 'Guest User'}</Text>
+                        </View>
+                        <View style={[styles.infoRow, { marginTop: 10 }]}>
+                          <Text style={styles.infoLabel}>PASSWORD:</Text>
+                          <Text style={[styles.infoValue, { color: accentColor }]}>
+                            {passwordRevealed ? (user?.plain_password || user?.password || 'pass123') : '••••••••'}
                           </Text>
-                        </SoundButton>
-                      ))}
-                    </View>
-                  )}
-                </View>
-              ))}
+                          <TouchableOpacity 
+                            style={styles.revealBtn}
+                            onPress={() => setPasswordRevealed(!passwordRevealed)}
+                          >
+                            <Ionicons name={passwordRevealed ? "eye-off-outline" : "eye-outline"} size={13} color="#FFF" />
+                            <Text style={styles.revealBtnText}>{passwordRevealed ? "HIDE" : "REVEAL"}</Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    )}
+
+                    {/* Theme Picker Sub-menu */}
+                    {item.id === "theme" && showThemePicker && (
+                      <View style={[styles.pickerContainer, { backgroundColor: theme.surface + '40', borderColor: theme.border + '50' }]}>
+                        {Object.keys(availableThemes).map((key) => (
+                          <SoundButton 
+                            key={key} 
+                            style={[
+                              styles.pickerButton,
+                              theme.name === availableThemes[key].name && { backgroundColor: theme.surface + '80' }
+                            ]}
+                            onPress={() => setThemeName(key)}
+                          >
+                            <View style={[styles.colorSquare, { backgroundColor: availableThemes[key].background, borderColor: availableThemes[key].border }]} />
+                            <Text style={[
+                              styles.pickerButtonText,
+                              theme.name === availableThemes[key].name && { color: accentColor, fontFamily: "Outfit_600SemiBold" }
+                            ]}>
+                              {availableThemes[key].name.toUpperCase()}
+                            </Text>
+                          </SoundButton>
+                        ))}
+                      </View>
+                    )}
+
+                    {/* Help & Support Sub-menu */}
+                    {item.id === "help" && showHelp && (
+                      <View style={[styles.pickerContainer, { backgroundColor: theme.surface + '40', borderColor: theme.border + '50' }]}>
+                        <Text style={[styles.helpText, { color: theme.text }]}>
+                          WhatsApp message this number:
+                        </Text>
+                        <TouchableOpacity
+                          style={styles.whatsappBtn}
+                          onPress={() => Linking.openURL('https://wa.me/919731412325')}
+                        >
+                          <Ionicons name="logo-whatsapp" size={16} color="#25D366" />
+                          <Text style={styles.whatsappBtnText}>+91 9731412325</Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                  </View>
+                );
+              })}
             </View>
           </GemCutCard>
 
@@ -221,6 +274,66 @@ const getStyles = (theme, accentColor) => StyleSheet.create({
     color: theme.secondaryText,
     fontSize: 11,
     fontFamily: "Inter_400Regular",
+    letterSpacing: 1,
+  },
+  infoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: 6,
+  },
+  infoLabel: {
+    fontSize: 10,
+    fontWeight: "700",
+    color: theme.secondaryText,
+    fontFamily: "Outfit_600SemiBold",
+    letterSpacing: 1,
+  },
+  infoValue: {
+    fontSize: 12,
+    fontWeight: "600",
+    fontFamily: "Outfit_600SemiBold",
+    letterSpacing: 1,
+  },
+  revealBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    backgroundColor: accentColor,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 6,
+    marginLeft: 8,
+  },
+  revealBtnText: {
+    fontSize: 9,
+    fontWeight: "700",
+    color: "#FFF",
+    fontFamily: "Outfit_600SemiBold",
+    letterSpacing: 1,
+  },
+  helpText: {
+    fontSize: 12,
+    fontFamily: "Inter_400Regular",
+    marginBottom: 8,
+  },
+  whatsappBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    backgroundColor: "rgba(37, 211, 102, 0.12)",
+    borderWidth: 1,
+    borderColor: "rgba(37, 211, 102, 0.3)",
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    alignSelf: "flex-start",
+  },
+  whatsappBtnText: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: "#25D366",
+    fontFamily: "Outfit_600SemiBold",
     letterSpacing: 1,
   },
   logoutButton: {

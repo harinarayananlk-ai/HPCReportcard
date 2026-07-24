@@ -28,6 +28,7 @@ import useAutoSave from '../../hooks/useAutoSave';
 export default function CompetencyProfile() {
   const router = useRouter();
   const { theme } = useTheme();
+  const styles = getStyles(theme);
   const { user, profile, activeStudentId, activeStudentProfile } = useAuth();
   const isTeacher = user?.role === 'teacher' || user?.role === 'superadmin';
   const targetUserId = activeStudentId || user?.id;
@@ -302,7 +303,7 @@ export default function CompetencyProfile() {
   );
 }
 
-const styles = StyleSheet.create({
+const getStyles = (theme) => StyleSheet.create({
   container: {
     flex: 1,
   },
@@ -426,13 +427,13 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontFamily: 'Outfit_600SemiBold',
     textTransform: 'uppercase',
-    color: '#555',
+    color: theme.secondaryText,
   },
   tableRow: {
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: 'rgba(150,150,150,0.2)',
     paddingVertical: 8,
     gap: 6,
   },
@@ -445,7 +446,7 @@ const styles = StyleSheet.create({
     height: 22,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: 'rgba(150,150,150,0.4)',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -456,7 +457,7 @@ const styles = StyleSheet.create({
   levelBtnText: {
     fontSize: 9,
     fontWeight: '700',
-    color: '#666',
+    color: theme.text,
     fontFamily: 'Outfit_600SemiBold',
   },
   levelBtnTextActive: {
