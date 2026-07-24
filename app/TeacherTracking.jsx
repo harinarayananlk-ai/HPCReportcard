@@ -11,7 +11,7 @@ import {
   Platform,
 } from "react-native";
 import { useRouter } from "expo-router";
-import Constants from "expo-constants";
+import { Ionicons } from "@expo/vector-icons";
 import SoundButton from "../components/SoundButton";
 import GemButton from "../components/GemButton";
 import PremiumBackground from "../components/PremiumBackground";
