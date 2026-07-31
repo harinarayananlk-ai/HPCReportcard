@@ -18,6 +18,7 @@ import PremiumBackground from "../components/PremiumBackground";
 import { useTheme, useAuth, API_URL } from "../context/GlobalContext";
 import { gems } from "../colour_themes";
 import GemCutCard from "../components/GemCutCard";
+import { getAfterRegistrationRoute } from "../utils/stageRouter";
 
 export default function TeacherTracking() {
   const router = useRouter();
@@ -265,10 +266,12 @@ export default function TeacherTracking() {
                                     const res = await fetch(`${API_URL}/students/profile/${student.user_id}`);
                                     const data = await res.json();
                                     setActiveStudentProfile(data || { registration_number: student.registration_number });
+                                    const route = getAfterRegistrationRoute(student.class_name || data?.class_name || '');
+                                    router.push(route);
                                   } catch (e) {
                                     setActiveStudentProfile({ registration_number: student.registration_number });
+                                    router.push("/part_a1/StudentRegistration");
                                   }
-                                  router.push("/part_a1/StudentRegistration");
                               }}
                             >
                               <Text style={{color: theme.buttonText, fontWeight: '700', fontSize: 11, letterSpacing: 1.5, textAlign: 'center'}}>GO TO HPC CARD</Text>

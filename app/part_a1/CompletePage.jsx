@@ -22,6 +22,7 @@ import PremiumBackground from "../../components/PremiumBackground";
 import { gems } from "../../colour_themes";
 import useAutoSave from "../../hooks/useAutoSave";
 import GemCutCard from "../../components/GemCutCard";
+import { getPartA2Route, isSecondaryStage } from "../../utils/stageRouter";
 
 const { width } = Dimensions.get('window');
 
@@ -462,19 +463,13 @@ export default function CompletePage() {
                 if (isTeacher) {
                   await triggerSave();
                 }
-                const cls = (targetProfile?.class_name || '').toLowerCase().trim();
-                const isSec = cls.includes('grade 9') || cls.includes('grade 10') || cls.includes('grade 11') || cls.includes('grade 12') ||
-                              cls.includes('class 9') || cls.includes('class 10') || cls.includes('class 11') || cls.includes('class 12') ||
-                              cls.includes('secondary');
-                let route = '/part_a2_s34/LayoutBuilder'; // fallback
-                if (isSec) {
-                  route = '/stage4/Dashboard';
-                } else if (cls.includes('bal vatika') || cls === 'kg' || cls === 'kindergarten' || cls === 'grade 1' || cls === 'grade 2') {
-                  route = '/part_a2_s1/AboutMe';
-                } else if (cls === 'grade 3' || cls === 'grade 4' || cls === 'grade 5') {
-                  route = '/part_a2_s2/AboutMe';
+                const cls = targetProfile?.class_name || '';
+                if (isSecondaryStage(cls)) {
+                  router.push('/part_a1_s4/GeneralInformation');
+                  return;
                 }
-                console.log("[CompletePage] Routing student", targetProfile?.full_name, "with class:", cls, "to:", route);
+                const route = getPartA2Route(cls);
+                console.log('[CompletePage] Routing student', targetProfile?.registration_number, 'with class:', cls, 'to:', route);
                 router.push(route);
               }}
               gemType="sapphire"

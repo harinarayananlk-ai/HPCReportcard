@@ -189,7 +189,7 @@ export default function TeacherRemarks() {
     setLoading(true);
     try {
       await triggerSave();
-      router.push('/part_b_s4/SelectionPage');
+      router.push('/stage4/Dashboard');
     } catch (e) {
       console.error(e);
       Alert.alert('Error', 'Could not save. Please try again.');

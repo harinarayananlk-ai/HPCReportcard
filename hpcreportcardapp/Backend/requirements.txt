@@ -1,8 +1,0 @@
-fastapi
-uvicorn
-pydantic
-python-multipart
-passlib[bcrypt]
-bcrypt==3.2.2
-pyppeteer
-jinja2
