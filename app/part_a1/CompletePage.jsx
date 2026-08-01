@@ -464,10 +464,6 @@ export default function CompletePage() {
                   await triggerSave();
                 }
                 const cls = targetProfile?.class_name || '';
-                if (isSecondaryStage(cls)) {
-                  router.push('/stage4/Dashboard');
-                  return;
-                }
                 const route = getPartA2Route(cls);
                 console.log('[CompletePage] Routing student', targetProfile?.registration_number, 'with class:', cls, 'to:', route);
                 router.push(route);
