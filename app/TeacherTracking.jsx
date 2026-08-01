@@ -255,27 +255,36 @@ export default function TeacherTracking() {
                               <Text style={[styles.detailValue, { color: accentColor }]} selectable>{student.plain_password || 'pass123'}</Text>
                             </View>
 
-                            <GemButton 
-                              style={{marginTop: 16, marginBottom: 8, alignSelf: 'center'}}
-                              gemType="sapphire"
-                              width={180}
-                              onPress={async () => {
-                                  setActiveStudentId(student.user_id);
-                                  // Fetch full profile before navigating
-                                  try {
-                                    const res = await fetch(`${API_URL}/students/profile/${student.user_id}`);
-                                    const data = await res.json();
-                                    setActiveStudentProfile(data || { registration_number: student.registration_number });
-                                    const route = getAfterRegistrationRoute(student.class_name || data?.class_name || '');
-                                    router.push(route);
-                                  } catch (e) {
-                                    setActiveStudentProfile({ registration_number: student.registration_number });
+                            <View style={{ marginTop: 16, gap: 10, alignItems: 'center' }}>
+                              <GemButton 
+                                gemType="sapphire"
+                                width={240}
+                                onPress={async () => {
+                                    setActiveStudentId(student.user_id);
+                                    // Fetch full profile before navigating
+                                    try {
+                                      const res = await fetch(`${API_URL}/students/profile/${student.user_id}`);
+                                      const data = await res.json();
+                                      setActiveStudentProfile(data || { registration_number: student.registration_number });
+                                    } catch (e) {
+                                      setActiveStudentProfile({ registration_number: student.registration_number });
+                                    }
                                     router.push("/part_a1/StudentRegistration");
-                                  }
-                              }}
-                            >
-                              <Text style={{color: theme.buttonText, fontWeight: '700', fontSize: 11, letterSpacing: 1.5, textAlign: 'center'}}>GO TO HPC CARD</Text>
-                            </GemButton>
+                                }}
+                              >
+                                <Text style={{color: theme.buttonText, fontWeight: '700', fontSize: 10, letterSpacing: 1.2, textAlign: 'center'}}>GENERATE HPC REPORT CARD</Text>
+                              </GemButton>
+
+                              <GemButton 
+                                gemType="sapphire"
+                                width={240}
+                                onPress={() => {
+                                  Alert.alert("Normal Report Card", "This feature is currently under development and will be worked on later.");
+                                }}
+                              >
+                                <Text style={{color: theme.buttonText, fontWeight: '700', fontSize: 10, letterSpacing: 1.2, textAlign: 'center'}}>GENERATE NORMAL REPORT CARD</Text>
+                              </GemButton>
+                            </View>
                           </GemCutCard>
                         )}
                       </View>

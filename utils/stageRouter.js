@@ -84,10 +84,7 @@ export function getPartA2Route(className) {
  * For all others: goes to ParentRegistration → CompletePage.
  */
 export function getAfterRegistrationRoute(className) {
-  if (isSecondaryStage(className)) {
-    return '/part_a1_s4/GeneralInformation';
-  }
-  return '/part_a1/ParentRegistration';
+  return '/part_a1/StudentRegistration';
 }
 
 /**

@@ -85,38 +85,6 @@ export default function TeacherHome() {
           ))}
         </View>
 
-        {/* ── GENERATE NORMAL REPORT CARD (DUMMY BUTTON) ── */}
-        <GemCutCard
-          borderColor={accentColor}
-          style={{ width: '100%', marginTop: 14, marginBottom: 8 }}
-          contentStyle={{ padding: 0 }}
-        >
-          <SoundButton 
-            style={[styles.boxCard, { paddingVertical: 18, flexDirection: 'row', gap: 12 }]}
-            onPress={() => {
-              Alert.alert("Normal Report Card", "This feature is currently under development and will be worked on later.");
-            }}
-            activeOpacity={0.7}
-          >
-            <Text style={[styles.boxIcon, styles.primaryBoxIcon, { marginBottom: 0 }]}>📄</Text>
-            <Text style={[styles.boxTitle, styles.primaryBoxTitle, { fontSize: 12, letterSpacing: 1.5 }]}>
-              GENERATE NORMAL REPORT CARD
-            </Text>
-          </SoundButton>
-        </GemCutCard>
-
-        <View style={{ marginTop: 4, alignItems: 'center' }}>
-          <GemButton
-            gemType="sapphire"
-            width={280}
-            onPress={() => {
-              Alert.alert("Normal Report Card", "This feature is currently under development and will be worked on later.");
-            }}
-          >
-            <Text style={styles.normalReportBtnText}>GENERATE NORMAL REPORT CARD</Text>
-          </GemButton>
-        </View>
-
         {/* ── LOGOUT ── */}
         <SoundButton 
           style={styles.logoutButton} 

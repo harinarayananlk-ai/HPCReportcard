@@ -465,7 +465,7 @@ export default function CompletePage() {
                 }
                 const cls = targetProfile?.class_name || '';
                 if (isSecondaryStage(cls)) {
-                  router.push('/part_a1_s4/GeneralInformation');
+                  router.push('/stage4/Dashboard');
                   return;
                 }
                 const route = getPartA2Route(cls);
