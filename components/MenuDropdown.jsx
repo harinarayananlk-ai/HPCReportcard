@@ -320,9 +320,9 @@ export default function MenuDropdown() {
                           : "/part_b_s1/SelectionPage";
                     handleNavigate(partBRoute);
                   }}
-                  style={[styles.cardBody, { backgroundColor: solidBg, borderColor: gems.silver }]}
+                  style={[styles.cardBody, { backgroundColor: solidBg, borderColor: gems.sapphire }]}
                 >
-                  <Text style={[styles.cardText, { color: gems.silver }]}>PART B</Text>
+                  <Text style={[styles.cardText, { color: gems.sapphire }]}>PART B</Text>
                 </TouchableOpacity>
               </Animated.View>
 
@@ -340,9 +340,9 @@ export default function MenuDropdown() {
                   <Animated.View pointerEvents="auto" style={[styles.domino, cardStyle_D]}>
                     <TouchableOpacity
                       onPress={() => handleNavigate("/stage4/PartD_ClassroomInteractions")}
-                      style={[styles.cardBody, { backgroundColor: solidBg, borderColor: gems.silver }]}
+                      style={[styles.cardBody, { backgroundColor: solidBg, borderColor: gems.sapphire }]}
                     >
-                      <Text style={[styles.cardText, { color: gems.silver }]}>PART D</Text>
+                      <Text style={[styles.cardText, { color: gems.sapphire }]}>PART D</Text>
                     </TouchableOpacity>
                   </Animated.View>
 
@@ -358,9 +358,9 @@ export default function MenuDropdown() {
                   <Animated.View pointerEvents="auto" style={[styles.domino, cardStyle_F]}>
                     <TouchableOpacity
                       onPress={() => handleNavigate("/stage4/CompetencyProfile")}
-                      style={[styles.cardBody, { backgroundColor: solidBg, borderColor: gems.silver }]}
+                      style={[styles.cardBody, { backgroundColor: solidBg, borderColor: gems.sapphire }]}
                     >
-                      <Text style={[styles.cardText, { color: gems.silver }]}>PART F</Text>
+                      <Text style={[styles.cardText, { color: gems.sapphire }]}>PART F</Text>
                     </TouchableOpacity>
                   </Animated.View>
                 </>

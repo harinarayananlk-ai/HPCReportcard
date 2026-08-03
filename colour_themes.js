@@ -2,13 +2,13 @@ export const gems = {
   sapphire: "#0D47A1",        // Rich Royal Sapphire
   silver: "#D1D1D1",          // Matte Silver
   aquamarine: "#0D47A1",      // Mapped to Sapphire
-  emerald: "#D1D1D1",         // Mapped to Silver
-  jade: "#D1D1D1",            // Mapped to Silver
-  topaz: "#0D47A1",           // Mapped to Sapphire
-  gold: "#0D47A1",            // Mapped to Sapphire
-  citrine: "#0D47A1",         // Mapped to Sapphire
-  amethyst: "#0D47A1",        // Mapped to Sapphire
-  ruby: "#0D47A1",            // Mapped to Sapphire
+  emerald: "#10B981",         // Vibrant Emerald Mountain Green
+  jade: "#059669",            // Deep Jade Green
+  topaz: "#D97706",           // Mapped to Topaz Gold
+  gold: "#D97706",            // Mapped to Gold
+  citrine: "#D97706",         // Mapped to Citrine
+  amethyst: "#7C3AED",        // Amethyst Purple
+  ruby: "#EF476F",            // Ruby Red
   moonstone: "#4682B4",       // Steel Blue Moonstone
   pearl: "#D1D1D1",           // Mapped to Silver
   onyx: "#1E1E1E",            // Matte Charcoal

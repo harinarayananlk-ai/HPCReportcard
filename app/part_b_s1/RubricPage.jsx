@@ -89,7 +89,7 @@ const TableInput = ({ value, onChange, editable = true, theme, styles, onFocus }
 const IMAGE_SOURCES = {
     none: require('../../assets/images/visily-image-removebg-preview.png'),
     river: require('../../assets/images/river.png'),
-    mountain: require('../../assets/images/mountain+river.png'),
+    mountain: require('../../assets/images/mountain_river.png'),
     sky: require('../../assets/images/ChatGPT_Image_May_11__2026__02_55_58_PM-removebg-preview.png'),
 };
 
@@ -321,7 +321,7 @@ export default function RubricPage() {
                         </View>
                         <View style={[styles.headerCellBase, { width: '24%' }]}>
                           <TouchableOpacity onPress={() => setActiveLevel('mountain')} style={styles.headerTouchable}>
-                            <AnimatedMountain color={activeLevel === 'mountain' ? gems.silver : theme.text} styles={styles} active={activeLevel === 'mountain'} />
+                            <AnimatedMountain color={activeLevel === 'mountain' ? gems.emerald : theme.text} styles={styles} active={activeLevel === 'mountain'} />
                           </TouchableOpacity>
                         </View>
                         <View style={[styles.headerCellBase, { width: '24%', borderRightWidth: 0 }]}>

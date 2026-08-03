@@ -30,7 +30,7 @@ import useAutoSave from '../../hooks/useAutoSave';
 const IMAGE_SOURCES = {
   none: require('../../assets/images/visily-image-removebg-preview.png'),
   stream: require('../../assets/images/river.png'),
-  mountain: require('../../assets/images/mountain+river.png'),
+  mountain: require('../../assets/images/mountain_river.png'),
   sky: require('../../assets/images/ChatGPT_Image_May_11__2026__02_55_58_PM-removebg-preview.png'),
 };
 
@@ -956,13 +956,13 @@ export default function PartBGroupProject() {
                 <Text style={styles.headerCellText}>ABILITY</Text>
               </View>
               <View style={[styles.headerCell, { width: '24%' }]}>
-                <Text style={styles.headerCellText}>Stream</Text>
+                <Text style={[styles.headerCellText, { color: gems.sapphire }]}>Stream</Text>
               </View>
               <View style={[styles.headerCell, { width: '24%' }]}>
-                <Text style={styles.headerCellText}>Mountain</Text>
+                <Text style={[styles.headerCellText, { color: gems.emerald }]}>Mountain</Text>
               </View>
               <View style={[styles.headerCell, { width: '24%', borderRightWidth: 0 }]}>
-                <Text style={styles.headerCellText}>Sky</Text>
+                <Text style={[styles.headerCellText, { color: gems.sapphire }]}>Sky</Text>
               </View>
             </View>
 

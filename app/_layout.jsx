@@ -40,7 +40,7 @@ export default function RootLayout() {
         <SafeAreaProvider>
           <View style={styles.container}>
           {/* Always render Stack so routes initialize correctly */}
-          <View style={[styles.stackWrapper, { display: appReady ? "flex" : "none" }]}>
+          <View style={[styles.stackWrapper, { opacity: appReady ? 1 : 0 }]}>
             <Stack 
               screenOptions={{ 
                 headerShown: false,

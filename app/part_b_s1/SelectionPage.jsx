@@ -42,7 +42,7 @@ const DOMAIN_NUMBERS = ["1", "2", "3", "4", "5", "5.1"];
 const IMAGE_SOURCES = {
     none: require('../../assets/images/visily-image-removebg-preview.png'),
     river: require('../../assets/images/river.png'),
-    mountain: require('../../assets/images/mountain+river.png'),
+    mountain: require('../../assets/images/mountain_river.png'),
     sky: require('../../assets/images/ChatGPT_Image_May_11__2026__02_55_58_PM-removebg-preview.png'),
 };
 
@@ -1167,7 +1167,7 @@ export default function SelectionPage() {
                                         <Text style={[styles.headerTitles, { color: theme.isDark ? '#9966CC' : '#6A1B9A' }]}>ABILITY</Text>
                                     </View>
                                     <View style={[styles.headerCellBase, { width: '24%', backgroundColor: theme.isDark ? '#222' : '#FFFFFF', borderRightColor: theme.isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)' }]}><AnimatedWaves color={activeData.matrix1Level === 'river' ? gems.sapphire : theme.text} active={activeData.matrix1Level === 'river'} /></View>
-                                    <View style={[styles.headerCellBase, { width: '24%', backgroundColor: theme.isDark ? '#222' : '#FFFFFF', borderRightColor: theme.isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)' }]}><AnimatedMountain color={activeData.matrix1Level === 'mountain' ? gems.silver : theme.text} active={activeData.matrix1Level === 'mountain'} /></View>
+                                    <View style={[styles.headerCellBase, { width: '24%', backgroundColor: theme.isDark ? '#222' : '#FFFFFF', borderRightColor: theme.isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)' }]}><AnimatedMountain color={activeData.matrix1Level === 'mountain' ? gems.sapphire : theme.text} active={activeData.matrix1Level === 'mountain'} /></View>
                                     <View style={[styles.headerCellBase, { width: '24%', borderRightWidth: 0, backgroundColor: theme.isDark ? '#222' : '#FFFFFF' }]}><AnimatedSky color={activeData.matrix1Level === 'sky' ? gems.sapphire : theme.text} active={activeData.matrix1Level === 'sky'} /></View>
                                 </View>
                                 {["AWARENESS", "SENSITIVITY", "CREATIVITY"].map((rowLabel, rIdx) => {
@@ -1243,7 +1243,7 @@ export default function SelectionPage() {
                                         <Text style={[styles.headerTitles, { color: theme.isDark ? '#9966CC' : '#6A1B9A' }]}>ABILITY</Text>
                                     </View>
                                     <View style={[styles.headerCellBase, { width: '24%', backgroundColor: theme.isDark ? '#222' : '#FFFFFF', borderRightColor: theme.isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)' }]}><AnimatedWaves color={activeData.matrix2Level === 'river' ? gems.sapphire : theme.text} active={activeData.matrix2Level === 'river'} /></View>
-                                    <View style={[styles.headerCellBase, { width: '24%', backgroundColor: theme.isDark ? '#222' : '#FFFFFF', borderRightColor: theme.isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)' }]}><AnimatedMountain color={activeData.matrix2Level === 'mountain' ? gems.silver : theme.text} active={activeData.matrix2Level === 'mountain'} /></View>
+                                    <View style={[styles.headerCellBase, { width: '24%', backgroundColor: theme.isDark ? '#222' : '#FFFFFF', borderRightColor: theme.isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)' }]}><AnimatedMountain color={activeData.matrix2Level === 'mountain' ? gems.sapphire : theme.text} active={activeData.matrix2Level === 'mountain'} /></View>
                                     <View style={[styles.headerCellBase, { width: '24%', borderRightWidth: 0, backgroundColor: theme.isDark ? '#222' : '#FFFFFF' }]}><AnimatedSky color={activeData.matrix2Level === 'sky' ? gems.sapphire : theme.text} active={activeData.matrix2Level === 'sky'} /></View>
                                 </View>
                                 {["AWARENESS", "SENSITIVITY", "CREATIVITY"].map((rowLabel, rIdx) => {

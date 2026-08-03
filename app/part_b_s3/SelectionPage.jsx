@@ -355,7 +355,7 @@ const InfoTrigger = ({ text, tooltipText, theme }) => {
 const IMAGE_SOURCES = {
     none: require('../../assets/images/visily-image-removebg-preview.png'),
     stream: require('../../assets/images/river.png'),
-    mountain: require('../../assets/images/mountain+river.png'),
+    mountain: require('../../assets/images/mountain_river.png'),
     sky: require('../../assets/images/ChatGPT_Image_May_11__2026__02_55_58_PM-removebg-preview.png'),
 };
 
@@ -1572,13 +1572,13 @@ export default function SelectionPage() {
                                         <Text style={[styles.headerTitles, { color: '#0055FF' }]}>ABILITY</Text>
                                     </View>
                                     <View style={[styles.headerCellBase, { width: '24%', backgroundColor: theme.isDark ? '#222' : '#FFFFFF', borderRightColor: theme.isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)' }]}>
-                                        <Text style={[styles.headerTitles, { color: theme.text }]}>Stream</Text>
+                                        <Text style={[styles.headerTitles, { color: gems.sapphire }]}>Stream</Text>
                                     </View>
                                     <View style={[styles.headerCellBase, { width: '24%', backgroundColor: theme.isDark ? '#222' : '#FFFFFF', borderRightColor: theme.isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)' }]}>
-                                        <Text style={[styles.headerTitles, { color: theme.text }]}>Mountain</Text>
+                                        <Text style={[styles.headerTitles, { color: gems.emerald }]}>Mountain</Text>
                                     </View>
                                     <View style={[styles.headerCellBase, { width: '24%', borderRightWidth: 0, backgroundColor: theme.isDark ? '#222' : '#FFFFFF' }]}>
-                                        <Text style={[styles.headerTitles, { color: theme.text }]}>Sky</Text>
+                                        <Text style={[styles.headerTitles, { color: gems.sapphire }]}>Sky</Text>
                                     </View>
                                 </View>
 

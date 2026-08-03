@@ -15,7 +15,7 @@ import useAutoSave from '../../hooks/useAutoSave';
 const IMAGE_SOURCES = {
     none: require('../../assets/images/visily-image-removebg-preview.png'),
     river: require('../../assets/images/river.png'),
-    mountain: require('../../assets/images/mountain+river.png'),
+    mountain: require('../../assets/images/mountain_river.png'),
     sky: require('../../assets/images/ChatGPT_Image_May_11__2026__02_55_58_PM-removebg-preview.png'),
 };
 
@@ -143,7 +143,7 @@ const FlipCard = ({ domain, matrix, onCellChange, theme, isStudent }) => {
                             <View style={[fcs.hCell, fcs.labelCol, { borderRightColor: theme.border, backgroundColor: theme.isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)' }]} />
                             {[
                                 { icon: <Waves color={gems.sapphire} size={14} />, label: 'STR', color: gems.sapphire, level: 'river' },
-                                { icon: <Mountain color={gems.silver} size={14} />, label: 'MTN', color: gems.silver, level: 'mountain' },
+                                { icon: <Mountain color={gems.emerald} size={14} />, label: 'MTN', color: gems.emerald, level: 'mountain' },
                                 { icon: <Cloud color={gems.sapphire} size={14} />, label: 'SKY', color: gems.sapphire, level: 'sky' },
                             ].map((col, ci) => (
                                 <TouchableOpacity

@@ -25,7 +25,7 @@ const backgrounds = [
   require("../assets/images/Background images/smooth_silver_gold_folds.png"),
   require("../assets/images/Background images/premium_login_background.png"),
   require("../assets/images/river.png"),
-  require("../assets/images/mountain+river.png"),
+  require("../assets/images/mountain_river.png"),
 ];
 
 export default function PremiumBackground({ bgIndex, gemColor }) {
@@ -69,7 +69,7 @@ export default function PremiumBackground({ bgIndex, gemColor }) {
         <GlowOrb color={gems.sapphire} opacity={theme.isDark ? 0.2 : 0.15} size={320} style={{ top: '35%', right: -50 }} />
       </View>
 
-      {/* Matte overlay: soft sapphire tint in light mode */}
+      {/* Matte overlay: soft tint */}
       <View style={[
         StyleSheet.absoluteFillObject, 
         { 

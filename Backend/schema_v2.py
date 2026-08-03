@@ -8,6 +8,11 @@ def create_schema(db_path):
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
 
+    # Drop existing tables to ensure clean re-seeding on boot up
+    tables = ["report_cards", "archived_reports", "student_enrollments", "students", "classes", "teachers", "superadmins", "schools", "users"]
+    for t in tables:
+        c.execute(f"DROP TABLE IF EXISTS {t}")
+
     # ── USERS ─────────────────────────────────────────────
     c.execute("""CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
