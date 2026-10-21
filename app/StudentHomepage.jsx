@@ -25,6 +25,7 @@ import { Image } from "react-native";
 import { gems } from "../colour_themes";
 import PremiumBackground from "../components/PremiumBackground";
 import GemCutCard from "../components/GemCutCard";
+import { getStage } from "../utils/stageRouter";
 
 // ── Sparkle Decoration ────────────────────────────────────────────────
 const Sparkle = ({ style, size = 15, color = '#FFF', delay = 0 }) => (
@@ -200,7 +201,91 @@ export default function StudentHomepage() {
           <Animated.Text entering={FadeInRight.delay(200)} style={styles.sectionTitle}>Quick Actions</Animated.Text>
           
           <View style={styles.actionList}>
-            <Animated.View entering={FadeInDown.delay(300).duration(800).springify()}>
+            {/* Stage 4 Secondary Dossier & Inquiry Hub */}
+            {getStage(profile?.class_name) === 4 && (
+              <Animated.View entering={FadeInDown.delay(250).duration(800).springify()} style={{ marginBottom: 12 }}>
+                <GemCutCard borderColor={gems.teal + '80'} contentStyle={{ padding: 0 }}>
+                  <SoundButton 
+                    style={styles.actionCard}
+                    onPress={() => router.push("/stage4/Dashboard")}
+                  >
+                    <View style={[styles.actionIconContainer, { backgroundColor: gems.teal + "15" }]}>
+                      <Ionicons name="sparkles" size={24} color={gems.teal} />
+                    </View>
+                    <View style={styles.actionTextContent}>
+                      <Text style={[styles.actionTitle, { color: theme.text }]}>Stage 4 Secondary Dossier</Text>
+                      <Text style={styles.actionDesc}>Group Project, Inquiry, Classroom Interactions, Time Inventories & Competencies.</Text>
+                    </View>
+                    <Ionicons name="chevron-forward" size={20} color={theme.secondaryText} />
+                  </SoundButton>
+                </GemCutCard>
+              </Animated.View>
+            )}
+
+            {/* Stage 1 Activities */}
+            {getStage(profile?.class_name) === 1 && (
+              <Animated.View entering={FadeInDown.delay(250).duration(800).springify()} style={{ marginBottom: 12 }}>
+                <GemCutCard borderColor={gems.sapphire + '80'} contentStyle={{ padding: 0 }}>
+                  <SoundButton 
+                    style={styles.actionCard}
+                    onPress={() => router.push("/part_b_s1/SelectionPage")}
+                  >
+                    <View style={[styles.actionIconContainer, { backgroundColor: gems.sapphire + "15" }]}>
+                      <Ionicons name="happy-outline" size={24} color={gems.sapphire} />
+                    </View>
+                    <View style={styles.actionTextContent}>
+                      <Text style={[styles.actionTitle, { color: theme.text }]}>Stage 1 Activities & Rubrics</Text>
+                      <Text style={styles.actionDesc}>Foundational activities, self & peer reflections, teacher feedback.</Text>
+                    </View>
+                    <Ionicons name="chevron-forward" size={20} color={theme.secondaryText} />
+                  </SoundButton>
+                </GemCutCard>
+              </Animated.View>
+            )}
+
+            {/* Stage 2 Activities */}
+            {getStage(profile?.class_name) === 2 && (
+              <Animated.View entering={FadeInDown.delay(250).duration(800).springify()} style={{ marginBottom: 12 }}>
+                <GemCutCard borderColor={'rgba(184,147,54,0.8)'} contentStyle={{ padding: 0 }}>
+                  <SoundButton 
+                    style={styles.actionCard}
+                    onPress={() => router.push("/part_b_s2/SelectionPage")}
+                  >
+                    <View style={[styles.actionIconContainer, { backgroundColor: "rgba(184,147,54,0.15)" }]}>
+                      <Ionicons name="book-outline" size={24} color="#B89336" />
+                    </View>
+                    <View style={styles.actionTextContent}>
+                      <Text style={[styles.actionTitle, { color: theme.text }]}>Stage 2 Activities & Rubrics</Text>
+                      <Text style={styles.actionDesc}>Preparatory stage activities, self & peer assessment rubrics.</Text>
+                    </View>
+                    <Ionicons name="chevron-forward" size={20} color={theme.secondaryText} />
+                  </SoundButton>
+                </GemCutCard>
+              </Animated.View>
+            )}
+
+            {/* Stage 3 Activities */}
+            {getStage(profile?.class_name) === 3 && (
+              <Animated.View entering={FadeInDown.delay(250).duration(800).springify()} style={{ marginBottom: 12 }}>
+                <GemCutCard borderColor={gems.sapphire + '80'} contentStyle={{ padding: 0 }}>
+                  <SoundButton 
+                    style={styles.actionCard}
+                    onPress={() => router.push("/part_b_s3/SelectionPage")}
+                  >
+                    <View style={[styles.actionIconContainer, { backgroundColor: gems.sapphire + "15" }]}>
+                      <Ionicons name="school-outline" size={24} color={gems.sapphire} />
+                    </View>
+                    <View style={styles.actionTextContent}>
+                      <Text style={[styles.actionTitle, { color: theme.text }]}>Stage 3 Activities & Rubrics</Text>
+                      <Text style={styles.actionDesc}>Middle stage subject rubrics, peer & self evaluation.</Text>
+                    </View>
+                    <Ionicons name="chevron-forward" size={20} color={theme.secondaryText} />
+                  </SoundButton>
+                </GemCutCard>
+              </Animated.View>
+            )}
+
+            <Animated.View entering={FadeInDown.delay(350).duration(800).springify()}>
               <GemCutCard borderColor={gems.sapphire + '60'} contentStyle={{ padding: 0 }}>
                 <SoundButton 
                   style={styles.actionCard}
@@ -210,8 +295,8 @@ export default function StudentHomepage() {
                     <Ionicons name="card-outline" size={24} color={gems.sapphire} />
                   </View>
                   <View style={styles.actionTextContent}>
-                    <Text style={[styles.actionTitle, { color: theme.text }]}>Go to HPC Card</Text>
-                    <Text style={styles.actionDesc}>View your Holistic Progress Card. (Self, Parent & Peer edits allowed)</Text>
+                    <Text style={[styles.actionTitle, { color: theme.text }]}>Part A: Holistic Progress Card</Text>
+                    <Text style={styles.actionDesc}>View profile, parent details, attendance and self-evaluation cards.</Text>
                   </View>
                   <Ionicons name="chevron-forward" size={20} color={theme.secondaryText} />
                 </SoundButton>

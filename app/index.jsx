@@ -5,6 +5,7 @@ import {
   Text,
   TextInput,
   View,
+  TouchableOpacity,
   Platform,
   StatusBar,
   Alert,
@@ -54,7 +55,7 @@ export default function LoginScreen() {
 
   const styles = getStyles(theme);
 
-  const handleLogin = async (bypassCreds = null) => {
+  const handleLogin = async (bypassCreds = null, directRoute = null) => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
 
@@ -84,7 +85,9 @@ export default function LoginScreen() {
         
         const targetRole = data.user.role || loginPayload.role;
 
-        if (targetRole === "superadmin") {
+        if (directRoute) {
+          router.push(directRoute);
+        } else if (targetRole === "superadmin") {
           router.push("/superadmin/Dashboard");
         } else if (targetRole === "teacher") {
           router.push("/Teacher");
@@ -170,6 +173,7 @@ export default function LoginScreen() {
 
         {/* Inputs */}
         <Animated.View layout={Layout.springify()} style={styles.inputContainer}>
+
           {role === "teacher" || role === "superadmin" ? (
             <>
               <View style={styles.inputWrapper}>
@@ -193,10 +197,10 @@ export default function LoginScreen() {
             </>
           ) : (
             <View style={styles.inputWrapper}>
-              <Text style={styles.inputLabel}>Registration Number</Text>
+              <Text style={styles.inputLabel}>Username / Reg No</Text>
               <TextInput
                 style={styles.input}
-                placeholder="ROLL_NUMBER"
+                placeholder="s_ladoo, s_g4a_1_achaar, etc."
                 placeholderTextColor={theme.secondaryText + "80"}
                 value={username}
                 onChangeText={setUsername}
@@ -238,16 +242,16 @@ export default function LoginScreen() {
       <View style={styles.absoluteBypassLeft}>
         {showStudentMenu ? (
           <>
-            <SoundButton style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]} onPress={() => handleLogin({ username: 's_ladoo', password: 'navy-2824-ladoo', role: 'student' })}>
+            <SoundButton style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]} onPress={() => handleLogin({ username: 's_ladoo', password: 'samosa-2025-ladoo', role: 'student' })}>
               <Text style={[styles.tinyBypassText, {fontSize: 8}]}>SF</Text>
             </SoundButton>
-            <SoundButton style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]} onPress={() => handleLogin({ username: 's_bittoo', password: 'dusk-4150-bittoo', role: 'student' })}>
+            <SoundButton style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]} onPress={() => handleLogin({ username: 's_g4a_1_achaar', password: 'samosa-2025-achaar', role: 'student' })}>
               <Text style={[styles.tinyBypassText, {fontSize: 8}]}>SP</Text>
             </SoundButton>
-            <SoundButton style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]} onPress={() => handleLogin({ username: 's_imli_6a', password: 'pearl-8573-imli', role: 'student' })}>
+            <SoundButton style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]} onPress={() => handleLogin({ username: 's_g7a_1_tikka', password: 'samosa-2025-tikka', role: 'student' })}>
               <Text style={[styles.tinyBypassText, {fontSize: 8}]}>SM</Text>
             </SoundButton>
-            <SoundButton style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]} onPress={() => handleLogin({ username: 's_urad_9a', password: 'ruby-5339-urad', role: 'student' })}>
+            <SoundButton style={[styles.tinyBypassBtn, { backgroundColor: '#F5F5F0', marginTop: 10 }]} onPress={() => handleLogin({ username: 's_g10a_1_raita', password: 'samosa-2025-raita', role: 'student' })}>
               <Text style={[styles.tinyBypassText, {fontSize: 8}]}>SS</Text>
             </SoundButton>
           </>

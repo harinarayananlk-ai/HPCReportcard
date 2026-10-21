@@ -47,3 +47,6 @@ query.py
 .venv/
 Backend/exports/*.pdf
 Backend/exports/Report_Card_*.pdf
+
+__pycache__/
+*.pyc

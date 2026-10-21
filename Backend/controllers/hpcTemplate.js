@@ -97,18 +97,52 @@ function buildHpcHtml(studentData) {
             background: #0E1015; 
             color: #333333; 
             -webkit-print-color-adjust: exact; 
+            width: 100%;
         }
         
         .page { 
-            width: 210mm; 
-            height: 297mm; 
-            margin: 0;
-            padding: 22mm; 
+            width: 100%; 
+            min-height: 100vh; 
+            height: auto;
+            margin: 0 0 24px 0;
+            padding: clamp(20px, 4vw, 44px); 
             position: relative; 
-            overflow: hidden; 
+            overflow: visible; 
             page-break-after: always;
             page-break-inside: avoid;
             background-color: transparent;
+            box-sizing: border-box;
+        }
+
+        .content-container {
+            position: relative;
+            z-index: 10;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media print {
+            body { 
+                background: #FFFFFF !important; 
+                margin: 0 !important; 
+                padding: 0 !important; 
+                width: 210mm !important;
+            }
+            .page { 
+                width: 210mm !important; 
+                height: 297mm !important; 
+                min-height: 297mm !important;
+                max-height: 297mm !important;
+                margin: 0 !important;
+                padding: 22mm !important; 
+                overflow: hidden !important;
+                page-break-after: always !important;
+                page-break-inside: avoid !important;
+            }
+            .content-container {
+                height: 100% !important;
+            }
         }
 
         .page-bg {
@@ -2366,12 +2400,13 @@ function buildHpcHtml(studentData) {
         };
 
         const getCpBadge = (skillId, grade) => {
-            const lvl = competencyProfile[`${skillId}_g${grade}_level`] || competencyProfile[`${skillId}_g${grade}`] || '';
+            const rawLvl = competencyProfile[`${skillId}_g${grade}_level`] || competencyProfile[`${skillId}_g${grade}`] || '';
             const desc = competencyProfile[`${skillId}_g${grade}_desc`] || '';
+            const lvl = (rawLvl || '').toString().trim().toUpperCase();
             let badge = '';
-            if (lvl === 'B') badge = `<span style="background: rgba(100,116,139,0.08); border: 1px solid rgba(100,116,139,0.25); color:#475569; padding: 2px 6px; border-radius: 4px; font-weight:700; font-size:9px; display:inline-block;">B</span>`;
-            else if (lvl === 'P') badge = `<span style="background: rgba(184,151,46,0.08); border: 1px solid rgba(184,151,46,0.25); color:#8a6d1a; padding: 2px 6px; border-radius: 4px; font-weight:700; font-size:9px; display:inline-block;">P</span>`;
-            else if (lvl === 'A') badge = `<span style="background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25); color:#15803d; padding: 2px 6px; border-radius: 4px; font-weight:700; font-size:9px; display:inline-block;">A</span>`;
+            if (lvl.startsWith('B')) badge = `<span style="background: rgba(100,116,139,0.08); border: 1px solid rgba(100,116,139,0.25); color:#475569; padding: 2px 6px; border-radius: 4px; font-weight:700; font-size:9px; display:inline-block;">B</span>`;
+            else if (lvl.startsWith('P')) badge = `<span style="background: rgba(184,151,46,0.08); border: 1px solid rgba(184,151,46,0.25); color:#8a6d1a; padding: 2px 6px; border-radius: 4px; font-weight:700; font-size:9px; display:inline-block;">P</span>`;
+            else if (lvl.startsWith('A')) badge = `<span style="background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25); color:#15803d; padding: 2px 6px; border-radius: 4px; font-weight:700; font-size:9px; display:inline-block;">A</span>`;
             
             if (desc) {
                 return `<div>${badge} <div style="font-size:8px; color:#555; margin-top:2px;">${escapeHtml(desc)}</div></div>`;

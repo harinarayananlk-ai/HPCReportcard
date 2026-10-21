@@ -160,6 +160,7 @@ async function run() {
         const finalOutputPath = outputPath || path.join(__dirname, 'Backend/exports/Holistic_Progress_Card_Unified.pdf');
         
         console.log('Unified PDF script: Rendering print-to-PDF page...');
+        await page.emulateMediaType('print');
         await page.pdf({
             path: finalOutputPath,
             format: 'A4',

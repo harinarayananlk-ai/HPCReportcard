@@ -4,7 +4,9 @@ import { themes } from "../colour_themes";
 import { Platform } from "react-native";
 
 const debuggerHost = Constants.expoConfig?.hostUri;
-const origin = debuggerHost?.split(":")[0] || (Platform.OS === 'android' ? '10.0.2.2' : 'localhost');
+const origin = Platform.OS === 'web'
+  ? (typeof window !== 'undefined' && window.location?.hostname ? window.location.hostname : 'localhost')
+  : (debuggerHost?.split(":")[0] || (Platform.OS === 'android' ? '10.0.2.2' : 'localhost'));
 export const API_URL = `http://${origin}:3000/api`;
 
 // Theme Context

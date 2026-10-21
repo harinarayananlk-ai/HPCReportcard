@@ -78,7 +78,19 @@ export default function ViewCardScreen() {
 
       const pdfUrl = `${API_URL.replace('/api', '')}${result.url}`;
       
-      // Download PDF into local app cache
+      if (Platform.OS === 'web') {
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.download = result.fileName || 'HPC_Report_Card.pdf';
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setDownloading(false);
+        return;
+      }
+
+      // Download PDF into local app cache on native devices
       const localUri = FileSystem.cacheDirectory + result.fileName;
       const { uri } = await FileSystem.downloadAsync(pdfUrl, localUri);
       
@@ -128,14 +140,27 @@ export default function ViewCardScreen() {
 
         <View style={styles.webviewContainer}>
           {htmlUri ? (
-            <WebView
-              source={{ uri: htmlUri }}
-              style={{ flex: 1, backgroundColor: 'transparent' }}
-              originWhitelist={["*"]}
-              javaScriptEnabled
-              domStorageEnabled
-              onLoadEnd={() => setLoading(false)}
-            />
+            Platform.OS === 'web' ? (
+              <iframe
+                src={htmlUri}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  border: 'none',
+                  backgroundColor: 'transparent'
+                }}
+                onLoad={() => setLoading(false)}
+              />
+            ) : (
+              <WebView
+                source={{ uri: htmlUri }}
+                style={{ flex: 1, backgroundColor: 'transparent' }}
+                originWhitelist={["*"]}
+                javaScriptEnabled
+                domStorageEnabled
+                onLoadEnd={() => setLoading(false)}
+              />
+            )
           ) : (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color={theme.accent} />
