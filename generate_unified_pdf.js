@@ -1,7 +1,10 @@
-const puppeteer = require('puppeteer');
 const fs = require('fs');
 const path = require('path');
-const { buildHpcHtml } = require('./Backend/controllers/hpcTemplate');
+const puppeteer = require('puppeteer');
+const templatePath = fs.existsSync(path.join(__dirname, 'controllers', 'hpcTemplate.js'))
+    ? path.join(__dirname, 'controllers', 'hpcTemplate')
+    : path.join(__dirname, 'Backend', 'controllers', 'hpcTemplate');
+const { buildHpcHtml } = require(templatePath);
 
 // Baseline Student Data Structure
 let studentData = {

@@ -9,13 +9,14 @@ import bcrypt
 
 mimetypes.add_type('application/pdf', '.pdf')
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "database.sqlite")
+from db import get_db, test_connection, IntegrityError
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    from seed import seed_db
-    seed_db(DB_PATH)
-    print("Database ready.")
+    if test_connection():
+        print("Database connected successfully.")
+    else:
+        print("Warning: Database connection check failed.")
     yield
 
 app = FastAPI(title="MyApp Python Backend", lifespan=lifespan)
@@ -35,11 +36,11 @@ app.add_middleware(
 os.makedirs(os.path.join(os.path.dirname(__file__), "exports"), exist_ok=True)
 app.mount("/exports", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "exports")), name="exports")
 
-def get_db():
-    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
-    conn.row_factory = sqlite3.Row
-    try: yield conn
-    finally: conn.close()
+def get_pdf_script_path():
+    p = os.path.join(os.path.dirname(__file__), "generate_unified_pdf.js")
+    if os.path.exists(p):
+        return p
+    return os.path.join(os.path.dirname(__file__), "..", "generate_unified_pdf.js")
 
 def verify_password(plain_password, hashed_password):
     try:
@@ -391,7 +392,7 @@ async def create_student(data: dict, db: sqlite3.Connection = Depends(get_db)):
 
         db.commit()
         return {"message": "Student created", "userId": u_id, "username": username, "password": password}
-    except sqlite3.IntegrityError:
+    except (IntegrityError, sqlite3.IntegrityError):
         db.rollback()
         raise HTTPException(status_code=409, detail="Username already exists")
 
@@ -511,7 +512,7 @@ async def render_part_b(user_id: int, db: sqlite3.Connection = Depends(get_db)):
     with tempfile.NamedTemporaryFile(mode='w', suffix='.html', delete=False) as tf_html:
         temp_html_path = tf_html.name
 
-    script_path = os.path.join(os.path.dirname(__file__), "..", "generate_unified_pdf.js")
+    script_path = get_pdf_script_path()
     process = subprocess.run(["node", script_path, temp_json_path, temp_html_path, "--html"], capture_output=True, text=True)
     
     os.unlink(temp_json_path)
@@ -612,7 +613,7 @@ async def export_pdf(data: dict, db: sqlite3.Connection = Depends(get_db)):
     file_name = f"Report_Card_{design}_{user_id}_{int(time.time())}.pdf"
     file_path = os.path.join(exports_dir, file_name)
 
-    script_path = os.path.join(os.path.dirname(__file__), "..", "generate_unified_pdf.js")
+    script_path = get_pdf_script_path()
     process = subprocess.run(["node", script_path, temp_path, file_path], capture_output=True, text=True)
     os.unlink(temp_path)
 
