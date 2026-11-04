@@ -7,3 +7,4 @@ bcrypt==3.2.2
 pyppeteer
 jinja2
 python-dotenv
+websockets>=13.0
