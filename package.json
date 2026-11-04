@@ -8,7 +8,9 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "postinstall": "node ./scripts/patch-webshape.js"
+    "postinstall": "node ./scripts/patch-webshape.js",
+    "backend": ".\\.venv\\Scripts\\python ..\\MyApp-backend\\main.py",
+    "dev": "concurrently --raw --kill-others -n \"PY_BACKEND,EXPO\" -c \"magenta,cyan\" \"npm run backend\" \"npm start\""
   },
   "dependencies": {
     "@expo-google-fonts/inter": "^0.4.2",
